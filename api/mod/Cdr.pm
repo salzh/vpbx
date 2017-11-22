@@ -71,7 +71,7 @@ sub getcdr () {
             } 
         } else {
             if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
-               $condition .= "$_ IS '$post_add{$_}'";
+               $condition .= "$_ IS $post_add{$_}";
             } else {            
                 $condition .= "$_='$post_add{$_}'";
             }
