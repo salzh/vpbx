@@ -45,6 +45,15 @@ sub getcdr () {
         }
     }
     
+    %queues = &database_select_as_hash(
+                            "select
+                                queue_name,queue_extension
+                            from
+                                v_call_center_queues
+                            where
+                                domain_uuid='$domain{uuid}'",
+                            "queue_extension");
+    
     $condition = "domain_uuid='$domain{uuid}'";
     for (keys %post_add) {
         next if  !$_ || $post_add{$_} eq '' || $_ eq 'page' || $_ eq 'limit';
@@ -69,6 +78,11 @@ sub getcdr () {
             } elsif ($post_add{call_result} eq 'failed') {
             	 $condition .= "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
             } 
+        } elsif ($_ eq 'cc_queue' ) {
+            if (index($post_add{$_}, '@') != -1) {
+                $post_add{$_} .= '@' . $domain{name};
+            }
+            
         } else {
             if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
                $condition .= "$_ IS $post_add{$_}";
@@ -114,6 +128,7 @@ sub getcdr () {
         for (sort {$hash{$b}{start_stamp} cmp $hash{$a}{start_stamp}} keys %hash) {
         		local $start_epoch = $hash{$_}{start_epoch};
         		local $uuid				 = $_;
+                
         		local $recording_filename = "/var/lib/freeswitch/recordings/$domain{name}/archive/". strftime('%Y', localtime($start_epoch)) . "/" . strftime('%b',  localtime($start_epoch)) . "/" . strftime('%d', localtime($start_epoch)) .  "/$uuid.wav";
 						 	warn $recording_filename;
 						$recording_url = '';
@@ -121,6 +136,16 @@ sub getcdr () {
 							$recording_url = "http://$domain{name}/app/recordings/recordings2.php?filename=" . encode_base64($recording_filename, '');
 							$hash{$_}{recording_url} = $recording_url;
 						}
+            local $queue_name = $hash{$_}{cc_queue};
+            if ($queue_name) {
+                local ($n) = split '@', $queue_name;
+                local $e = $queues{$n};
+                
+                $hash{$_}{cc_queue} = $n;
+                $hash{$_}{queue_extension} = $e;
+            }
+            
+            
             push @{$response{data}{list}}, $hash{$_};
         }
     }
