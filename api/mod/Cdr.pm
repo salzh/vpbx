@@ -80,7 +80,7 @@ sub getcdr () {
             } 
         } else {
             if ($_ eq 'cc_queue' ) {
-                if (index($post_add{$_}, '@') != -1) {
+                if (index($post_add{$_}, '@') == -1) {
                     $post_add{$_} .= '@' . $domain{name};
                 }                
             }
