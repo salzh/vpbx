@@ -52,7 +52,7 @@ sub getcdr () {
                                 v_call_center_queues
                             where
                                 domain_uuid='$domain{uuid}'",
-                            "queue_extension");
+                            "queue_extension,call_center_queue_uuid");
     
     $condition = "domain_uuid='$domain{uuid}'";
     for (keys %post_add) {
