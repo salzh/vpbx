@@ -47,7 +47,7 @@ sub getcdr () {
     
     %queues = &database_select_as_hash(
                             "select
-                                queue_name,queue_extension
+                                queue_name,queue_extension,call_center_queue_uuid
                             from
                                 v_call_center_queues
                             where
@@ -139,13 +139,16 @@ sub getcdr () {
             local $queue_name = $hash{$_}{cc_queue};
             if ($queue_name) {
                 local ($n) = split '@', $queue_name;
-                local $e = $queues{$n};
+                local $e = $queues{$n}{queue_extension};
+                local $d = $queues{$n}{call_center_queue_uuid};
                 
                 $hash{$_}{cc_queue} = $n;
                 $hash{$_}{queue_extension} = $e;
+                $hash{$_}{queue_uuid} = $d;
             } else {
                 $hash{$_}{cc_queue} = '';
                 $hash{$_}{queue_extension} = '';
+                $hash{$_}{queue_uuid} = '';                
             }
             
             
