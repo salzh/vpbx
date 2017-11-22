@@ -143,6 +143,9 @@ sub getcdr () {
                 
                 $hash{$_}{cc_queue} = $n;
                 $hash{$_}{queue_extension} = $e;
+            } else {
+                $hash{$_}{cc_queue} = '';
+                $hash{$_}{queue_extension} = '';
             }
             
             
