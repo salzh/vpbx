@@ -1,0 +1,15 @@
+    <html>
+        <header><title>route test</title></header>
+        <body>
+            <form method=post action='/pbx/index.pl'>
+                <input type=hidden name=mod value=Dialplan />
+                <input type=hidden name=action value=adddialplan />
+               dialplan_name: <input type=text name=dialplan_name /><br>
+           condition_field1: <input type=text name=condition_field1 /><br>
+           condition_expression_1: <input type=text name=condition_expression_1 /><br>
+           action_1: <input type=text name=action_1 /><br>
+
+                <input type=submit value=submit />
+            </form>
+        </body>
+    </html>

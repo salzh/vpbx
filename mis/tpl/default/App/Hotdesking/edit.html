@@ -1,0 +1,67 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			sp_data({
+				url:"__API_ROOT__index.pl?action=gethotdesking&extension_uuid=[{$_GET['extension_uuid']}]&domain_uuid="+current_domain_uuid,
+				params:$scope.vo
+			},$scope,$http);
+			
+			/*save*/
+			$scope.save=function(){
+				sp_save({
+					url:"__API_ROOT__index.pl?action=edithotdesking&domain_uuid="+current_domain_uuid,
+					params:$scope.vo
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('hotdesking/index')}]">Hot Desking</a></li>
+     <li><a href="[{:u('hotdesking/add')}]">Add Hot Desking</a></li>
+  </ul>
+  <!-- <div class="well">
+  </div> -->
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension: </label>
+		<div class="controls">
+			{{vo.extension_uuid}}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Unique ID: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="unique_id" ng-model="vo.unique_id" autocomplete="off" maxlength="255" ng-pattern="/[0-9]/" required>
+			<br> A unique NUMERIC ID to identify the extension and domain.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Voicemail Password: </label>
+		<div class="controls">
+  			<input class="formfld" type="password" name="vm_password" ng-model="vo.vm_password" id="vm_password" onfocus="document.getElementById('show_vm_password').innerHTML = 'Password: '+document.getElementById('vm_password').value;" maxlength="255" ng-pattern="/[0-9]/">
+			<br> <span onclick="document.getElementById('show_vm_password').innerHTML = ''">Enter the voicemail NUMERIC password here. </span><span id="show_vm_password">Password:</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Dial String: </label>
+		<div class="controls">
+    		<input class="formfld" type="text" name="dial_string" ng-model="vo.dial_string" maxlength="255">
+			<br>Location of the endpoint.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('hotdesking/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

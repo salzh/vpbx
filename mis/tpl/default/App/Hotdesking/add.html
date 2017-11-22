@@ -1,0 +1,55 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addhotdesking&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('hotdesking/index')}]"
+				},$scope,$http);
+			}
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('hotdesking/index')}]">Hot Desking</a></li>
+     <li class="active"><a href="[{:u('hotdesking/add')}]">Add Hot Desking</a></li>
+  </ul>
+  <!-- <div class="well">
+  </div> -->
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension: </label>
+		<div class="controls">
+			<select id="extension_uuid" name="extension_uuid" ng-model="vo.extension_uuid" class="formfld" required>
+				<option value=""></option>
+				<option value="2fb66c34-b675-4be5-a1d2-5dfb7b43ab11">1000</option>
+				<option value="5454cb15-2228-4101-b115-4487b2b4bb60">1001</option>
+				<option value="9c2a8db8-9dba-49b6-81fd-f175b380f6ac">1002</option>
+				<option value="66498120-0278-4cee-bb4a-5fce9254625c">1003</option>
+			</select>
+			<br>Select the extension number. 
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Unique ID: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="unique_id" ng-model="vo.unique_id" autocomplete="off" maxlength="255" ng-pattern="/[0-9]/" required>
+			<br> A unique NUMERIC ID to identify the extension and domain.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('hotdesking/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

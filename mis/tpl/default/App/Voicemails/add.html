@@ -1,0 +1,110 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addvoicemail&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('voicemails/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('voicemails/index')}]">Voicemails</a></li>
+     <li class="active"><a href="[{:u('voicemails/add')}]">Add Voicemail</a></li>
+  </ul>
+ <!--  <div class="well">
+  </div> -->
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Voicemail ID: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="voicemail_id" ng-model="vo.voicemail_id" maxlength="255" required>
+			<br> Enter the Voicemail ID
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Password: </label>
+		<div class="controls">
+			<input class="formfld" type="password" name="voicemail_password" ng-model="vo.voicemail_password" id="password"
+				onfocus="document.getElementById('show_password').innerHTML = 'Password: '+document.getElementById('password').value;"
+				autocomplete="off" maxlength="50" value="">
+				<br> Enter the Password <span id="show_password"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Greeting ID: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="greeting_id" ng-model="vo.greeting_id" maxlength="255"
+				value=""><br> Enter the Greeting ID
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Mail To: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="voicemail_mail_to" ng-model="vo.voicemail_mail_to"
+				maxlength="255" value=""><br> Enter the email address
+			to send voicemail to.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Attach File: </label>
+		<div class="controls">
+			<select class="formfld" name="voicemail_attach_file" ng-model="vo.voicemail_attach_file"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Choose whether to
+			attach the file to the email.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Local After
+			Email: </label>
+		<div class="controls">
+			<select class="formfld" name="voicemail_local_after_email" ng-model="vo.voicemail_local_after_email"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Choose to keep the
+			voicemail file after sending the email.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="voicemail_enabled" ng-model="vo.voicemail_enabled"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Select to enable or
+			disable this voicemail.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="voicemail_description" ng-model="vo.voicemail_description"
+				maxlength="255" value=""><br> Enter the description.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> <input
+			type="hidden" name="referer_path" ng-model="vo.referer_path"
+			value="/app/voicemails/voicemails.php"><input type="hidden"
+			name="referer_query" ng-model="vo.referer_query" value=""></label>
+		<div class="controls"></div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a href="[{:u('voicemails/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

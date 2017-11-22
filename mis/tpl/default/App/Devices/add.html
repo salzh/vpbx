@@ -1,0 +1,215 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=adddevice&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('devices/index')}]"
+				},$scope,$http);
+			}
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('devices/index')}]">Devices</a></li>
+     <li class="active"><a href="[{:u('devices/add')}]">Add Device</a></li>
+  </ul>
+  <div class="well">
+  	The following information is used to provision endpoints.
+  </div>
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> MAC Address: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_mac_address" ng-model="vo.device_mac_address"
+				maxlength="255" value=""><br> Enter the MAC address.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Label: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_label" ng-model="vo.device_label"
+				maxlength="255" value=""><br> Enter the device label.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Template: </label>
+		<div class="controls">
+			<select id="device_template" name="device_template" ng-model="vo.device_template" class="formfld"><option
+					value=""></option>
+				<optgroup label="polycom">
+					<option value="polycom/vvx">polycom/vvx</option>
+					<option value="polycom/8030">polycom/8030</option>
+					<option value="polycom/650">polycom/650</option>
+				</optgroup>
+				<optgroup label="snom">
+					<option value="snom/820">snom/820</option>
+					<option value="snom/m3">snom/m3</option>
+					<option value="snom/320">snom/320</option>
+					<option value="snom/300">snom/300</option>
+					<option value="snom/360">snom/360</option>
+				</optgroup>
+				<optgroup label="yealink">
+					<option value="yealink/t22">yealink/t22</option>
+					<option value="yealink/t20">yealink/t20</option>
+				</optgroup>
+				<optgroup label="aastra">
+					<option value="aastra/675x">aastra/675x</option>
+				</optgroup>
+				<optgroup label="grandstream">
+					<option value="grandstream/dp715">grandstream/dp715</option>
+					<option value="grandstream/gxp2200">grandstream/gxp2200</option>
+				</optgroup>
+				<optgroup label="cisco">
+					<option value="cisco/spa303">cisco/spa303</option>
+					<option value="cisco/7960">cisco/7960</option>
+					<option value="cisco/7940">cisco/7940</option>
+					<option value="cisco/spa112">cisco/spa112</option>
+					<option value="cisco/spa504g">cisco/spa504g</option>
+					<option value="cisco/spa525g">cisco/spa525g</option>
+				</optgroup>
+				<optgroup label="linksys">
+					<option value="linksys/spa3102">linksys/spa3102</option>
+					<option value="linksys/spa2102">linksys/spa2102</option>
+					<option value="linksys/spa921">linksys/spa921</option>
+					<option value="linksys/spa942">linksys/spa942</option>
+				</optgroup>
+				<optgroup label="panasonic">
+					<option value="panasonic/UT113">panasonic/UT113</option>
+					<option value="panasonic/UT136">panasonic/UT136</option>
+					<option value="panasonic/UT133">panasonic/UT133</option>
+					<option value="panasonic/UT123">panasonic/UT123</option>
+				</optgroup></select><br> Select a template.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Lines:</label>
+		<div class="controls">
+			<table width="75%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td class="vtable">Line</td>
+						<td class="vtable">Server Address</td>
+						<td class="vtable">Outbound Proxy</td>
+						<td class="vtable">Display Name</td>
+						<td class="vtable">User ID</td>
+						<td class="vtable">Auth ID</td>
+						<td class="vtable">Password</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td class="vtable" valign="top" align="left" nowrap="nowrap">
+							<select class="formfld" style="width: 45px;" name="line_number" ng-model="vo.line_number">
+								<option value=""></option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+						</select>
+						</td>
+						<td class="vtable" valign="top" align="left" nowrap="nowrap">
+							<input class="formfld" style="width: 125px;" type="text"
+							name="server_address" ng-model="vo.server_address" maxlength="255" value="">
+						</td>
+						<td class="vtable" align="left"><input class="formfld"
+							style="width: 125px;" type="text" name="outbound_proxy" ng-model="vo.outbound_proxy"
+							maxlength="255" value=""></td>
+						<td class="vtable" align="left"><input class="formfld"
+							style="width: 95px;" type="text" name="display_name" ng-model="vo.display_name"
+							maxlength="255" value=""></td>
+						<td class="vtable" align="left"><input class="formfld"
+							style="width: 75px;" type="text" name="user_id" ng-model="vo.user_id" maxlength="255"
+							value=""></td>
+						<td class="vtable" align="left"><input class="formfld"
+							style="width: 75px;" type="text" name="auth_id" ng-model="vo.auth_id" maxlength="255"
+							value=""></td>
+						<td class="vtable" align="left"><input class="formfld"
+							style="width: 90px;" type="text" name="password" ng-model="vo.password" maxlength="255"
+							value=""></td>
+						<td class="vtable" align="left"><input type="submit"
+							name="submit" ng-model="vo.submit" class="btn" value="Save"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extensions: </label>
+		<div class="controls">
+			<table width="52%"></table>
+			<br>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Vendor: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_vendor" ng-model="vo.device_vendor"
+				maxlength="255" value=""><br> Enter the venodr name.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Model: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_model" ng-model="vo.device_model"
+				maxlength="255" value=""><br> Enter the model name or
+			number.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Firmware
+			Version: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_firmware_version" ng-model="vo.device_firmware_version"
+				maxlength="255" value=""><br> Enter the firmware
+			version.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="device_provision_enable" ng-model="vo.device_provision_enable"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Enable or disable
+			provisioning for this device.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Time Zone: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_time_zone" ng-model="vo.device_time_zone"
+				maxlength="255" value=""><br> Enter the time zone.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="device_description" ng-model="vo.device_description"
+				maxlength="255" value=""><br> Enter the description.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('devices/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

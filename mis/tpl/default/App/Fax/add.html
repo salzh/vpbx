@@ -1,0 +1,109 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addfaxserver&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('fax/index')}]"
+				},$scope,$http);
+			}
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('fax/index')}]">Fax Server</a></li>
+     <li class="active"><a href="[{:u('fax/add')}]">Add Fax Server</a></li>
+  </ul>
+ <!--  <div class="well">
+  </div> -->
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()"  name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_name" ng-model="vo.fax_name" maxlength="255"  required>
+			<br> Enter the name here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_extension" ng-model="vo.fax_extension"
+				maxlength="255" value=""><br> Enter the fax extension
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Destination
+			Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_destination_number" ng-model="vo.fax_destination_number"
+				maxlength="255" value=""><br> Enter the fax destination
+			number
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Email: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_email" ng-model="vo.fax_email" maxlength="255" required>
+			<br> Enter the email address to send the FAX to.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> PIN Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_pin_number" ng-model="vo.fax_pin_number"
+				maxlength="255" value=""><br> Enter the PIN number
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Caller ID Name:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_caller_id_name" ng-model="vo.fax_caller_id_name"
+				maxlength="255" value=""><br> Enter the Caller ID name
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Caller ID
+			Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_caller_id_number" ng-model="vo.fax_caller_id_number"
+				maxlength="255" value=""><br> Enter the Caller ID
+			number here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Forward Number:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_forward_number" ng-model="vo.fax_forward_number"
+				maxlength="255" value=""><br> Enter the forward number
+			here. Used to forward the fax to a registered extension or external
+			number.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="fax_description" ng-model="vo.fax_description"
+				maxlength="255" value=""><br> Enter the description
+			here.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a href="[{:u('fax/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

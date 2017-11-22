@@ -1,0 +1,54 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				var domain={};
+				domain.tenantname=$scope.domain.domain_name;
+				domain.description=$scope.domain.domain_description;
+				domain.domain_uuid=$scope.domain.domain_uuid;
+				
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addtenant",
+					params:domain,
+					redirect:"[{:u('domains/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('domains/index')}]">Domains</a></li>
+     <li class="active"><a href="[{:u('domains/add')}]">Add Domains</a></li>
+  </ul>
+  <div class="well">
+  	Enter the domain details below.
+  </div>
+  
+  	<form class="form-horizontal"  ng-controller="editController" ng-submit="save()" name="form">
+	  <div class="control-group">
+	    <label class="control-label" for="input-name">Name:</label>
+	    <div class="controls">
+	      <input type="text" id="input-name" placeholder="Enter the name of the domain." ng-model="domain.domain_name">
+	      <span class="help-block">Enter the name of the domain.</span>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label" for="input-description">Description:</label>
+	    <div class="controls">
+	      <input type="text" id="input-description" placeholder="Description" ng-model="domain.domain_description" >
+	      <span class="help-block">Enter a description, if desired.</span>
+	    </div>
+	  </div>
+	  <div class="form-actions">
+	  <input type="hidden" ng-model="domain.domain_uuid"/>
+	  <button type="submit" class="btn btn-primary">Save</button>
+	  </div>
+	</form>
+</block>

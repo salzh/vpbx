@@ -1,0 +1,118 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			sp_data({
+				url:"__API_ROOT__index.pl?action=getcallbroadcast&call_broadcast_uuid=[{$_GET['call_broadcast_uuid']}]&domain_uuid="+current_domain_uuid,
+				params:$scope.vo
+			},$scope,$http);
+			
+			/*save*/
+			$scope.save=function(){
+				sp_save({
+					url:"__API_ROOT__index.pl?action=editcallbroadcast&domain_uuid="+current_domain_uuid,
+					params:$scope.vo
+				},$scope,$http);
+			}
+			
+			$scope.sendcallbroadcast=function(){
+				sp_request({
+					url:"__API_ROOT__index.pl?action=sendcallbroadcast&call_broadcast_uuid=[{$_GET['call_broadcast_uuid']}]&domain_uuid="+current_domain_uuid
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('callbroadcasts/index')}]">Call Broadcasts</a></li>
+     <li><a href="[{:u('callbroadcasts/add')}]">Add Call Broadcast</a></li>
+  </ul>
+ <!--  <div class="well">
+  </div> -->
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_name" ng-model="vo.broadcast_name" maxlength="255" required>
+			<br> Enter the name here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Timeout: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_timeout" ng-model="vo.broadcast_timeout"
+				maxlength="255" value=""><br> Limit the length of the
+			call. Leave this empty for no limit.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Concurrent
+			Limit: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_concurrent_limit" ng-model="vo.broadcast_concurrent_limit"
+				maxlength="255" value=""><br> Limit the approximate
+			number of concurrent calls. Leave this empty for no limit.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Caller ID Name:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_caller_id_name" ng-model="vo.broadcast_caller_id_name"
+				maxlength="255" value=""><br> Applicable if the
+			provider allow the Caller ID Name to be set. default: anonymous
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Caller ID
+			Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_caller_id_number" ng-model="vo.broadcast_caller_id_number"
+				maxlength="255" value=""><br> Applicable if the
+			provider that allow the Caller ID number to be sent. default:
+			0000000000
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Destination
+			Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_destination_data" ng-model="vo.broadcast_destination_data"
+				maxlength="255" value=""><br> Send the call to the
+			extension an IVR Menu, Conference Room, or any other number. <br>
+			<br>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Phone Number
+			List: </label>
+		<div class="controls">
+			<textarea class="formfld" type="text" name="broadcast_phone_numbers" ng-model="vo.broadcast_phone_numbers"
+				rows="10"></textarea>
+			<br> Optional, set a list of phone numbers one per row in the
+			following format: 123-123-1234|Last Name, First Name <br>
+			<br>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="broadcast_description" ng-model="vo.broadcast_description"
+				maxlength="255" value=""><br> Enter the description
+			here.
+		</div>
+	</div>
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a type="submit" class="btn btn-success" ng-click="sendcallbroadcast()">Send</a>
+		<a href="[{:u('callbroadcasts/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+
+</block>

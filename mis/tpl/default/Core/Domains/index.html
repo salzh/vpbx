@@ -1,0 +1,56 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=gettenantlist'
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deletetenant',
+					listurl:'__API_ROOT__index.pl?action=gettenantlist',
+					params:{domain_uuid:uuid}
+				},$scope,$http);
+			}
+			
+		}
+	
+	
+	</script>
+
+</block>
+
+
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('domains/index')}]">Domains</a></li>
+     <li><a href="[{:u('domains/add')}]">Add Domains</a></li>
+  </ul>
+  <div class="well">Control the list of domains to manage.</div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<th>Domain</th>
+			<th>Description</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="vo in lists">
+			<td>{{vo.domain_name}}</td>
+			<td>{{vo.domain_description}}</td>
+			<td>
+				<a href="[{:u('domains/edit',array('domain_uuid'=>'{{vo.domain_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+				<a href="#" title="Delete" ng-click="delete(vo.domain_uuid)"><i class="fa fa-trash-o"></i></a>
+			</td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

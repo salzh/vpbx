@@ -1,0 +1,56 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=gethotdeskinglist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deletehotdesking&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=gethotdeskinglist&domain_uuid='+current_domain_uuid,
+					params:{extension_uuid:uuid}
+				},$scope,$http);
+			}
+			
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('hotdesking/index')}]">Hot Desking</a></li>
+     <li><a href="[{:u('hotdesking/add')}]">Add Hot Desking</a></li>
+  </ul>
+  <div class="well">
+  Log in to hot desking with a unique ID and your voicemail password to direct your calls to a remote extension.
+  Then, make and receive calls as if you were at your extension.
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>Extension</th>
+				<th>Unique ID</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td>{{vo.extension}}</td>
+		   <td>{{vo.unique_id}}</td>
+		   <td>
+		   	<a href="[{:u('hotdesking/edit',array('extension_uuid'=>'{{vo.extension_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+		   	<a href="#" title="Delete" ng-click="delete(vo.extension_uuid)"><i class="fa fa-trash-o"></i></a>
+		   </td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

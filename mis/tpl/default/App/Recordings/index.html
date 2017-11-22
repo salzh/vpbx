@@ -1,0 +1,59 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=getrecordinglist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deleterecording&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=getrecordinglist&domain_uuid='+current_domain_uuid,
+					params:{recording_uuid:uuid}
+				},$scope,$http);
+			}
+			
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('recordings/index')}]">Recordings</a></li>
+     <li><a href="[{:u('recordings/upload')}]">Upload Recording</a></li>
+     <li><a href="[{:u('recordings/add')}]">Add Recording</a></li>
+  </ul>
+  <div class="well">
+  To make a recording dial *732 or you can make a 16bit 8khz/16khz Mono WAV file then copy it to the following directory then refresh the page to play it back.
+  Click on the 'Filename' to download it or the 'Recording Name' to play the audio.
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th> Filename (download)   </th>
+				<th> Recording Name (play) </th>
+				<th>Size</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td>{{vo.recording_filename}}</td>
+		   <td>{{vo.recording_filename}}</td>
+		   <td>{{vo.recording_size}}</td>
+		   <td>
+		   		<!-- <a href="[{:u('recordings/edit',array('recording_uuid'=>'{{vo.recording_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a> -->
+		   		<a href="#" title="Delete" ng-click="delete(vo.recording_uuid)"><i class="fa fa-trash-o"></i></a>
+		   </td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

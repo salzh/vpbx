@@ -1,0 +1,77 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addcallblock&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('callblock/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('callblock/index')}]">Call Block</a></li>
+     <li class="active"><a href="[{:u('callblock/add')}]">Add Call Block</a></li>
+  </ul>
+  <div class="well">
+  	Block calls from a number. Either select a number from the list above or enter the number, name and enable below.
+  </div>
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="call_block_number" ng-model="vo.call_block_number" maxlength="255" required>
+			<br> Enter the exact number.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="call_block_name" ng-model="vo.call_block_name" maxlength="255" required>
+			<br> Enter the name.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Action: </label>
+		<div class="controls">
+			<select class="formfld" name="call_block_action" ng-model="vo.call_block_action">
+				<option value=""></option>
+				<option value="Reject">Reject</option>
+				<option value="Busy">Busy</option>
+				<optgroup label="Voicemail">
+					<option value="Voicemail default 1000">1000</option>
+					<option value="Voicemail default 1001">1001</option>
+					<option value="Voicemail default 1002">1002</option>
+					<option value="Voicemail default 1003">1003</option>
+				</optgroup>
+			</select>
+			<br> Set an action for calls from this number.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="call_block_enabled" ng-model="vo.call_block_enabled" required>
+				<option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option>
+			</select>
+			<br> Set to true to enable call blocking for this number.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('callblock/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

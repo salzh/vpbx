@@ -1,0 +1,117 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addclick2call&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('clicktocall/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('clicktocall/index')}]">Click to Call</a></li>
+  </ul>
+  <div class="well">
+  Provide the following information to make a call from the source number to the destination number.
+  </div>
+  
+  <form class="form-horizontal" ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name">Source Caller ID Name:</label>
+		<div class="controls">
+			<input name="src_cid_name" ng-model="vo.src_cid_name" value="" class="formfld" type="text">
+			<br> Enter the Caller ID name to send to your phone.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Source Caller ID
+			Number:</label>
+		<div class="controls">
+			<input name="src_cid_number" ng-model="vo.src_cid_number" value="" class="formfld" type="text"><br>
+			Enter the Caller ID number to send to your phone (you probably want
+			this to be the same as the destination number).
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Destination
+			Caller ID Name:</label>
+		<div class="controls">
+			<input name="dest_cid_name" ng-model="vo.dest_cid_name" value="" class="formfld" type="text"><br>
+			Enter the Caller ID name to send to the destination number.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Destination
+			Caller ID Number:</label>
+		<div class="controls">
+			<input name="dest_cid_number" ng-model="vo.dest_cid_number" value="" class="formfld" type="text"><br>
+			Enter the Caller ID number to send to the destination number (you
+			probably want this to be your phone number).
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Source Number:</label>
+		<div class="controls">
+			<input name="src" ng-model="vo.src" value="" class="formfld" type="text"><br> Enter
+			your phone number. This can be an extension on the system, or another
+			number (eg: mobile phone).
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name">Destination
+			Number:</label>
+		<div class="controls">
+			<input name="dest" ng-model="vo.dest" value="" class="formfld"  type="text"><br> Enter
+			the number to call. This can be an extension on the system, another
+			number, or a sip uri. Sip URI's are of the form
+			5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for
+			other systems).
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Auto Answer: </label>
+		<div class="controls">
+			<select class="formfld" name="auto_answer" ng-model="vo.auto_answer"><option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Select whether to
+			enable auto answer.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Record: </label>
+		<div class="controls">
+			<select class="formfld" name="rec" ng-model="vo.rec"><option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Select whether to
+			record the call.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Ring Back: </label>
+		<div class="controls">
+			<select class="formfld" name="ringback" ng-model="vo.ringback"><option value=""></option>
+				<option value="us-ring">us-ring</option>
+				<option value="fr-ring">fr-ring</option>
+				<option value="uk-ring">uk-ring/option&gt;</option>
+				<option value="rs-ring">rs-ring</option>
+				<option value="music">music</option></select><br> Defines what the you
+			will hear while destination is being called. The choices are music
+			(music on hold) ring (ring tone.)
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Call</button>
+	</div>
+</form>
+</block>

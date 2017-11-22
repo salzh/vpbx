@@ -1,0 +1,72 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script src="__ROOT__/assets/js/ajaxfileupload.js"></script>
+	<script>
+	function editController($scope, $http) {
+
+		/*save*/
+		$scope.ajaxFileUpload = function() {
+			$("#loading").ajaxStart(function () {
+	    		$(this).show();
+	     	}).ajaxComplete(function () {
+	     		$(this).hide();
+	 		});
+
+	         $.ajaxFileUpload({
+		         url: "__API_ROOT__index.pl?action=addrecording&domain_uuid="+current_domain_uuid,
+		         fileElementId: 'fileToUpload',
+		         dataType: 'json',
+		         data:  $scope.vo,
+		         success: function (data, status) {
+		        	 if(data.error.code=="1"){
+		     			noty({text: data.error.message,
+		     				type:'error',
+		     				layout:'center'
+		     			});
+		     		}else{
+		     			noty({text: 'Saved success!',
+		    				type:'success',
+		    				layout:'center',
+		    				modal: true,
+		    				callback:{
+		    					afterClose:function() {
+		    							location.href="[{:u('recordings/index')}]";
+		    					}
+		    				}
+		    			});
+		     		}
+		         },
+		         error: function (data, status, e) {
+		         }
+		     });
+
+	         return false;
+		}
+	}
+		
+	</script>
+</block>
+
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('recordings/index')}]">Recordings</a></li>
+     <li class="active"><a href="[{:u('recordings/upload')}]">Upload Recording</a></li>
+     <li><a href="[{:u('recordings/add')}]">Add Recording</a></li>
+  </ul>
+<form class="form-horizontal" id="fileform" ng-controller="editController"  ng-submit="ajaxFileUpload()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> File: </label>
+		<div class="controls">
+			<input  type="file" name="ulfile" id="fileToUpload">
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Upload</button>
+		<a href="[{:u('recordings/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

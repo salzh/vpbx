@@ -1,0 +1,44 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			$http.get('__API_ROOT__index.pl?action=getfollowmelist&domain_uuid='+current_domain_uuid).success(function(data) {
+				$scope.lists = data.data;
+			});
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('followme/index')}]">Follow Me</a></li>
+     <!-- <li><a href="[{:u('inboundroutes/add')}]">Add Inbound Routes</a></li> -->
+  </ul>
+  <div class="well">
+  Use the links to configure call forward follow me, or do no disturb. The following list the extensions that have been assigned to this user account.
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>Extension</th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td>{{vo.extension}}</td>
+		   <td></td>
+		   <td>
+		   		<a href="[{:u('followme/edit',array('extension_uuid'=>'{{vo.extension_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+		   </td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

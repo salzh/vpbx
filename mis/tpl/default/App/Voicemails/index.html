@@ -1,0 +1,65 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=getvoicemaillist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deletevoicemail&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=getvoicemaillist&domain_uuid='+current_domain_uuid,
+					params:{voicemail_uuid:uuid}
+				},$scope,$http);
+			}
+			
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('voicemails/index')}]">Voicemails</a></li>
+     <li><a href="[{:u('voicemails/add')}]">Add Voicemail</a></li>
+  </ul>
+  <div class="well">
+  Voicemail settings.
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>Voicemail ID </th>
+				<th>Mail To</th>
+				<th>Attach File</th>
+				<th>Local After Email  </th>
+				<th>Tools</th>
+				<th> Enabled </th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td>{{vo.voicemail_id}}</td>
+		   <td>{{vo.voicemail_mail_to}}</td>
+		   <td>{{vo.voicemail_attach_file}}</td>
+		   <td>{{vo.voicemail_local_after_email}}</td>
+		   <td></td>
+		   <td>{{vo.voicemail_enabled}}</td>
+		   <td>{{vo.voicemail_description}}</td>
+		   <td>
+		   		<a href="[{:u('voicemails/edit',array('voicemail_uuid'=>'{{vo.voicemail_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+		   		<a href="#" title="Delete" ng-click="delete(vo.voicemail_uuid)"><i class="fa fa-trash-o"></i></a>
+		   </td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

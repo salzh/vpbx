@@ -1,0 +1,363 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addextension&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('extensions/index')}]"
+				},$scope,$http);
+			}
+		}
+		
+	</script>
+</block>
+
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('extensions/index')}]">Extensions</a></li>
+     <li class="active"><a href="[{:u('extensions/add')}]">Add Extensions</a></li>
+  </ul>
+<form class="form-horizontal" ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="extension" ng-model="vo.extension"
+				autocomplete="off" ng-minlength="2" ng-maxlength="7"  ng-pattern="/[0-9]/" required><br> Enter
+			the alphanumeric extension. The default configuration allows 2 - 7
+			digit extensions.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Number Alias: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="number_alias" ng-model="vo.number_alias" autocomplete="off" maxlength="255"><br> 
+			If the extension is numeric then number alias is optional.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Range: </label>
+		<div class="controls">
+			<select class="formfld" name="range" ng-model="vo.range">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+				<option value="25">25</option>
+				<option value="30">30</option>
+				<option value="35">35</option>
+				<option value="40">40</option>
+				<option value="45">45</option>
+				<option value="50">50</option>
+				<option value="75">75</option>
+				<option value="100">100</option>
+				<option value="150">150</option>
+				<option value="200">200</option>
+				<option value="250">250</option>
+				<option value="500">500</option>
+				<option value="500">750</option>
+				<option value="1000">1000</option>
+				<option value="5000">5000</option></select><br> Enter the number of
+			extensions to create. Increments each extension by 1.<br> <input
+				type="checkbox" name="autogen_users" ng-model="vo.autogen_users" value="true">
+			Auto-generate user with extension as login name<br>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Account Code: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="accountcode" ng-model="vo.accountcode" maxlength="255"
+				value=""><br> Enter the account code here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Effective
+			Caller ID Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="effective_caller_id_name" ng-model="vo.effective_caller_id_name"
+				maxlength="255" value=""><br> Enter the internal caller
+			ID name here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Effective
+			Caller ID Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="effective_caller_id_number" ng-model="vo.effective_caller_id_number"
+				maxlength="255" value=""><br> Enter the internal caller
+			ID number here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Outbound Caller
+			ID Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="outbound_caller_id_name" ng-model="vo.outbound_caller_id_name"
+				maxlength="255" value=""><br> Enter the external
+			(public) caller ID name here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Outbound Caller
+			ID Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="outbound_caller_id_number" ng-model="vo.outbound_caller_id_number"
+				maxlength="255" value=""><br> Enter the external
+			(public) caller ID number here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Emergency
+			Caller ID Number: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="emergency_caller_id_number" ng-model="vo.emergency_caller_id_number"
+				maxlength="255" value=""><br> Enter the emergency
+			caller ID number here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Directory Full
+			Name: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="directory_full_name" ng-model="vo.directory_full_name"
+				maxlength="255" value=""><br> Enter the first name
+			followed by the last name.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Directory
+			Visible: </label>
+		<div class="controls">
+			<select class="formfld" name="directory_visible" ng-model="vo.directory_visible"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> <br> Select
+			whether to hide the name from the directory.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Directory
+			Extension Visible: </label>
+		<div class="controls">
+			<select class="formfld" name="directory_exten_visible" ng-model="vo.directory_exten_visible"><option
+					value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> <br> Select
+			whether announce the extension when calling the directory.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Limit Max: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="limit_max" ng-model="vo.limit_max" maxlength="255"
+				value="5"><br> Enter the max number of outgoing calls
+			for this user.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Limit
+			Destination: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="limit_destination" ng-model="vo.limit_destination"
+				maxlength="255" value=""><br> Enter the destination to
+			send the calls when the max number of outgoing calls has been
+			reached.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Voicemail
+			Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="vm_enabled" ng-model="vo.vm_enabled"><option value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Enable/disable
+			voicemail for this extension.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Voicemail Mail
+			To: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="vm_mailto" ng-model="vo.vm_mailto" maxlength="255"
+				value=""><br> Enter the email address to send voicemail
+			to (optional).
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Voicemail
+			Attach File: </label>
+		<div class="controls">
+			<select class="formfld" name="vm_attach_file" ng-model="vo.vm_attach_file"><option
+					value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Choose whether to
+			attach the voicemail to the email as an audio file.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> VM Keep Local
+			After Email: </label>
+		<div class="controls">
+			<select class="formfld" name="vm_keep_local_after_email" ng-model="vo.vm_keep_local_after_email"><option
+					value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Keep local file after
+			sending the email.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Toll Allow: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="toll_allow" ng-model="vo.toll_allow" maxlength="255"
+				value=""><br> Enter the toll allow value here.
+			(Examples: domestic,international,local)
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Call Timeout: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="call_timeout" ng-model="vo.call_timeout"
+				maxlength="255" value="30"><br> Enter the call timeout.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Call Group: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="call_group" ng-model="vo.call_group" maxlength="255"
+				value=""><br> Enter the user call group here. Groups
+			available by default: sales, support, billing.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Hold Music: </label>
+		<div class="controls">
+			<select class="formfld" name="hold_music" ng-model="vo.hold_music" id="hold_music"
+				style="width: auto;"><option value=""
+					style="font-style: italic;">Defaut</option></select><br> Select the MOH
+			Category here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> User Context: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="user_context" ng-model="vo.user_context"
+				maxlength="255" value="hi.com"><br> Enter the user
+			context here.
+		</div>
+	</div>
+	<div class="advanved">
+		<div class="control-group">
+			<label class="control-label" for="input-name"> Auth ACL: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="auth_acl" ng-model="vo.auth_acl" maxlength="255"
+					value=""><br> Enter the Auth ACL here.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> CIDR: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="cidr" ng-model="vo.cidr" maxlength="255"
+					value=""><br> Enter the CIDR here.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> SIP Force
+				Contact: </label>
+			<div class="controls">
+				<select class="formfld" name="sip_force_contact" ng-model="vo.sip_force_contact"><option
+						value=""></option>
+					<option value="NDLB-connectile-dysfunction">Rewrite
+						Contact IP and Port</option>
+					<option value="NDLB-connectile-dysfunction-2.0">Rewrite
+						Contact IP and Port 2.0</option>
+					<option value="NDLB-tls-connectile-dysfunction">Rewrite
+						Contact Port</option></select><br> Choose whether to rewrite the contact port,
+				or rewrite both the contact IP and port.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> SIP Force
+				Expires: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="sip_force_expires" ng-model="vo.sip_force_expires"
+					maxlength="255" value=""><br> Choose whether to
+				rewrite the contact port, or rewrite both the contact IP and port.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> Nibble
+				Account: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="nibble_account" ng-model="vo.nibble_account"
+					maxlength="255" value=""><br> Enter the account number
+				for nibblebill to use.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> MWI Account: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="mwi_account" ng-model="vo.mwi_account"
+					maxlength="255" value=""><br> MWI Account with
+				user@domain of the voicemail to monitor.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> SIP Bypass
+				Media: </label>
+			<div class="controls">
+				<select class="formfld" name="sip_bypass_media" ng-model="vo.sip_bypass_media"><option
+						value=""></option>
+					<option value="bypass-media">Bypass Media</option>
+					<option value="bypass-media-after-bridge">Bypass Media
+						After Bridge</option>
+					<option value="proxy-media">Proxy Media</option></select><br> Choose
+				whether to send the media stream point to point or in transparent
+				proxy mode.
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-name"> Dial String: </label>
+			<div class="controls">
+				<input class="formfld" type="text" name="dial_string" ng-model="vo.dial_string"
+					maxlength="4096" value=""><br> Location of the
+				endpoint.
+			</div>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="enabled" ng-model="vo.enabled"><option value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Set the status of the
+			extension.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<textarea class="formfld" name="description" ng-model="vo.description" rows="4"></textarea>
+			<br>
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('extensions/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

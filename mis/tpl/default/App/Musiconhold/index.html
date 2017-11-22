@@ -1,0 +1,61 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=getmusiconholdlist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(vo){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deletemusiconhold&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=getmusiconholdlist&domain_uuid='+current_domain_uuid,
+					params:vo
+				},$scope,$http);
+			}
+			
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('musiconhold/index')}]">Music on Hold</a></li>
+     <li><a href="[{:u('musiconhold/add')}]">Add Music on Hold</a></li>
+  </ul>
+  <div class="well">
+  Music on hold can be in WAV or MP3 format. 
+  To play an MP3 file you must have mod_shout enabled on the 'Modules' tab. 
+  You can adjust the volume of the MP3 audio from the 'Settings' tab. 
+  For best performance upload 16 bit, 8/16/32/48 kHz mono WAV files. 
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>Download</th>
+				<th>Play</th>
+				<th>Uploaded</th>
+				<th>File Size</th>
+				<th>Sampling</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td>{{vo.filename}}</td>
+		   <td>{{vo.filename}}</td>
+		   <td>April 15 2009 13:38:07</td>
+		   <td>{{vo.recording_size}}Byte</td>
+		   <td>{{vo.sampling_rate}}HZ</td>
+		   <td><a href="javascript:void(0)" ng-click="delete(vo)" title="Delete"><i class="fa fa-trash-o"></i></a></td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

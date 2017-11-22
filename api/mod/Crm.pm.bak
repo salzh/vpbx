@@ -1,0 +1,475 @@
+=pod
+	Version 1.0
+	Developed by Velantro inc
+	Contributor(s):
+	George Gabrielyan <george@velantro.com>
+=cut
+
+use POSIX qw(strftime);
+sub addincomingbycallerid () {
+	local %params = (
+        dialplan_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+        condition_field_1 => {type => 'string', maxlen => 20, notnull => 0, default => 'caller_id_number'},
+        condition_expression_1 => {type => 'string', maxlen => 255, notnull => 0, default => ''},
+        condition_field_2 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
+        condition_expression_2 => {type => 'string', maxlen => 255, notnull => 0, default => ''},
+        action_1 => {type => 'string', maxlen => 255, notnull => 1, default => ''},
+        action_2 => {type => 'string', maxlen => 255, notnull => 0, default => ''},
+        limit => {type => 'int', maxlen => 4, notnull => 0, default =>''},
+        public_order => {type => 'int', maxlen => 4, notnull => 0, default => '100'},
+        dialplan_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'true'},
+        dialplan_description => {type => 'string', maxlen => 255, notnull => 0, default => ''},	
+    );
+	 
+	%response       = ();   
+    %domain         = &get_domain();
+
+    if (!$domain{name}) {
+        $response{stat}		= "fail";
+        $response{message}	= "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
+    }
+    
+    
+    if ($response{stat} ne 'fail') {
+       for $k (keys %params) {
+            $tmpval   = '';
+            if (&getvalue(\$tmpval, $k, $params{$k})) {
+                $post_add{$k} = $tmpval;
+            } else {
+                $response{stat}		= "fail";
+                $response{message}	= $k. &_(" not valid");
+            }
+       }
+    }	
+	
+	if (!$response{stat} ne 'fail') {
+        $post_add{dialplan_description} = "caller_id_number-$post_add{condition_expression_1}";
+		$result = &post_data (
+			'domain_uuid' => $domain{uuid},
+			'urlpath'     => '/app/dialplan_inbound/dialplan_inbound_add.php?action=advanced',
+			'reload'      => 1,
+			'data'        => [%post_add]);
+		#warn $result->header("Location");
+		$location = $result->header("Location");
+		($uuid) = $location =~ /app_uuid=(.+)$/;
+		if (!$uuid) {
+			$response{stat}		= "fail";
+            $response{message}	= $k. &_(" not valid");
+		} else {
+            
+            %hash = &database_select_as_hash(
+                            "select
+                                1,dialplan_uuid
+                            where
+                                dialplan_description='$post_add{dialplan_description}' and
+                                app_uuid='c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'",
+                            "dialplan_uuid");
+            
+			$response{stat}		            = "ok";
+            $response{data}{dialplan_uuid} = $hash{1}{dialplan_uuid};
+		}       
+	}
+	
+	&print_json_response(%response);   
+}
+
+sub hangup {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    
+    $output = &runswitchcommand('internal', "uuid_kill $uuid"
+								);
+    
+    $response{stat}          = 'ok';
+    $response{message} = $output;
+	&print_json_response(%response);   	
+}
+
+sub blindtransfer {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    local ($dest) = &database_clean_string($form{dest});
+    
+    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest");
+    $response{stat}          = 'ok';
+    $response{message} = $output;
+    
+    
+   	&print_json_response(%response);
+}
+
+sub startattendedtransfer () {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    local ($dest) = &database_clean_string($form{dest});
+    
+    %domain         = &get_domain();
+    $domain_name    = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+    
+    %calls = &parse_calls();
+    if (!$calls{$uuid}{b_uuid}) {
+        &print_api_error_end_exit(160, "$uuid not in any calls");
+    }
+    
+	$uuid_xtt = $calls{$uuid}{b_uuid};
+    #check if api-park dialplan is created
+    %hash = &database_select_as_hash("select
+                                        1,dialplan_uuid,dialplan_number
+                                    from
+                                        v_dialplans
+                                    where
+                                        dialplan_context='default' and
+                                        dialplan_name='api-park'",
+                                    'dialplan_uuid,dialplan_number');
+    if (!$hash{1}{dialplan_uuid}) {
+        &print_api_error_end_exit(160, "dialplan of api-park not defined");        
+    }
+    
+	$park_number = $hash{1}{dialplan_number};
+
+	if (!$dest) {		
+        &print_api_error_end_exit(130, "dest is null");
+	}
+	
+	$accountcode = $form{accountcode};
+	if ($accountcode) {
+		#$accountcode_str = "sip_h_X-accountcode=$accountcode";
+		&runswitchcommand('internal', "uuid_setvar $uuid sip_h_X-accountcode $accountcode");
+	}
+	
+
+	$dest =~ s/^\+1//g;
+	if ($dest =~ /^\+(\d+)$/) {
+		$dest = "011$1";
+	}
+	
+	$realdest = $dest;
+	
+	$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
+	
+    $cid = &database_clean_string(substr $form{callerid}, 0, 50);
+
+	@uri = &outbound_route_to_bridge($realdest, $domain{uuid});
+	if ($uri[0]) {
+		$src_uri = $uri[0];
+	} else {
+		$src_uri = "user/$realdest\@$domain{name}";
+	}
+	
+	warn $src_uri;
+	$output = &runswitchcommand('internal', "uuid_setvar $uuid src_uri $src_uri");
+
+	
+    
+    $output = &runswitchcommand('internal', "uuid_setvar $uuid uuid_xtt $uuid_xtt");
+    $output = &runswitchcommand('internal', "uuid_dual_transfer $uuid  xtt/XML/default $park_number/XML/default");
+    
+    $response{stat}          = 'ok';
+    $response{message} = $output;
+    
+    
+   	&print_json_response(%response); 
+}
+
+sub cancelattendedtransfer() {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    $uuid_xtt = &runswitchcommand('internal', "uuid_getvar $uuid uuid_xtt");
+    $output   = &runswitchcommand('internal', "uuid_bridge $uuid $uuid_xtt");
+
+    $response{stat}          = 'ok';
+    $response{message} = $output;    
+    
+   	&print_json_response(%response); 
+}
+
+sub confirmattendedtransfer() {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    $uuid_xtt = &runswitchcommand('internal', "uuid_getvar $uuid uuid_xtt");
+
+    %calls = &parse_calls();
+    if (!$calls{$uuid}{b_uuid}) {
+        &print_api_error_end_exit(160, "$uuid not in any calls");
+    }
+    
+    $output   = &runswitchcommand('internal', "uuid_bridge $calls{$uuid}{b_uuid} $uuid_xtt");
+   
+    $response{message} = $output;    
+   	&print_json_response(%response);
+}
+
+sub getchannelstate () {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    
+    %channels = &parse_channels();
+    
+    $state   = $channels{$uuid}{callstate};
+    
+    $response{stat}        = 'ok';
+    $response{data}{state} = $state;
+    
+    
+   	&print_json_response(%response);   
+}
+
+sub getlivechannels () {
+	%domain         = &get_domain();
+    $domain_name    = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+	
+	$show_all	= $form{show_all};
+	%channels 	= &parse_channels();
+	
+	for (sort {$channel{$b}{created_epoch} <=> $channel{$a}{created_epoch}} keys %channels) {
+		if (!$show_all) {
+			next unless $channels{$_}{context} eq $domain_name;
+		}
+		
+		push @{$response{data}{channel_list}}, $channels{$_};
+	}
+
+	$response{stat} = 'ok';
+	
+   	&print_json_response(%response);	
+}
+
+sub makecall {	
+	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
+	if (!$ext) {		
+        &print_api_error_end_exit(130, "src is null");
+	}
+    %domain      = &get_domain();
+    $domain_name = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }	
+	
+	$auto_answer = $form{autoanswer}  ? "sip_h_Call-Info=<sip:$domain_name>;answer-after=0,sip_auto_answer=true" : "";
+	$alert_info  = $form{autoanswer}  ? "sip_h_Alert-Info='Ring Answer'" : '';
+	$dest	= $form{dest};
+	if (!$form{dest}) {		
+        &print_api_error_end_exit(130, "dest is null");
+	}
+	
+	$accountcode = $form{accountcode};
+	if ($accountcode) {
+		$accountcode_str = "sip_h_X-accountcode=$accountcode";
+	}
+	
+	$uuid   = &genuuid();
+    if (!$uuid) {
+        &print_api_error_end_exit(130, "uuid tool not defined");       
+    }
+	$dest =~ s/^\+1//g;
+	if ($dest =~ /^\+(\d+)$/) {
+		$dest = "011$1";
+	}
+	
+	$realdest = $dest;
+	
+	$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
+	
+    $cid = &database_clean_string(substr $form{callerid}, 0, 50);
+
+	@uri = &outbound_route_to_bridge($ext, $domain{uuid});
+	if ($uri[0]) {
+		$src_uri = $uri[0];
+	} else {
+		$src_uri = "user/$ext\@$domain{name}";
+	}
+	
+	warn $src_uri;
+	$year = strftime('%Y', localtime);
+	$mon  = strftime('%b', localtime);
+	$day  = strftime('%d', localtime);
+	
+	%hash = &database_select_as_hash("select 1,user_record from v_extensions where user_context='$domain_name' and extension='$ext'", 'record');
+	if ($hash{1}{record} eq 'all' or $hash{1}{record} eq 'outbound') {
+		$record = "api_on_answer='uuid_record $uuid start /usr/local/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.wav'";
+	}
+	$output = &runswitchcommand('internal', "bgapi originate {ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$src_uri  $realdest XML $domain_name");
+ 
+    $response{stat}          = 'ok';
+    $response{data}{uuid}    = $uuid;   
+    $response{message} = $output;   
+   	
+    &print_json_response(%response);
+}
+
+
+sub makeautocall {
+	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
+    
+    %domain         = &get_domain();
+    $domain_name    = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+	
+	
+	$auto_answer = $form{autoanswer}  ? "sip_h_Call-Info=<sip:$domain_name>;answer-after=0,sip_auto_answer=true" : "";
+	$alert_info  = $form{autoanswer}  ? "sip_h_Alert-Info='Ring Answer'" : '';
+	$dest	= $form{dest};
+	if (!$form{dest}) {		
+        &print_api_error_end_exit(130, "dest is null");
+	}
+	$accountcode = $form{accountcode};
+	if ($accountcode) {
+		$accountcode_str = "sip_h_X-accountcode=$accountcode";
+	}
+	
+	$uuid   = &genuuid();
+    if (!$uuid) {
+        &print_api_error_end_exit(130, "uuid tool not defined");       
+    }
+	$dest =~ s/^\+1//g;
+	if ($dest =~ /^\+(\d+)$/) {
+		$dest = "011$1";
+	}
+	
+	$realdest = $dest;
+	
+	$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
+	
+    $cid = &database_clean_string(substr $form{callerid}, 0, 50);
+	$is_widget_in_conference = 0;
+	$conf_list = &runswitchcommand('internal', "conference $ext$domain_name list");
+	for (split /\n/, $conf_list) {
+		if (index($_, "loopback/$ext-a") != -1) {
+			$is_widget_in_conference = 1;
+			last;
+		}
+	}
+	$result = &runswitchcommand('internal', "conference $ext$domain_name kick non_moderator");
+	
+	if (!$is_widget_in_conference) {
+		$result =  &runswitchcommand('internal', "originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,ignore_early_media=true,origination_uuid=$uuid,flags=endconf|moderator}loopback/$ext/$domain_name/XML conference$ext XML default");
+		sleep 2;
+		
+		$call_list = &runswitchcommand('internal', "show calls");
+		$is_ext_answered = 0;
+		for (split /\n/, $call_list) {
+			if (index($_, "$uuid,") == 0) {
+				$is_ext_answered = 1;
+				last;
+			}
+		}
+	
+		if (!$is_ext_answered) {
+            &print_api_error_end_exit(140, "ext not answered");
+		}
+	}
+	
+	
+	$uuid = &genuuid();
+	$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,origination_uuid=$uuid,autocallback_fromextension=$ext,is_lead=1}loopback/$dest/$domain_name/XML conference$ext XML default");
+	
+    $response{stat}       = 'ok';
+    $response{data}{uuid} = $uuid;
+    &print_json_response(%response);
+}
+
+sub get_incoming_event {
+	local $ext = $form{ext};
+	%domain         = &get_domain();
+    $domain_name    = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+	
+	
+	$ext = "$ext\@$domain";
+	
+	use Cache::Memcached;
+	local $memcache = "";
+    $memcache = new Cache::Memcached {'servers' => ['127.0.0.1:11211'],};
+	
+	$memcache->delete($ext);
+
+	local $starttime = time;
+	local $| = 1;
+	
+	print $cgi->header(-type  =>  'text/event-stream', '-cache-control' => 'NO-CACHE',);
+
+CHECK:
+	
+	if (time - $starttime > 3600) {
+		$memcache->delete($ext);
+		exit 0; #force max connection time to 1h
+	}
+	
+	local $status = $memcache->get($ext);
+	local $current_state = '';
+	
+	local $channels = &runswitchcommand('internal', 'show channels');
+	local $cnt      = 0;
+	for  $line (split /\n/, $channels) {
+		my @f = split ',', $line;
+		if ($f[22] eq $ext && $f[33] ) { #presence_id && initial_ip_addr
+			
+			$current_state = $f[24];
+			if ($status ne $current_state) {		
+				print "data:", &Hash2Json(error => '0', 'message' => 'ok', 'actionid' => $query{actionid}, uuid => $f[0],
+					 caller => "$f[6] <$f[7]>", start_time => $f[2], current_state => $f[24]), "\n\n";
+				$memcache->set($ext, $current_state);
+			}
+		}		
+	}
+	
+	if (!$current_state) {
+		if (!$status) {
+			
+			print "data:" , &Hash2Json(error => '0', 'message' => 'ok', 'actionid' => $query{actionid}, uuid => '',
+					 caller => "", start_time => '', current_state => 'nocall'), "\n\n";
+			$memcache->set($ext, 'nocall');
+		} elsif ($status ne 'nocall') {
+			print "data:", &Hash2Json(error => '0', 'message' => 'ok', 'actionid' => $query{actionid}, uuid => '',
+					 caller => "", start_time => '', current_state => 'hangup'), "\n\n";
+			$memcache->set($ext, '');
+		}
+	}
+	
+	sleep 1;
+	goto CHECK;
+}
+
+sub hold () {
+    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+    
+    $output = &runswitchcommand("internal", "uuid_hold toggle $uuid");
+    
+    $response{stat}          = 'ok';
+    $response{message} = $output;
+    &print_json_response(%response);
+}
+
+sub unhold() {
+    &hold();
+}
+
+sub agentlogin () {
+    $name   = &database_clean_string(substr $form{agentname}, 0, 50);
+    $status = shift || 'Available';
+    %domain      = &get_domain();
+    $domain_name = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+    warn "callcenter_config agent set status $name\@$domain_name '$status'";
+    $output = &runswitchcommand(1, "callcenter_config agent set status $name\@$domain_name '$status'");
+    
+    $response{stat}          = 'ok';
+    $response{message} = $output;
+    &print_json_response(%response);
+}
+
+sub agentlogout () {
+    &agentlogin('Logged Out');
+}
+
+sub getuuid() {
+    #try best to get call uuid by different condition
+}
+
+return 1;

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow: hidden;">
+<head>
+<meta charset="utf-8">
+<title>UnoPBX</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="__ROOT__/assets/simpleboot/themes/bluesky/theme.min.css" rel="stylesheet">
+<link href="__ROOT__/assets/simpleboot/css/simplebootadmin.css" rel="stylesheet">
+<!-- <link href="__ROOT__/assets/simpleboot/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"> -->
+<link href="__ROOT__/assets/simpleboot/font-awesome/4.1.0/css/font-awesome.min.css"  rel="stylesheet" type="text/css">
+<!--[if IE 7]>
+	<link rel="stylesheet" href="__ROOT__/assets/simpleboot/font-awesome/4.1.0/css/font-awesome-ie7.min.css">
+<![endif]-->
+<link rel="stylesheet" href="__ROOT__/assets/simpleboot/themes/bluesky/simplebootadminindex.min.css">
+<!--[if lte IE 8]>
+	<link rel="stylesheet" href="__ROOT__/assets/simpleboot/css/simplebootadminindex-ie.css" />
+<![endif]-->
+<link rel="stylesheet" href="__ROOT__/assets/css/style.css">
+<style>
+#loading {top: 45px;left: 50%;margin-left: -50px;}
+</style>
+<script src="__ROOT__/assets/js/angular-1.2.9.min.js"></script>
+<script>
+var current_domain_uuid="[{$current_domain}]";
+</script>
+<block name="head_extend"></block>
+</head>
+<body style="min-width:900px;" >
+	<div id="loading"><i class="loadingicon"></i><span>Loading...</span></div>
+	<div id="right_tools_wrapper">
+		<!--<span id="refresh_wrapper" title="refr" ><i class="fa fa-refresh right_tool_icon"></i></span>-->
+	</div>
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a href="#" class="brand">
+				<small> 
+						UnoPBX
+				</small>
+				</a>
+				<div class="pull-left nav_shortcuts" >
+					<a class="btn btn-small btn-success" href="#" title="">
+						<i class="fa fa-th"></i>
+					</a>
+					
+					<a class="btn btn-small btn-info" href="#" title="">
+						<i class="fa fa-pencil"></i>
+					</a>
+
+					<a class="btn btn-small btn-warning" href="#" title="">
+						<i class="fa fa-home"></i>
+					</a>
+
+					<a class="btn btn-small btn-danger" href="#" title="">
+						<i class="fa fa-trash-o"></i>
+					</a>
+				</div>
+				<ul class="nav simplewind-nav pull-right">
+					<li class="light-blue">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+							<span class="user-info"> <small>Welcome,</small>admin</span>
+							<i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+							<li><a href="#"><i class="fa fa-cog"></i>Setting</a></li>
+							<li><a href="#"><i class="fa fa-user"></i>Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="{:u('user/login/index')}"><i class="fa fa-power-off"></i>Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+				
+				<form id="domain_select_form" action="__SELF__">
+				<select class="pull-right" style="margin: 7px 0px 0px 0px;" id="domain_select" name="domain_uuid">
+					<foreach name="domains" item="vo">
+						<php>$domain_selected=$vo['domain_uuid']==$current_domain?"selected":"";</php>
+						
+						<option value="[{$vo.domain_uuid}]" [{$domain_selected}]>[{$vo.domain_name}]</option>
+					</foreach> 
+				</select>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="main-container container-fluid">
+
+		<div class="sidebar" id="sidebar">
+			<!-- <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+			</div> -->
+			<div id="nav_wraper">
+				<ul class="nav nav-list">
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-cogs normal"></i>
+							<span class="menu-text normal">System</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+						
+						</ul>	
+					</li>
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-group normal"></i>
+							<span class="menu-text normal">Accounts</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+							<li>
+								<a href="[{:U('app/extensions/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Extensions</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:U('app/gateways/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Gateways</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:U('app/devices/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Devices</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+						</ul>	
+					</li>
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-phone normal"></i>
+							<span class="menu-text normal">Dialplan</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+							<li>
+								<a href="[{:u('app/inboundroutes/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Inbound Routes</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/outboundroutes/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Outbound Routes</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+						</ul>	
+					</li>
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-cubes normal"></i>
+							<span class="menu-text normal">Apps</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+							<li>
+								<a href="[{:u('app/callblock/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Call Block</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/callbroadcasts/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Call Broadcasts</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/fax/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Fax Server</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/followme/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Follow Me</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/hotdesking/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Hot Desking</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/musiconhold/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Music On Hold</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/recordings/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Recordings</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/timeconditions/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Time Conditions</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/voicemails/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Voicemails</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+							<li>
+								<a href="[{:u('app/clicktocall/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Click to Call</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+						</ul>	
+					</li>
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-bars normal"></i>
+							<span class="menu-text normal">Status</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+						
+						</ul>	
+					</li>
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-plus-circle normal"></i>
+							<span class="menu-text normal">Advanced</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+							<li>
+								<a href="[{:u('core/domains/index')}]" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Domains</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+							</li>
+						</ul>	
+					</li>
+					<!-- <li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-plane normal"></i>
+							<span class="menu-text normal">Global Forward</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+							<li>
+								<a href="#" class="dropdown-toggle">
+									<i class="fa fa-caret-right"></i>
+									<span class="menu-text">Submenu</span>
+									<b class="arrow fa fa-angle-right"></b>
+								</a>
+						</ul>	
+					</li> -->
+					<li>
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-file-text-o normal"></i>
+							<span class="menu-text normal">Ext Call Reports</span>
+							<b class="arrow fa fa-angle-right normal"></b>
+							<i class="fa fa-reply back"></i>
+							<span class="menu-text back">Back</span>
+						</a>
+						<ul  class="submenu">
+
+						</ul>	
+					</li>
+				</ul>
+			</div>
+			
+		</div>
+
+		<div class="main-content">
+			<div class="page-content" id="content" style="min-height: 500px;padding:20px;overflow: auto;" ng-app>
+				<block name="content"></block>
+			</div>
+		</div>
+	</div>
+	
+	<script src="__ROOT__/assets/simpleboot/js/jquery.js"></script>
+	<script src="__ROOT__/assets/simpleboot/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__ROOT__/assets/js/jquery.noty.packaged.min.js"></script>
+	<script src="__ROOT__/assets/js/functions.js"></script>
+	<script>
+	$(function(){
+		$content=$("#content");
+		var headerheight=86;
+		$content.height($(window).height()-headerheight);
+		
+		var b = $("#sidebar").hasClass("menu-min");
+		var a = "ontouchend" in document;
+		$(".nav-list").on(
+				"click",
+				function(g) {
+					var f = $(g.target).closest("a");
+					if (!f || f.length == 0) {
+						return
+					}
+					if (!f.hasClass("dropdown-toggle")) {
+						if (b && "click" == "tap"
+								&& f.get(0).parentNode.parentNode == this) {
+							var h = f.find(".menu-text").get(0);
+							if (g.target != h && !$.contains(h, g.target)) {
+								return false
+							}
+						}
+						return
+					}
+					var d = f.next().get(0);
+					if (!$(d).is(":visible")) {
+						var c = $(d.parentNode).closest("ul");
+						if (b && c.hasClass("nav-list")) {
+							return
+						}
+						c.find("> .open > .submenu").each(
+								function() {
+									if (this != d
+											&& !$(this.parentNode).hasClass(
+													"active")) {
+										$(this).slideUp(150).parent().removeClass(
+												"open")
+									}
+								})
+					} else {
+					}
+					if (b && $(d.parentNode.parentNode).hasClass("nav-list")) {
+						return false;
+					}
+					$(d).slideToggle(150).parent().toggleClass("open");
+					return false;
+				});
+		
+		$("#domain_select").change(function(){
+			location.href="__SELF__"+"&domain_uuid="+$(this).val();
+		})
+		
+		$("#sidebar a[href*='[{$controller_url}]']").parents("ul").parents("li").children(".dropdown-toggle").click();
+		$.noty.defaults = {
+			    layout: 'top',
+			    theme: 'defaultTheme',
+			    type: 'alert',
+			    text: '', // can be html or string
+			    dismissQueue: true, // If you want to use queue feature set this true
+			    template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+			    animation: {
+			        open: {height: 'toggle'},
+			        close: {height: 'toggle'},
+			        easing: 'swing',
+			        speed: 500 // opening & closing animation speed
+			    },
+			    timeout: 1500, // delay for closing event. Set false for sticky notifications
+			    force: false, // adds notification to the beginning of queue when set to true
+			    modal: false,
+			    maxVisible: 5, // you can set max visible notification for dismissQueue true option,
+			    killer: false, // for close all notifications before show
+			    closeWith: ['click'], // ['click', 'button', 'hover']
+			    callback: {
+			        onShow: function() {},
+			        afterShow: function() {},
+			        onClose: function() {},
+			        afterClose: function() {}
+			    },
+			    buttons: false // an array of buttons
+			};
+	});
+	
+	</script>
+	<block name="scripts_extend"></block>
+
+</body>
+</html>

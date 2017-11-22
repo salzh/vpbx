@@ -1,0 +1,56 @@
+<extend name=":main" />
+<block name="head_extend">
+	<script>
+		function listController($scope,$http){
+			sp_list({
+				url:'__API_ROOT__index.pl?action=getextensionlist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deleteextension&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=getextensionlist&domain_uuid='+current_domain_uuid,
+					params:{extension_uuid:uuid}
+				},$scope,$http);
+			}
+		}
+	</script>
+
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('extensions/index')}]">Extensions</a></li>
+     <li><a href="[{:u('extensions/add')}]">Add Extensions</a></li>
+  </ul>
+  <div class="well">Use this to configure your SIP extensions.</div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>
+					Extension
+				</th>
+				<th>Call Group</th>
+				<th>Enabled</th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr  ng-repeat="vo in lists">
+				<td>
+					{{vo.extension}}
+				</td>
+				<td>{{vo.call_group}}</td>
+				<td>{{vo.enabled}}</td>
+				<td>{{vo.description}}</td>
+				<td>
+					<a href="[{:u('extensions/edit',array('extension_uuid'=>'{{vo.extension_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+					<a href="#" title="Delete" ng-click="delete(vo.extension_uuid)"><i class="fa fa-trash-o"></i></a>
+				</td>
+			</tr>
+	</tbody>
+  </table>
+</block>

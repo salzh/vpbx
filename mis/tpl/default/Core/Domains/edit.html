@@ -1,0 +1,50 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			sp_data({
+				url:"__API_ROOT__index.pl?action=gettenant&domain_uuid=[{$_GET['domain_uuid']}]",
+				params:$scope.vo
+			},$scope,$http);
+			
+			/*save*/
+			$scope.save=function(){
+				var domain={};
+				domain.tenantname=$scope.vo.domain_name;
+				domain.description=$scope.vo.domain_description;
+				domain.domain_uuid=$scope.vo.domain_uuid;
+				sp_save({
+					url:"__API_ROOT__index.pl?action=edittenant",
+					params:domain
+				},$scope,$http);
+			}
+		}
+	</script>
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('domains/index')}]">Domains</a></li>
+     <li><a href="[{:u('domains/add')}]">Add Domains</a></li>
+  </ul>
+  <div class="well">Enter the domain details below.</div>
+  <form class="form-horizontal"  ng-controller="editController" ng-submit="save()" name="form">
+  <div class="control-group">
+    <label class="control-label" for="input-name">Name:</label>
+    <div class="controls">
+      <input type="text" id="input-name" placeholder="Enter the name of the domain." ng-model="vo.domain_name">
+      <span class="help-block">Enter the name of the domain.</span>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-description">Description:</label>
+    <div class="controls">
+      <input type="text" id="input-description" placeholder="Description" ng-model="vo.domain_description" >
+      <span class="help-block">Enter a description, if desired.</span>
+    </div>
+  </div>
+  <div class="form-actions">
+  <input type="hidden" ng-model="vo.domain_uuid"/>
+  <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+</block>

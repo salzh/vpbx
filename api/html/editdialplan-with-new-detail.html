@@ -1,0 +1,61 @@
+    <html>
+        <header><title>route test</title></header>
+        <body>
+            <form method=post action='/pbx/index.pl'>
+                <input type=hidden name=mod value=Dialplan />
+                <input type=hidden name=action value=editdialplan />
+               dialplan_name: <input type=text name=dialplan_name  value='3109990000' size=50/><br>
+           dialplan_enabled: <input type=text name=dialplan_enabled  value='true' size=50/><br>
+           dialplan_uuid: <input type=text name=dialplan_uuid  value='08feacc0-a4c1-498e-8ed2-7b91bb9d54a5' size=50/><br>
+           dialplan_context: <input type=text name=dialplan_context  value='public' size=50/><br>
+           app_uuid: <input type=text name=app_uuid  value='c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' size=50/><br>
+           dialplan_number: <input type=text name=dialplan_number  value='3109990000' size=50/><br>
+           dialplan_description: <input type=text name=dialplan_description  value='to be deleted' size=50/><br>
+           dialplan_order: <input type=text name=dialplan_order  value='81' size=50/><br>
+           dialplan_details[0][dialplan_detail_group]: <input type=text name=dialplan_details[0][dialplan_detail_group]  value='' size=50/><br>
+           dialplan_details[0][dialplan_detail_break]: <input type=text name=dialplan_details[0][dialplan_detail_break]  value='' size=50/><br>
+           dialplan_details[0][dialplan_detail_order]: <input type=text name=dialplan_details[0][dialplan_detail_order]  value='10' size=50/><br>
+           dialplan_details[0][dialplan_detail_type]: <input type=text name=dialplan_details[0][dialplan_detail_type]  value='context' size=50/><br>
+           dialplan_details[0][dialplan_detail_inline]: <input type=text name=dialplan_details[0][dialplan_detail_inline]  value='' size=50/><br>
+           dialplan_details[0][dialplan_detail_tag]: <input type=text name=dialplan_details[0][dialplan_detail_tag]  value='condition' size=50/><br>
+           dialplan_details[0][dialplan_detail_uuid]: <input type=text name=dialplan_details[0][dialplan_detail_uuid]  value='47b46b6e-6b66-4393-9c59-90cb86c69cd9' size=50/><br>
+           dialplan_details[0][dialplan_detail_data]: <input type=text name=dialplan_details[0][dialplan_detail_data]  value='public' size=50/><br>
+           dialplan_details[1][dialplan_detail_uuid]: <input type=text name=dialplan_details[1][dialplan_detail_uuid]  value='77c36512-75e2-406d-a294-d6f2ae44ac86' size=50/><br>
+           dialplan_details[1][dialplan_detail_inline]: <input type=text name=dialplan_details[1][dialplan_detail_inline]  value='' size=50/><br>
+           dialplan_details[1][dialplan_detail_break]: <input type=text name=dialplan_details[1][dialplan_detail_break]  value='' size=50/><br>
+           dialplan_details[1][dialplan_detail_type]: <input type=text name=dialplan_details[1][dialplan_detail_type]  value='destination_number' size=50/><br>
+           dialplan_details[1][dialplan_detail_data]: <input type=text name=dialplan_details[1][dialplan_detail_data]  value='3109990000' size=50/><br>
+           dialplan_details[1][dialplan_detail_tag]: <input type=text name=dialplan_details[1][dialplan_detail_tag]  value='condition' size=50/><br>
+           dialplan_details[1][dialplan_detail_group]: <input type=text name=dialplan_details[1][dialplan_detail_group]  value='' size=50/><br>
+           dialplan_details[1][dialplan_detail_order]: <input type=text name=dialplan_details[1][dialplan_detail_order]  value='20' size=50/><br>
+           dialplan_details[2][dialplan_detail_order]: <input type=text name=dialplan_details[2][dialplan_detail_order]  value='30' size=50/><br>
+           dialplan_details[2][dialplan_detail_type]: <input type=text name=dialplan_details[2][dialplan_detail_type]  value='set' size=50/><br>
+           dialplan_details[2][dialplan_detail_break]: <input type=text name=dialplan_details[2][dialplan_detail_break]  value='' size=50/><br>
+           dialplan_details[2][dialplan_detail_group]: <input type=text name=dialplan_details[2][dialplan_detail_group]  value='' size=50/><br>
+           dialplan_details[2][dialplan_detail_data]: <input type=text name=dialplan_details[2][dialplan_detail_data]  value='accountcode=false' size=50/><br>
+           dialplan_details[2][dialplan_detail_uuid]: <input type=text name=dialplan_details[2][dialplan_detail_uuid]  value='1128cb67-303a-4c75-bd2a-9fa5fdae0c19' size=50/><br>
+           dialplan_details[2][dialplan_detail_tag]: <input type=text name=dialplan_details[2][dialplan_detail_tag]  value='action' size=50/><br>
+           dialplan_details[2][dialplan_detail_inline]: <input type=text name=dialplan_details[2][dialplan_detail_inline]  value='' size=50/><br>
+           dialplan_details[3][dialplan_detail_group]: <input type=text name=dialplan_details[3][dialplan_detail_group]  value='' size=50/><br>
+           dialplan_details[3][dialplan_detail_tag]: <input type=text name=dialplan_details[3][dialplan_detail_tag]  value='action' size=50/><br>
+           dialplan_details[3][dialplan_detail_break]: <input type=text name=dialplan_details[3][dialplan_detail_break]  value='' size=50/><br>
+           dialplan_details[3][dialplan_detail_uuid]: <input type=text name=dialplan_details[3][dialplan_detail_uuid]  value='ba17cefd-00ed-4e0b-b238-5a3c58431483' size=50/><br>
+           dialplan_details[3][dialplan_detail_data]: <input type=text name=dialplan_details[3][dialplan_detail_data]  value='100 XML shy.managedlogix.net' size=50/><br>
+           dialplan_details[3][dialplan_detail_inline]: <input type=text name=dialplan_details[3][dialplan_detail_inline]  value='' size=50/><br>
+           dialplan_details[3][dialplan_detail_order]: <input type=text name=dialplan_details[3][dialplan_detail_order]  value='41' size=50/><br>
+           dialplan_details[3][dialplan_detail_type]: <input type=text name=dialplan_details[3][dialplan_detail_type]  value='transfer' size=50/><br>
+
+             
+            dialplan_details[4][dialplan_detail_tag]: <input type=text name=dialplan_details[4][dialplan_detail_tag]  value='action' size=50/><br>
+           dialplan_details[4][dialplan_detail_break]: <input type=text name=dialplan_details[4][dialplan_detail_break]  value='' size=50/><br>
+           dialplan_details[4][dialplan_detail_uuid]: <input type=text name=dialplan_details[4][dialplan_detail_uuid]  value='ba17cefd-00ed-4e0b-b248-5a4c58441484' size=50/><br>
+           dialplan_details[4][dialplan_detail_data]: <input type=text name=dialplan_details[4][dialplan_detail_data]  value='100 XML shy.managedlogix.net' size=50/><br>
+           dialplan_details[4][dialplan_detail_inline]: <input type=text name=dialplan_details[4][dialplan_detail_inline]  value='' size=50/><br>
+           dialplan_details[4][dialplan_detail_order]: <input type=text name=dialplan_details[4][dialplan_detail_order]  value='41' size=50/><br>
+           dialplan_details[4][dialplan_detail_type]: <input type=text name=dialplan_details[4][dialplan_detail_type]  value='transfer' size=50/><br>
+ 
+             
+                <input type=submit value=submit />
+            </form>
+        </body>
+    </html>

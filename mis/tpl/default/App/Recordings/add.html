@@ -1,0 +1,62 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addrecording&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('recordings/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('recordings/index')}]">Recordings</a></li>
+     <li class="active"><a href="[{:u('recordings/add')}]">Add Recording</a></li>
+  </ul>
+  <div class="well">
+  	The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. 
+  	It can send incoming calls to an auto attendant, huntgroup, extension, external number, or a script. 
+  </div>
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Filename
+			(download): </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="recording_filename" ng-model="vo.recording_filename"
+				maxlength="255" value=""><br>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Recording Name
+			(play): </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="recording_name" ng-model="vo.recording_name"
+				maxlength="255" value=""><br> Recording Name. example:
+			recording_x
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="recording_description" ng-model="vo.recording_description"
+				maxlength="255" value=""><br> You may enter a
+			description here for your reference (not parsed).
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('recordings/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

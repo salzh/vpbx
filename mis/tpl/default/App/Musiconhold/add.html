@@ -1,0 +1,92 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script src="__ROOT__/assets/js/ajaxfileupload.js"></script>
+	<script>
+	function editController($scope, $http) {
+
+		/*save*/
+		$scope.ajaxFileUpload = function() {
+			$("#loading").ajaxStart(function () {
+	    		$(this).show();
+	     	}).ajaxComplete(function () {
+	     		$(this).hide();
+	 		});
+
+	         $.ajaxFileUpload({
+		         //url: "http://173.161.25.154/unopbx2/test.php",
+		         url:"__API_ROOT__index.pl?action=addmusiconhold&domain_uuid="+current_domain_uuid,
+		         fileElementId: 'fileToUpload',
+		         dataType: 'json',
+		         data:  $scope.vo,
+		         success: function (data, status) {
+		        	 if(data.error.code=="1"){
+		     			noty({text: data.error.message,
+		     				type:'error',
+		     				layout:'center'
+		     			});
+		     		}else{
+		     			noty({text: 'Saved success!',
+		    				type:'success',
+		    				layout:'center',
+		    				modal: true,
+		    				callback:{
+		    					afterClose:function() {
+		    							location.href="[{:u('musiconhold/index')}]";
+		    					}
+		    				}
+		    			});
+		     		}
+		         },
+		         error: function (data, status, e) {
+		         }
+		     });
+
+	         return false;
+		}
+	}
+		
+	</script>
+</block>
+
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('musiconhold/index')}]">Music on Hold</a></li>
+     <li class="active"><a href="[{:u('musiconhold/add')}]">Add Music on Hold</a></li>
+  </ul>
+<form class="form-horizontal" id="fileform" ng-controller="editController"  ng-submit="ajaxFileUpload()" name="form">
+
+	<div class="control-group">
+		<label class="control-label" for="input-name"> File: </label>
+		<div class="controls">
+			<input  type="file" name="recordingfile" id="fileToUpload">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Sampling: </label>
+		<div class="controls">
+			<select name="upload_sampling_rate" ng-model="vo.upload_sampling_rate">
+				<option value="8000">8 kHz</option>
+				<option value="16000">16 kHz</option>
+				<option value="32000">32 kHz</option>
+				<option value="48000">48 kHz</option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Category: </label>
+		<div class="controls">
+			<select id="upload_category" name="upload_category" class="formfld" style="width: auto;" ng-model="vo.upload_category">
+				<option value="">Default</option>
+			</select> OR
+			<input type="text" name="upload_category_new" id="upload_category_new" placeholder="Add new category" ng-model="vo.upload_category_new">
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Upload</button>
+		<a href="[{:u('musiconhold/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>

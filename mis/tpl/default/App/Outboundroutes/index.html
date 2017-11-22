@@ -1,0 +1,61 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function listController($scope,$http){
+			
+			sp_list({
+				url:'__API_ROOT__index.pl?action=getoutboundroutelist&domain_uuid='+current_domain_uuid
+			},$scope,$http);
+			
+			$scope.delete=function(uuid){
+				sp_delete({
+					url:'__API_ROOT__index.pl?action=deleteoutboundroute&domain_uuid='+current_domain_uuid,
+					listurl:'__API_ROOT__index.pl?action=getoutboundroutelist&domain_uuid='+current_domain_uuid,
+					params:{outbound_uuid:uuid}
+				},$scope,$http);
+			}
+			
+		}
+	
+	</script>
+
+</block>
+<block name="content">
+	<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('outboundroutes/index')}]">Outbound Routes</a></li>
+     <li><a href="[{:u('outboundroutes/add')}]">Add Outbound Routes</a></li>
+  </ul>
+  <div class="well">
+  Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.
+  </div>
+  
+  <table class="table table-hover" ng-controller="listController">
+  	<thead>
+	  	<tr>
+			<tr>
+				<th>Name</th>
+				<th>Number</th>
+				<th>Order</th>
+				<th>Enabled</th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+	</thead>
+	<tbody>
+		<tr  ng-repeat="vo in lists">
+		   <td></td>
+		   <td></td>
+		   <td></td>
+		   <td>{{vo.dialplan_enabled}}</td>
+		   <td></td>
+		   <td>
+		   		<a href="[{:u('outboundroutes/edit',array('outbound_uuid'=>'{{vo.outbound_uuid}}'))}]" title="Edit"><i class="fa fa-edit"></i></a>
+		   		<a href="#" title="Delete" ng-click="delete(vo.outbound_uuid)"><i class="fa fa-trash-o"></i></a>
+		   	</td>
+		</tr>
+	</tbody>
+	
+  
+  
+  </table>
+</block>

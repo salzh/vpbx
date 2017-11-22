@@ -1,0 +1,411 @@
+<extend name=":main" />
+
+<block name="scripts_extend">
+	<script>
+		function editController($scope, $http) {
+			sp_data(
+					{
+						url : "__API_ROOT__index.pl?action=getfollowme&extension_uuid=[{$_GET['extension_uuid']}]&domain_uuid="
+								+ current_domain_uuid,
+						params : $scope.vo
+					}, $scope, $http);
+
+			/*save*/
+			$scope.save = function() {
+				sp_save({
+					url : "__API_ROOT__index.pl?action=editextension",
+					params : $scope.vo
+				}, $scope, $http);
+			}
+		}
+	</script>
+</block>
+
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li class="active"><a href="[{:u('followme/index')}]">Follow Me</a></li>
+  </ul>
+  <div class="well">
+  	 Use the links to configure call forward follow me, or do no disturb. 
+  	 The following list the extensions that have been assigned to this user account.
+  </div>
+  <form class="form-horizontal" ng-controller="editController"  ng-submit="save()" name="form">
+	<div class="control-group">
+   <label class="control-label" for="input-name">
+	<strong>Call Forward:</strong>
+	</label>
+   <div class="controls">
+   <label class="radio inline">
+  <input type="radio" name="forward_all_enabled" ng-model="vo.forward_all_enabled" id="forward_all_enabled" onclick="document.getElementById('follow_me_enabled').checked=true;document.getElementById('follow_me_disabled').checked=true;document.getElementById('dnd_enabled').checked=false;document.getElementById('dnd_disabled').checked=true;" value="true"> Enable 
+</label>
+ <label class="radio inline">
+ <input type="radio" name="forward_all_enabled" ng-model="vo.forward_all_enabled" id="forward_all_disabled" onclick="" value="false" checked> Disabled 
+</label>
+			</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Number:
+</label>
+   <div class="controls">
+	<input class="formfld" type="text" name="forward_all_destination" ng-model="vo.forward_all_destination" maxlength="255" value=""><br>
+</div>
+</div>
+<br>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	<strong>Follow Me:</strong>
+</label>
+   <div class="controls">
+   <label class="radio inline">
+ <input type="radio" name="follow_me_enabled" ng-model="vo.follow_me_enabled" id="follow_me_enabled"
+				value="true"
+				onclick="document.getElementById('forward_all_enabled').checked=true;document.getElementById('forward_all_disabled').checked=true;document.getElementById('dnd_enabled').checked=false;document.getElementById('dnd_disabled').checked=true;"> Enable 
+	</label>
+	<label class="radio inline">
+ <input type="radio" name="follow_me_enabled" ng-model="vo.follow_me_enabled" id="follow_me_disabled"
+				value="false" onclick="" checked> Disabled 
+	</label>
+	<br><br>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Ring 1st Number:
+</label>
+   <div class="controls">
+	<input class="formfld ui-autocomplete-input" type="text"
+				name="destination_data_1" ng-model="vo.destination_data_1" id="destination_data_1" maxlength="255"
+				value="" autocomplete="off"><span role="status"
+				aria-live="polite" class="ui-helper-hidden-accessible"></span>
+	Delay
+	<select class="formfld" style="width: 80px;" name="destination_delay_1" ng-model="vo.destination_delay_1"><option
+					value=""></option>
+<option value="0" selected>0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+	Timeout
+	<select class="formfld" style="width: 80px;"
+				name="destination_timeout_1" ng-model="vo.destination_timeout_1"><option value=""></option>
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Ring 2nd Number:
+</label>
+   <div class="controls">
+	<input class="formfld ui-autocomplete-input" type="text"
+				name="destination_data_2" ng-model="vo.destination_data_2" id="destination_data_2" maxlength="255"
+				value="" autocomplete="off"><span role="status"
+				aria-live="polite" class="ui-helper-hidden-accessible"></span>
+	Delay
+	<select class="formfld" style="width: 80px;" name="destination_delay_2" ng-model="vo.destination_delay_2"><option
+					value=""></option>
+<option value="0" selected>0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+	Timeout
+	<select class="formfld" style="width: 80px;"
+				name="destination_timeout_2" ng-model="vo.destination_timeout_2"><option value=""></option>
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Ring 3rd Number:
+</label>
+   <div class="controls">
+	<input class="formfld ui-autocomplete-input" type="text"
+				name="destination_data_3" ng-model="vo.destination_data_3" id="destination_data_3" maxlength="255"
+				value="" autocomplete="off"><span role="status"
+				aria-live="polite" class="ui-helper-hidden-accessible"></span>
+	Delay
+	<select class="formfld" style="width: 80px;" name="destination_delay_3" ng-model="vo.destination_delay_3"><option
+					value=""></option>
+<option value="0" selected>0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+	Timeout
+	<select class="formfld" style="width: 80px;"
+				name="destination_timeout_3" ng-model="vo.destination_timeout_3"><option value=""></option>
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Ring 4th Number:
+</label>
+   <div class="controls">
+	<input class="formfld ui-autocomplete-input" type="text"
+				name="destination_data_4" ng-model="vo.destination_data_4" id="destination_data_4" maxlength="255"
+				value="" autocomplete="off"><span role="status"
+				aria-live="polite" class="ui-helper-hidden-accessible"></span>
+	Delay
+	<select class="formfld" style="width: 80px;" name="destination_delay_4" ng-model="vo.destination_delay_4"><option
+					value=""></option>
+<option value="0" selected>0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+	Timeout
+	<select class="formfld" style="width: 80px;"
+				name="destination_timeout_4" ng-model="vo.destination_timeout_4"><option value=""></option>
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Ring 5th Number:
+</label>
+   <div class="controls">
+	<input class="formfld ui-autocomplete-input" type="text"
+				name="destination_data_5" ng-model="vo.destination_data_5" id="destination_data_5" maxlength="255"
+				value="" autocomplete="off"><span role="status"
+				aria-live="polite" class="ui-helper-hidden-accessible"></span>
+	Delay
+	<select class="formfld" style="width: 80px;" name="destination_delay_5" ng-model="vo.destination_delay_5"><option
+					value=""></option>
+<option value="0" selected>0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30">30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+	Timeout
+	<select class="formfld" style="width: 80px;"
+				name="destination_timeout_5" ng-model="vo.destination_timeout_5"><option value=""></option>
+<option value="0">0</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="15">15</option>
+<option value="20">20</option>
+<option value="25">25</option>
+<option value="30" selected>30</option>
+<option value="35">35</option>
+<option value="40">40</option>
+<option value="45">45</option>
+<option value="50">50</option>
+<option value="55">55</option>
+<option value="60">60</option>
+<option value="65">65</option>
+<option value="70">70</option>
+<option value="75">75</option>
+<option value="80">80</option>
+<option value="85">85</option>
+<option value="90">90</option>
+<option value="95">95</option>
+<option value="100">100</option></select>
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	Caller ID Name:
+</label>
+   <div class="controls">
+  <input class="formfld" type="text" name="cid_name_prefix" ng-model="vo.cid_name_prefix"
+				maxlength="255" value=""><br>
+Set the caller ID name prefix. 
+</div>
+</div>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+Call Prompt:
+</label>
+   <div class="controls">
+<select class="formfld" name="call_prompt" ng-model="vo.call_prompt"><option value="true">true</option>
+<option value="false">false</option></select><br>
+Prompt to accept the call for external destinations. 
+</div>
+</div>
+<br>
+<div class="control-group">
+   <label class="control-label" for="input-name">
+	<strong>Do Not Disturb:</strong>
+</label>
+   <div class="controls">
+   <label class="radio inline">
+ <input type="radio" name="dnd_enabled" ng-model="vo.dnd_enabled" id="dnd_enabled" value="true"
+				onclick="document.getElementById('forward_all_enabled').checked=true;document.getElementById('forward_all_disabled').checked=true;document.getElementById('follow_me_enabled').checked=true;document.getElementById('follow_me_disabled').checked=true;"> Enable 
+	</label>
+	<label class="radio inline">
+<input type="radio" name="dnd_enabled" ng-model="vo.dnd_enabled" id="dnd_disabled" value="false"
+				onclick="" checked> Disabled 	</label>
+		
+	<br>
+</div>
+</div>
+  
+  <div class="form-actions">
+  <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+  
+</block>

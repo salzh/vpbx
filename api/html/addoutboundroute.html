@@ -1,0 +1,14 @@
+<html>
+    <header><title>route test</title></header>
+    <body>
+        <form method=post action='/pbx/index.pl'>
+            <input type=hidden name=mod value=Route />
+            <input type=hidden name=action value=addoutboundroute />
+           gateway: <input type=text name=gateway /><br>
+           dialplan_expression: <input type=text name=dialplan_expression /><br>
+           dialplan_description: <input type=text name=dialplan_description /><br>
+
+            <input type=submit value=submit />
+        </form>
+    </body>
+</html>

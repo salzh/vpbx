@@ -1,0 +1,263 @@
+<extend name=":main" />
+<block name="scripts_extend">
+	<script>
+		function editController($scope,$http){
+			
+			/*save*/
+			$scope.save=function(){
+				sp_add({
+					url:"__API_ROOT__index.pl?action=addgateway&domain_uuid="+current_domain_uuid,
+					params:$scope.vo,
+					redirect:"[{:u('gateways/index')}]"
+				},$scope,$http);
+			}
+			
+		}
+		
+	</script>
+</block>
+
+<block name="content">
+<ul class="nav nav-tabs">
+     <li><a href="[{:u('gateways/index')}]">Gateways</a></li>
+     <li class="active"><a href="[{:u('gateways/add')}]">Add Gateway</a></li>
+  </ul>
+  <div class="well">
+  	Defines a connections to a SIP Provider or another SIP server.
+  </div>
+<form class="form-horizontal"  ng-controller="editController"  ng-submit="save()" name="form">
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Gateway: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="gateway" ng-model="vo.gateway" maxlength="255" required>
+			<br> Enter the gateway name here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Username: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="username" ng-model="vo.username" maxlength="255" autocomplete="off" required>
+			<br> Enter the username here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Password: </label>
+		<div class="controls">
+			<input class="formfld" type="password" name="password" ng-model="vo.password" id="password" autocomplete="off" maxlength="255" required>
+			<br><span onclick="document.getElementById('show_password').innerHTML = ''">Enter the password here.</span>
+			<span id="show_password"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> From User: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="from_user" ng-model="vo.from_user" maxlength="255"
+				value=""><br> Enter the from-user here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> From Domain: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="from_domain" ng-model="vo.from_domain" maxlength="255">
+			<br> Enter the from-domain here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Proxy: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="proxy" ng-model="vo.proxy" maxlength="255" required>
+			<br> Enter the domain or IP address of the proxy.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Realm: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="realm" ng-model="vo.realm" maxlength="255"
+				value=""><br> Enter the realm here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Expire Seconds:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="expire_seconds" ng-model="vo.expire_seconds"
+				maxlength="255" value="800"><br> Enter the
+			expire-seconds here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Register: </label>
+		<div class="controls">
+			<select class="formfld" name="register" ng-model="vo.register"><option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Choose whether to
+			register.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Retry Seconds:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="retry_seconds" ng-model="vo.retry_seconds"
+				maxlength="255" value="60"><br> Enter the retry-seconds
+			here.
+		</div>
+	</div>
+	<div class="advanced">
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Distinct To: </label>
+		<div class="controls">
+			<select class="formfld" name="distinct_to" ng-model="vo.distinct_to"><option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Enter the distinct_to
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Auth Username:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="auth_username" ng-model="vo.auth_username"
+				maxlength="255" value=""><br> Enter the auth-username
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="extension" ng-model="vo.extension" maxlength="255"
+				value=""><br> Enter the extension here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Register
+			Transport: </label>
+		<div class="controls">
+			<select class="formfld" name="register_transport" ng-model="vo.register_transport"><option
+					value=""></option>
+				<option value="udp">udp</option>
+				<option value="tcp">tcp</option>
+				<option value="tls">tls</option></select><br> Choose whether to
+			register-transport.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Register Proxy:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="register_proxy" ng-model="vo.register_proxy"
+				maxlength="255" value=""><br> Enter the register proxy
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Outbound Proxy:
+		</label>
+		<div class="controls">
+			<input class="formfld" type="text" name="outbound_proxy" ng-model="vo.outbound_proxy"
+				maxlength="255" value=""><br> Enter the outbound proxy
+			here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Caller Id In
+			From: </label>
+		<div class="controls">
+			<select class="formfld" name="caller_id_in_from" ng-model="vo.caller_id_in_from"><option
+					value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Enter the
+			caller-id-in-from.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Supress Cng: </label>
+		<div class="controls">
+			<select class="formfld" name="supress_cng" ng-model="vo.supress_cng"><option value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Enter the supress-cng
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Sip CID Type: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="sip_cid_type" ng-model="vo.sip_cid_type"
+				maxlength="255" value=""><br> Enter the sip cid type:
+			none, pid, and rpid.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Codec
+			Preferences: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="codec_prefs" ng-model="vo.codec_prefs" maxlength="255"
+				value=""><br> Enter the codec preferences as a list.
+			Ex: PCMA,PCMU,G722
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Extension In
+			Contact: </label>
+		<div class="controls">
+			<select class="formfld" name="extension_in_contact" ng-model="vo.extension_in_contact"><option
+					value=""></option>
+				<option value="true">true</option>
+				<option value="false">false</option></select><br> Enter the Extension In
+			Contact
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Ping: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="ping" ng-model="vo.ping" maxlength="255"
+				value=""><br> Enter the ping interval here in seconds.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Channels:: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="channels" ng-model="vo.channels" maxlength="255"
+				value=""><br> Maximum number of simultaneous channels
+			available in the gateway.
+		</div>
+	</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Context: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="context" ng-model="vo.context" maxlength="255"
+				value="public"><br> Enter the context here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Profile: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="profile" ng-model="vo.profile" maxlength="255"
+				value="external"><br> Enter the profile here.
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Enabled: </label>
+		<div class="controls">
+			<select class="formfld" name="enabled" ng-model="vo.enabled"><option value=""></option>
+				<option value="true" selected>true</option>
+				<option value="false">false</option></select><br> Enable or Disable the
+			Gateway
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="input-name"> Description: </label>
+		<div class="controls">
+			<input class="formfld" type="text" name="description" ng-model="vo.description" maxlength="255"
+				value=""><br> Enter the description of the gateway
+			here.
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Save</button>
+		<a href="[{:u('gateways/index')}]" class="btn btn-info">Back</a>
+	</div>
+</form>
+
+</block>
