@@ -25,6 +25,7 @@ sub getcdr () {
         limit => {type => 'int', maxlen => 50, notnull => 0, default => 100},
         missed => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
         cc_queue => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+        queue_extension => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         cc_result => {type => 'string', maxlen => 50, notnull => 0, default => ''}
     );
 	 
@@ -69,7 +70,11 @@ sub getcdr () {
             	 $condition .= "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
             } 
         } else {
-            $condition .= "$_='$post_add{$_}'";
+            if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
+               $condition .= "$_ IS '$post_add{$_}'";
+            } else {            
+                $condition .= "$_='$post_add{$_}'";
+            }
         }
     }
     
