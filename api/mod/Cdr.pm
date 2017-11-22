@@ -78,12 +78,12 @@ sub getcdr () {
             } elsif ($post_add{call_result} eq 'failed') {
             	 $condition .= "(answer_stamp is null and bridge_uuid is null and billsec = 0 and sip_hangup_disposition = 'send_refuse')";
             } 
-        } elsif ($_ eq 'cc_queue' ) {
-            if (index($post_add{$_}, '@') != -1) {
-                $post_add{$_} .= '@' . $domain{name};
-            }
-            
         } else {
+            if ($_ eq 'cc_queue' ) {
+                if (index($post_add{$_}, '@') != -1) {
+                    $post_add{$_} .= '@' . $domain{name};
+                }                
+            }
             if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
                $condition .= "$_ IS $post_add{$_}";
             } else {            
