@@ -80,15 +80,15 @@ sub getcdr () {
             } 
         } else {
             if ($_ eq 'cc_queue' ) {
-                if (index($post_add{$_}, '@') == -1) {
+                if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
+                    $condition .= "$_ IS $post_add{$_}"; next;
+                } elsif (index($post_add{$_}, '@') == -1) {
                     $post_add{$_} .= '@' . $domain{name};
+                    $condition .= "$_='$post_add{$_}'";
                 }                
-            }
-            if (lc($post_add{$_}) eq 'null' or lc($post_add{$_}) eq 'not null') {
-               $condition .= "$_ IS $post_add{$_}";
-            } else {            
+            } else {                       
                 $condition .= "$_='$post_add{$_}'";
-            }
+            }           
         }
     }
     
