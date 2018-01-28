@@ -111,7 +111,7 @@ sub getcdr () {
                             "total");
     $response{data}{total} = $hash{1}{total} ? $hash{1}{total} : 0;
     
-    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension';
+    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction';
     if ($response{stat} ne 'fail') {
     	
         %hash = &database_select_as_hash(
@@ -130,12 +130,16 @@ sub getcdr () {
         		local $uuid				 = $_;
                 
         		local $recording_filename = "/var/lib/freeswitch/recordings/$domain{name}/archive/". strftime('%Y', localtime($start_epoch)) . "/" . strftime('%b',  localtime($start_epoch)) . "/" . strftime('%d', localtime($start_epoch)) .  "/$uuid.wav";
-						 	warn $recording_filename;
-						$recording_url = '';
-						if (-e $recording_filename) {
-							$recording_url = "http://$domain{name}/app/recordings/recordings2.php?filename=" . encode_base64($recording_filename, '');
-							$hash{$_}{recording_url} = $recording_url;
-						}
+                if (!-e $recording_filename) {
+                    $recording_filename  = "/var/lib/freeswitch/recordings/$domain{name}/archive/". strftime('%Y', localtime($start_epoch)) . "/" . strftime('%b',  localtime($start_epoch)) . "/" . strftime('%d', localtime($start_epoch)) .  "/$uuid.mp3";
+                }
+                
+                warn $recording_filename;
+                $recording_url = '';
+                if (-e $recording_filename) {
+                    $recording_url = "http://$domain{name}/app/recordings/recordings2.php?filename=" . encode_base64($recording_filename, '');
+                    $hash{$_}{recording_url} = $recording_url;
+                }
             local $queue_name = $hash{$_}{cc_queue};
             if ($queue_name) {
                 local ($n) = split '@', $queue_name;
