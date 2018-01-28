@@ -111,7 +111,7 @@ sub getcdr () {
                             "total");
     $response{data}{total} = $hash{1}{total} ? $hash{1}{total} : 0;
     
-    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction';
+    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition';
     if ($response{stat} ne 'fail') {
     	
         %hash = &database_select_as_hash(
@@ -155,6 +155,28 @@ sub getcdr () {
                 $hash{$_}{queue_uuid} = '';                
             }
             
+            if ($hash{$_}{direction} eq 'inbound' or $hash{$_}{direction} eq 'local') {
+                if ($hash{$_}{answer_stamp} && $hash{$_}{bridge_uuid}) {
+                    $call_result = 'answered';
+                } elsif($hash{$_}{answer_stamp} && !$hash{$_}{bridge_uuid}) {
+                    $call_result = 'voicemail';
+                } elsif(!$hash{$_}{answer_stamp} && !$hash{$_}{bridge_uuid} && $hash{$_}{sip_hangup_disposition} ne 'send_refuse') {
+                    $call_result = 'cancelled';
+                } else {
+                    $call_result = 'failed';
+                }
+                    
+            } elsif ($hash{$_}{direction} eq 'outbound') {
+                if ($hash{$_}{answer_stamp} && $hash{$_}{bridge_uuid}) {
+                    $call_result = 'answered';
+                } elsif(!$hash{$_}{answer_stamp} && $hash{$_}{bridge_uuid}) {
+                    $call_result = 'cancelled';
+                } else {
+                     $call_result = 'failed';
+                }
+            }
+            
+            $hash{$_}{call_result} = $call_result;
             
             push @{$response{data}{list}}, $hash{$_};
         }
