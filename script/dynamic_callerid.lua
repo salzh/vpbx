@@ -79,11 +79,9 @@
         x = 0;
         dbh:query(sql, params, function(row)
             dynamic_callerid = row.dynamic_callerid;
-            --destination_caller_id_name = row.destination_caller_id_name;
-            --destination_caller_id_number = row.destination_caller_id_number;
             x = x + 1;
         end);
-    then
+    else
         dynamic_callerid = 'true';
 	end
     
