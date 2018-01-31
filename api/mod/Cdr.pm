@@ -111,7 +111,7 @@ sub getcdr () {
                             "total");
     $response{data}{total} = $hash{1}{total} ? $hash{1}{total} : 0;
     
-    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition';
+    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
     if ($response{stat} ne 'fail') {
     	
         %hash = &database_select_as_hash(
