@@ -29,7 +29,7 @@ sub connect_db() {
     $ahost ||= $config{dbhost};
     $auser ||= $config{dbuser};
     $apass ||= $config{dbpass};
-   
+    local $dbh;
 	if ($type eq 'sqlite') {
     $dbh = DBI->connect("dbi:SQLite:dbname=$adb","","");
 	} elsif($type eq 'pg') {
