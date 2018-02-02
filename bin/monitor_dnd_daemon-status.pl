@@ -193,7 +193,7 @@ sub do_update_agent_status() {
         return;
     }  
     
-    $cmd = "fs_cli -rx \"callcenter_config agent set state $agent_name '$state'\"";
+    $cmd = "fs_cli -rx \"callcenter_config agent set status $agent_name '$state'\"";
     warn &now() . ": $cmd";
     
     $res = `$cmd`;
