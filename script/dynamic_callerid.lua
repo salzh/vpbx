@@ -87,7 +87,7 @@ debug["sql"] = true;
     
 	if (dynamic_callerid and dynamic_callerid == 'true')  then
 		--get the destination_number
-		sql = "SELECT destination_number FROM v_destinations where destination_number like :destination_number and domain_uuid = :domain_uuid and destination_enabled='true' and destination_description is not like '%DID%' ";
+		sql = "SELECT destination_number FROM v_destinations where destination_number like :destination_number and domain_uuid = :domain_uuid and destination_enabled='true' and destination_description  not like '%DID%' ";
 		local params = {destination_number = outbound_area_code .. '%', domain_uuid = domain_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
