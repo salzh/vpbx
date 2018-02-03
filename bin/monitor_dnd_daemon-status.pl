@@ -92,7 +92,7 @@ while (1) {
         next unless $ext_agent{$presence_id}{status} eq 'Available' or $ext_agent{$presence_id}{status} eq 'On Break';
         
         $agent_name = $ext_agent{$presence_id}{name};
-        if ($ext_agent{$presence_id}{status} eq 'Available') {
+        if ($ext_agent{$presence_id}{status} eq 'Available' and $ext_agent{$presence_id}{state} eq 'Waiting') {
             
             #$cmd = "fs_cli -rx \"callcenter_config agent set state $agent_name 'In a queue call'\"";
             #warn &now() . ": $cmd";
