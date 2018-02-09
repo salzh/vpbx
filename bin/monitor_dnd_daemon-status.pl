@@ -98,10 +98,9 @@ while (1) {
             #warn &now() . ": $cmd";
             
             $res = &do_update_agent_status($agent_name, 'On Break');
+            $tmp{$presence_id} = $ext_agent{$presence_id};
             #$res = `$cmd`;
-        }
-        
-        $tmp{$presence_id} = $ext_agent{$presence_id};
+        }       
     }
     
     for $presence_id (keys %last_ext_agent) {
