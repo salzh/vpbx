@@ -60,6 +60,7 @@ if (-e '/usr/local/freeswitch/db/callcenter.db') {
 
 $dbh = &connect_db('sqlite', $db);
 $dbh_main = &connect_db();
+%history = ();
 while (1) {
     if ($debug) {
         print "$i: \n";
@@ -195,9 +196,21 @@ sub do_update_agent_status() {
         return;
     }  
     
+    if ($state eq 'On Break') {
+        $history{$agent_name} = 'On Break';
+    }
+    
+    if ($state eq 'Available') {
+        if (!$history{$agent_name} && $state eq 'Available') {
+            warn "That Break Status is not set by me, Let's ignore this action!\n";
+            return;
+        }        
+    }
+    
+    
     $cmd = "fs_cli -rx \"callcenter_config agent set status $agent_name '$state'\"";
     warn &now() . ": $cmd";
-    
+    delete $history{$agent_name};
     $res = `$cmd`;
      
     return $res;
