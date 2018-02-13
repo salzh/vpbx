@@ -89,6 +89,8 @@ while (1) {
         warn "check $presence_id " . $ext_agent{$presence_id}{name} . " " . $ext_agent{$presence_id}{status};
 
         next unless $ext_agent{$presence_id};
+        $tmp{$presence_id} = $ext_agent{$presence_id};
+
         next unless $ext_agent{$presence_id}{status} eq 'Available' or $ext_agent{$presence_id}{status} eq 'On Break';
         
         $agent_name = $ext_agent{$presence_id}{name};
@@ -98,9 +100,10 @@ while (1) {
             #warn &now() . ": $cmd";
             
             $res = &do_update_agent_status($agent_name, 'On Break');
-            $tmp{$presence_id} = $ext_agent{$presence_id};
             #$res = `$cmd`;
-        }       
+        }
+        
+
     }
     
     for $presence_id (keys %last_ext_agent) {
