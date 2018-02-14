@@ -202,16 +202,17 @@ sub do_update_agent_status() {
     }
     
     if ($state eq 'Available') {
-        if (!$history{$agent_name} && $state eq 'Available') {
-            warn "That Break Status is not set by me, Let's ignore this action!\n";
+        if (!$history{$agent_name}) {
+            warn "That Break Status  of $agent_name is not set by me, Let's ignore this action!\n";
             return;
-        }        
+        }
+        
+        delete $history{$agent_name};
     }
     
     
     local $cmd = "fs_cli -rx \"callcenter_config agent set status $agent_name '$state'\"";
     warn &now() . ": $cmd";
-    delete $history{$agent_name};
     $res = `$cmd`;
      
     return $res;
