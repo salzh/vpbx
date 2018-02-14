@@ -111,7 +111,7 @@ while (1) {
         if (!$tmp{$presence_id}) {
             $agent_name = $last_ext_agent{$presence_id}{name};
             #$cmd = "fs_cli -rx \"callcenter_config agent set state $agent_name 'Waiting'\"";
-            warn &now() . ": $cmd";
+            #warn &now() . ": $cmd";
             
             $res = &do_update_agent_status($agent_name, 'Available');
 
@@ -191,8 +191,9 @@ sub do_update_agent_status() {
     $sth->execute();
     $res = $sth->fetchrow_hashref;
     
+    warn "$sql: " . $res->{domain_setting_value} . "\n";
     if ($res->{domain_setting_value} ne 'true') {        
-        warn "skip_busy_aent:$domain_name not enabled, ignored!!!\n";
+        warn "skip_busy_agent:$domain_name not enabled, ignored!!!\n";
         return;
     }  
     
@@ -208,7 +209,7 @@ sub do_update_agent_status() {
     }
     
     
-    $cmd = "fs_cli -rx \"callcenter_config agent set status $agent_name '$state'\"";
+    local $cmd = "fs_cli -rx \"callcenter_config agent set status $agent_name '$state'\"";
     warn &now() . ": $cmd";
     delete $history{$agent_name};
     $res = `$cmd`;
