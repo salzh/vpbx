@@ -457,7 +457,7 @@ sub Recording() {
 	local $src_to = $hash{$src_presence_id}{voicemail_mail_to} || ''; 
 	local $dst_to = $hash{$dst_presence_id}{voicemail_mail_to} || '';
 	
-	&send_recoriding_email($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt);
+	&send_recording_email($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt);
 	
 	return 1;
 }
