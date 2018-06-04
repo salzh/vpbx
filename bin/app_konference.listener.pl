@@ -122,7 +122,7 @@ $remote->autoflush(1);
 $logres = login_cmd("auth ClueCon$BLANK");
 sleep 1;
 
-$logres = login_cmd("event CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE CUSTOM callcenter::info$BLANK");
+$logres = login_cmd("event CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE MEDIA_BUG_STOP CUSTOM callcenter::info$BLANK");
 $eventcount = 0;
 %Channel_Spool = ();
 local $| = 1;
@@ -152,6 +152,7 @@ while (<$remote>) {
 			elsif ($event{'Event-Name'} eq "CHANNEL_BRIDGE")			{ Bridge(%event); }
 			elsif ($event{'Event-Name'} eq "CHANNEL_HANGUP")		{ Hangup(%event); }
 			elsif ($event{'Event-Name'} eq "CHANNEL_HANGUP_COMPLETE") { End(%event); }
+			elsif ($event{'Event-Name'} eq "MEDIA_BUG_STOP") { Recording(%event); }
 			elsif ($event{'Event-Subclass'} eq "callcenter%3A%3Ainfo" &&  $event{'CC-Action'} eq 'agent-status-change') {&update_agent_status(%event);}
 				
 			
@@ -429,6 +430,77 @@ sub update_agent_status() {
 		
 	}
 	return 1;
+}
+
+sub Recording() {
+	local(%event) = @_;
+	local $src_presence_id = uri_unescape($event{'Channel-Presence-ID'});
+	local ($src, $src_domain) = split '@', $src_presence_id;
+	local $dst_presence_id = uri_unescape($event{'variable_sip_req_uri'});
+	local ($dst, $dst_domain) = split '@', $dst_presence_id;
+	local $dt = uri_unescape($event{'Event-Date-Local'});
+	local $recording_file = $event{'Media-Bug-Target'};
+	
+	if (!-e $recording_file) {
+		return;
+	}
+	
+	
+	local %hash = &database_select_as_hash("select  format('%s@%s',voicemail_id, domain_name) tmpkey, voicemail_mail_to
+										   from v_voicemails
+										   left join v_domains on v_domains.domain_uuid=v_voicemails.domain_uuid
+										   where
+										   (voicemail_id='$src' or voicemail_id='$dst') and 
+										   (domain_name='$src_domain' or domain_name='$dst_domain')",
+										   "voicemail_mail_to,domain_name,voicemail_id");
+	
+	local $src_to = $hash{$src_presence_id}{voicemail_mail_to} || ''; 
+	local $dst_to = $hash{$dst_presence_id}{voicemail_mail_to} || '';
+	
+	&send_recoriding_email($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt);
+	
+	return 1;
+}
+
+sub send_recording_email () {
+	local ($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt) = @_;
+	
+	local $email_body =<<B;
+<html>
+<font face="arial">
+<b>New Recording From <a href="tel:$src_presence_id"> to "$src_presence_id"  To <a href="tel:$src_presence_id">$dst_presence_id</a></b><br/>
+<hr noshade="noshade" size="1"/>
+Created: $dt<br/>
+src: $src_presence_id<br/>
+dst: $dst_presence_id<br/>
+</font>
+</html>
+B
+
+	local $email_subject =<<S;
+New Recording  from $src_presence_id to $dst_presence_id
+S
+
+    $email_subject =~ s/'/&#39;/g;
+	$email_subject =~ s/"/&#34;/g;
+    $email_subject =~ s/\n//g;
+    
+	$email_body =~ s/'/&#39;/g;
+	$email_body =~ s/"/&#34;/g;
+    $email_body =~ s/\n//g;
+	if ($src_to) {
+		
+		$cmd = "luarun email.lua $src_to $src_to ' ' '$email_subject' '$email_body' '$recording_file' false";
+		warn $cmd;
+		system("fs_cli -rx \"$cmd\"");
+	}
+	
+	if ($dst_to) {
+		$cmd = "luarun email.lua $dst_to $dst_to ' ' '$email_subject' '$email_body' '$recording_file' false";
+		warn $cmd;
+		system("fs_cli -rx \"$cmd\"");
+	}
+
 }
 sub log_debug() {
 	$msg = shift;
