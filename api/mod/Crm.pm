@@ -6,6 +6,7 @@
 =cut
 
 use POSIX qw(strftime);
+$record_format = 'wav';
 sub addincomingbycallerid () {
 	local %params = (
         dialplan_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
@@ -321,7 +322,7 @@ sub makecall {
 	
 	%hash = &database_select_as_hash("select 1,user_record from v_extensions where user_context='$domain_name' and extension='$ext'", 'record');
 	if ($hash{1}{record} eq 'all' or $hash{1}{record} eq 'outbound') {
-		$record = "api_on_answer='uuid_record $uuid start /usr/local/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.wav'";
+		$record = "api_on_answer='uuid_record $uuid start /usr/local/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format'";
 	}
 	$output = &runswitchcommand('internal', "bgapi originate {ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$src_uri  $realdest XML $domain_name");
  
@@ -510,6 +511,81 @@ sub agentlogin () {
 sub agentlogout () {
     &agentlogin('Logged Out');
 }
+
+
+sub stoprecording() {
+	&_dorecording(0);
+}
+
+sub startrecording() {
+	&_dorecording(1);
+}
+sub _dorecording() {
+	local $mode = shift;
+	local $ext = $form{ext} || $form{extension};
+	%domain    = &get_domain();
+    $domain_name    = $domain{name};
+    if (!$domain{name}) {
+        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+    }
+	
+	
+	$ext = "$ext\@$domain";
+	%raw_calls = &parse_calls();
+	for (keys %raw_calls) {
+		if ($raw_calls{$_}{presence_id} eq $ext) {
+			$found = 1;
+			$direction = 'outbound';
+		
+		}
+		
+		if ($raw_calls{$_}{b_presence_id} eq $ext) {
+			$found = 1;
+			$direction = 'inbound';			
+		}
+		
+		
+		if ($found) {
+			$uuid = $_;
+			$time = $raw_calls{$_}{created_epoch};
+			
+			last;
+		}
+		
+	}
+	
+	if (!$found) {
+		 $response{stat}    = 'fail';
+    	 $response{message} = '$ext is not in any bridged call';
+	} else {
+		if (!$mode) {
+			$output = &runswitchcommand('internal', "uuid_record $main_uuid stop all");
+		} else {
+			
+			$year = strftime('%Y', localtime);
+			$mon  = strftime('%b', localtime);
+			$day  = strftime('%d', localtime);
+			
+			$recording_file = "/usr/local/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format";
+			for $i (0..20) {
+				$tmp_recording_file = "/usr/local/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid" . ($i ? "_$i":"") . ".$record_format";
+				if (!-e $tmp_recording_file) {
+					$recording_file = $tmp_recording_file;
+					last;
+				}			
+			}
+			
+			$output = &runswitchcommand('internal', "uuid_record $uuid start $recording_file");
+		}	
+		$response{stat}    = 'ok';
+		$response{message} = $output;
+	}
+	
+	&print_json_response(%response);
+
+}
+
+
 
 sub getuuid() {
     #try best to get call uuid by different condition
