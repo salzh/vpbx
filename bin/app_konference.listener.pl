@@ -456,8 +456,13 @@ sub Recording() {
 	
 	local $src_to = $hash{$src_presence_id}{voicemail_mail_to} || ''; 
 	local $dst_to = $hash{$dst_presence_id}{voicemail_mail_to} || '';
+	if ($recording_file =~ /_\d+\.(?:wav|mp3)$/) {
+		&send_recording_email($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt);
+	} else {
+		warn "$recording_file is not demanded recording, ignore!!!\n";
+	}
 	
-	&send_recording_email($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt);
+	
 	
 	return 1;
 }
