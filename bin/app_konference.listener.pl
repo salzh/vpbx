@@ -436,16 +436,26 @@ sub Recording() {
 	local(%event) = @_;
 	local $src_presence_id = uri_unescape($event{'Channel-Presence-ID'});
 	local ($src, $src_domain) = split '@', $src_presence_id;
-	local $dst_presence_id = uri_unescape($event{'variable_sip_req_uri'});
+	local $cc_agent =  uri_unescape($event{'variable_cc_agent'});
+	
+	if ($cc_agent) {
+		$dst_presence_id = $cc_agent;
+		$cc_dst = $event{'variable_last_sent_callee_id_number'};
+	} else {	
+		$dst_presence_id = uri_unescape($event{'variable_sip_req_uri'});
+	}
 	local ($dst, $dst_domain) = split '@', $dst_presence_id;
+	$dst = $cc_dst if $cc_dst;
 	local $dt = uri_unescape($event{'Event-Date-Local'});
 	local $recording_file = $event{'Media-Bug-Target'};
 	
 	if (!-e $recording_file) {
+		warn "$recording_file not found, ignore!!\n";
 		return;
 	}
 	
-	
+	warn "$recording_file found!!\n";
+
 	local %hash = &database_select_as_hash("select  format('%s@%s',voicemail_id, domain_name) tmpkey, voicemail_mail_to
 										   from v_voicemails
 										   left join v_domains on v_domains.domain_uuid=v_voicemails.domain_uuid
@@ -469,7 +479,7 @@ sub Recording() {
 
 sub send_recording_email () {
 	local ($src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt) = @_;
-	
+	warn "$src_to, $dst_to, $recording_file, $src_presence_id, $dst_presence_id, $dt!\n";
 	local $email_body =<<B;
 <html>
 <font face="arial">
