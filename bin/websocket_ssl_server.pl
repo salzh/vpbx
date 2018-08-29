@@ -86,7 +86,11 @@ sub check_incoming_event () {
   		if ((($hash{from} eq $incoming_connections{$uuid}{agent}) ||
   				($hash{to} eq $incoming_connections{$uuid}{agent})) &&
   				$hash{domain_name} eq $incoming_connections{$uuid}{domain_name}) {
-   				$incoming_connections{$uuid}{conn}->send_utf8($event_str) if $event_str;
+                if ($event_str) {
+                   local $conn = $incoming_connections{$uuid}{conn};
+                    warn "send [" . $conn->ip() . ':' . $conn->port() . "]\n$event_str\n\n";
+                    $conn->send_utf8($event_str) ;
+                }                
    		}
    	}
     
