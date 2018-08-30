@@ -319,7 +319,7 @@ sub End() {
 	local $host = ($host_prefix . $event{'Caller-Context'}) || $default_host;
 	warn "Get Hangup-Complete " . $uuid;
 									
-	#print Dumper(\%event);
+	print Dumper(\%event);
 	local $now = &now();
  	local $a_uuid = $event{'variable_originating_leg_uuid'};
 
@@ -336,7 +336,7 @@ sub End() {
 	$domain_name = '' if $domain_name eq '_undef_';
 
 	if (!$domain_name) {
-		$domain_name = $event{'variable_domain_name'};
+		$domain_name = $event{'variable_domain_name'} || $event{variable_dialed_domain};
 		if ($event{'variable_cc_queue'}) {
 			$call_type = 'queue';
 		}
