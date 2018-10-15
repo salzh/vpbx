@@ -91,14 +91,14 @@ sub blindtransfer {
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
     
     if ($direction eq 'outbound') {
-    	$buuid = &get_bchannel_uuid($uuid);
+    	$uuid = &get_bchannel_uuid($uuid);
     }
 		
-		if (!$uuid) {
-			 $response{stat}    = 'fail';
-    	 $response{message} = '$uuid is not in any bridged call';
-		} else {
-	    $output = &runswitchcommand('internal', "uuid_transfer $buuid $dest");
+	if (!$uuid) {
+		$response{stat}    = 'fail';
+		$response{message} = '$uuid is not in any bridged call';
+	} else {
+	    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest");
 	    $response{stat}          = 'ok';
 	    $response{message} = $output;
     }
