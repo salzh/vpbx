@@ -18,7 +18,7 @@ $ssl_server = IO::Socket::SSL->new(
   Proto         => 'tcp',
   SSL_cert_file => '/etc/ssl/certs/nginx.crt',
   SSL_key_file  => '/etc/ssl/private/nginx.key',
-) or die "fail to create ssl";
+) or die "fail to create ssl: $!";
 
 Net::WebSocket::Server->new(
     #listen => 8088,
