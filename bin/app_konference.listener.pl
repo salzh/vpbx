@@ -347,6 +347,10 @@ sub End() {
 	warn $event{'Caller-Caller-ID-Number'} . " end call with  " . $event{'Caller-Callee-ID-Number'};
 	$queue_name = $event{'variable_cc_queue'};
 	if ($queue_name) {
+		if ($event{'variable_hangup_cause'} eq 'LOSE_RACE') {
+			return;
+		}
+		
 		local ($queue, $d) = split '@', $queue_name;
 		%hash = &database_select_as_hash("select 1,call_center_queue_uuid from v_call_center_queues left join v_domains on v_call_center_queues.domain_uuid=v_domains.domain_uuid where domain_name='$d' and queue_name='$queue'", 'call_center_queue_uuid');
 		$call_center_queue_uuid = $hash{1}{call_center_queue_uuid};
