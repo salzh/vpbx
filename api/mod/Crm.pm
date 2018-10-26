@@ -98,7 +98,9 @@ sub blindtransfer {
 		$response{stat}    = 'fail';
 		$response{message} = '$uuid is not in any bridged call';
 	} else {
-	    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest");
+	    %domain         = &get_domain();
+    	    $domain_name    = $domain{name};
+	    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest XML $domain_name");
 	    $response{stat}          = 'ok';
 	    $response{message} = $output;
     }
