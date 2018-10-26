@@ -99,7 +99,7 @@ sub blindtransfer {
 		$response{message} = '$uuid is not in any bridged call';
 	} else {
 	    %domain         = &get_domain();
-    	    $domain_name    = $domain{name};
+    	$domain_name    = $domain{name};
 	    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest XML $domain_name");
 	    $response{stat}          = 'ok';
 	    $response{message} = $output;
@@ -121,15 +121,20 @@ sub startattendedtransfer () {
     
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
     
-  
-    %calls = &parse_calls();
-    if (!$calls{$uuid}{b_uuid}) {
-        &print_api_error_end_exit(160, "$uuid not in any calls");
-    }
-    
-    
+	if ($direction eq 'inbound') {
+		
+	
+		%calls = &parse_calls();
+		for  (keys %calls) {
+		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
+		}
+		
+		if ($uuid_xtt) {
+			&print_api_error_end_exit(160, "$uuid not in any calls");
+		}
+		
+	} else  {
 		$uuid_xtt = $calls{$uuid}{b_uuid};
-	  if ($direction eq 'outbound') {
     	($uuid_xtt, $uuid) = ($uuid, $uuid_xtt);
     }
 		
