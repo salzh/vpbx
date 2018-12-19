@@ -121,11 +121,18 @@ sub startattendedtransfer () {
     
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
     %calls = &parse_calls();
-	$uuid_xtt = $calls{$uuid}{b_uuid};
-	if ($direction eq 'inbound') {		
-		if (!$uuid_xtt) {
+
+	if ($direction eq 'inbound') {
+		
+	
+		for  (keys %calls) {
+		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
+		}
+		
+		if ($uuid_xtt) {
 			&print_api_error_end_exit(160, "$uuid not in any calls");
-		}		
+		}
+		
 	} else  {
 		$uuid_xtt = $calls{$uuid}{b_uuid};
     	($uuid_xtt, $uuid) = ($uuid, $uuid_xtt);
