@@ -120,11 +120,11 @@ sub startattendedtransfer () {
     }
     
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
-    
+    %calls = &parse_calls();
+
 	if ($direction eq 'inbound') {
 		
 	
-		%calls = &parse_calls();
 		for  (keys %calls) {
 		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
 		}
