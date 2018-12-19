@@ -199,7 +199,7 @@ sub startattendedtransfer () {
 
 sub cancelattendedtransfer() {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
-    local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
+    local  $direction = 'inbound'; #$form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
     if ($direction eq 'outbound') {
     	$uuid = &get_bchannel_uuid($uuid);
@@ -216,7 +216,7 @@ sub cancelattendedtransfer() {
 
 sub confirmattendedtransfer() {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
-    local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
+    local  $direction = 'inbound';  #$form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
     if ($direction eq 'outbound') {
     	$uuid = &get_bchannel_uuid($uuid);
