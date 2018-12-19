@@ -347,7 +347,7 @@ sub End() {
 	warn $event{'Caller-Caller-ID-Number'} . " end call with  " . $event{'Caller-Callee-ID-Number'};
 	$queue_name = $event{'variable_cc_queue'};
 	if ($queue_name) {
-		if ($event{'variable_hangup_cause'} eq 'LOSE_RACE') {
+		if ($event{'variable_hangup_cause'} eq 'LOSE_RACE' || $event{'Hangup-Cause'}  eq 'LOSE_RACE') {
 			return;
 		}
 		

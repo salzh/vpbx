@@ -226,10 +226,12 @@ sub confirmattendedtransfer() {
 
     %calls = &parse_calls();
     if (!$calls{$uuid}{b_uuid}) {
+	warn "$uuid not in any calls!";
         &print_api_error_end_exit(160, "$uuid not in any calls");
     }
     
     $output   = &runswitchcommand('internal', "uuid_bridge $calls{$uuid}{b_uuid} $uuid_xtt");
+    warn "uuid_bridge $calls{$uuid}{b_uuid} $uuid_xtt!!";
    
     $response{message} = $output;    
    	&print_json_response(%response);
