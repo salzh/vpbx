@@ -129,7 +129,8 @@ sub startattendedtransfer () {
 		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
 		}
 		
-		if ($uuid_xtt) {
+		if (!$uuid_xtt) {
+			warn "$uuid not in any calls!";
 			&print_api_error_end_exit(160, "$uuid not in any calls");
 		}
 		
@@ -184,7 +185,6 @@ sub startattendedtransfer () {
 	
 	warn $src_uri;
 	$output = &runswitchcommand('internal', "uuid_setvar $uuid src_uri $src_uri");
-
 	
     
     $output = &runswitchcommand('internal', "uuid_setvar $uuid uuid_xtt $uuid_xtt");
@@ -226,7 +226,7 @@ sub confirmattendedtransfer() {
 
     %calls = &parse_calls();
     if (!$calls{$uuid}{b_uuid}) {
-	warn "$uuid not in any calls!";
+		warn "$uuid not in any calls!";
         &print_api_error_end_exit(160, "$uuid not in any calls");
     }
     
