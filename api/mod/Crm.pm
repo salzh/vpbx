@@ -90,18 +90,23 @@ sub blindtransfer {
     local ($dest) = &database_clean_string($form{dest});
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
     
-    if ($direction eq 'outbound') {
-    	$uuid = &get_bchannel_uuid($uuid);
-    }
+	%calls = parse_calls();
+    if ($direction eq 'inbound') {		
+		for  (keys %calls) {
+		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
+		}
+	} else {
+		$uuid_xtt = $calls{$uuid}{b_uuid};	
+	}
 		
-	if (!$uuid) {
+	if (!$uuid_xtt) {
 		$response{stat}    = 'fail';
 		$response{message} = '$uuid is not in any bridged call';
 	} else {
 	    %domain         = &get_domain();
     	$domain_name    = $domain{name};
-	    $output = &runswitchcommand('internal', "uuid_transfer $uuid $dest XML $domain_name");
-	    $response{stat}          = 'ok';
+	    $output = &runswitchcommand('internal', "uuid_transfer $uuid_xtt $dest XML $domain_name");
+	    $response{stat}    = 'ok';
 	    $response{message} = $output;
     }
     
@@ -123,21 +128,18 @@ sub startattendedtransfer () {
     %calls = &parse_calls();
 
 	if ($direction eq 'inbound') {
-		
-	
 		for  (keys %calls) {
 		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
-		}
-		
-		if (!$uuid_xtt) {
-			warn "$uuid not in any calls!";
-			&print_api_error_end_exit(160, "$uuid not in any calls");
-		}
-		
+		}		
 	} else  {
 		$uuid_xtt = $calls{$uuid}{b_uuid};
-    	($uuid_xtt, $uuid) = ($uuid, $uuid_xtt);
+    	#($uuid_xtt, $uuid) = ($uuid, $uuid_xtt);
     }
+		
+	if (!$uuid_xtt) {
+		warn "$uuid not in any calls!";
+		&print_api_error_end_exit(160, "$uuid not in any $direction calls");
+	}
 		
     #check if api-park dialplan is created
     %hash = &database_select_as_hash("select
@@ -487,10 +489,21 @@ sub hold () {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
-    if ($direction eq 'outbound') {
-    	$uuid = &get_bchannel_uuid($uuid);
-    }
-    $output = &runswitchcommand("internal", "uuid_hold toggle $uuid");
+    %calls = parse_calls();
+    if ($direction eq 'inbound') {		
+		for  (keys %calls) {
+		   $uuid_xtt =  $_ if $calls{$_}{b_uuid} eq $uuid;
+		}
+	} else {
+		$uuid_xtt = $calls{$uuid}{b_uuid};	
+	}
+	
+	if (!$uuid_xtt) {
+		warn "$uuid not in any calls!";
+		&print_api_error_end_exit(160, "$uuid not in any $direction calls");
+	}
+	
+    $output = &runswitchcommand("internal", "uuid_hold toggle $uuid_xtt");
     
     $response{stat}          = 'ok';
     $response{message} = $output;
