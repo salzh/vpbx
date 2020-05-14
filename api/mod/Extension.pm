@@ -104,6 +104,7 @@ description:
           $post_add{directory_full_name}          = &database_clean_string(substr($form{directory_full_name}, 0, 50));
           $post_add{voicemail_password}           = &database_clean_string(substr($form{voicemail_password}, 0, 50));
           $post_add{description}                  = &database_clean_string(substr($form{description}, 0, 50));
+          $post_add{domain_uuid}                  = $domain{uuid};
         
           
           &post_data (
