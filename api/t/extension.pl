@@ -4,7 +4,7 @@ use Test::More;
 plan tests => 8;
 use Data::Dumper;
 
-$domain_name =  'shy.managedlogix.net';
+$domain_name =  'newmentor.managedlogix.net';
 warn $domain_name;
 
 %hash = &send_request('/pbx/index.pl?action=addextension&extension=3000&description=it is extension for test, should be deleted'. "&&domain_name=$domain_name");
