@@ -32,11 +32,12 @@ sub addtenant () {
     
     if ($response{stat} ne 'fail') {
         &post_data ( 'domain'    => '',
-			'urlpath'   => '/core/domain_settings/domain_edit.php',
+			'urlpath'   => '/core/domains/domain_edit.php',
 			'reload'	=> 1,
 			'data'   =>  [
 				'domain_name' => $domain_name,
 				'domain_description' => $descr,
+                'domain_enabled' => 'true',
 				'submit' => 'Save'
 			]
         );
