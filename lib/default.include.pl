@@ -84,7 +84,7 @@ sub default_ua_init2() {
 
 
 sub do_pbx_login_check() {
-	$check_url = "http://$app{pbx_host}/app/edit/index.php?dir=xml";
+	$check_url = "http://$app{pbx_host}/core/databases/databases.php";
 	warn "$check_url: Cookie: $app{pbx_cookie}";
 	$res = $global_useragent->request(GET $check_url, %global_headers);
 	#warn Dumper($res);
