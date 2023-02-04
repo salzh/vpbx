@@ -8,7 +8,7 @@
 =cut
 
 BEGIN {
-	unshift @INC, './mod';
+	unshift @INC, './mod', '/var/www/vpbx/api';
 }
 
 
