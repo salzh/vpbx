@@ -59,7 +59,23 @@ submit:Create Account
                                 from
                                     v_users
                                 where
-                                    username='$post_add{username}' and
+                                    username='$post_add{group_name}' ",
+                                'uuid');
+        if ($hash{1}{uuid}) {
+            $post_add{group_uuid_name} = $hash{1}{uuid} . "|" . $post_add{group_name};
+        } else {
+            $response{stat}	= "fail";
+            $response{message}	= "group=" .  $post_add{group_name} . " not found!";
+        }
+    }
+    
+     if ($response{stat} ne 'fail') {
+        %hash = &database_select_as_hash("select
+                                    1,group_uuid
+                                from
+                                    v_groups
+                                where
+                                    group_name='$post_add{username}' and
                                     domain_uuid='$domain{uuid}'",
                                 'uuid');
         if ($hash{1}{uuid}) {
@@ -71,7 +87,7 @@ submit:Create Account
     if ($response{stat} ne 'fail') {    
         &post_data (
                 'domain_uuid' => $domain{uuid},
-                'urlpath'     => '/core/users/signup.php',
+                'urlpath'     => '/core/users/user_edit.php',
                 'reload'      => 1,
                 'data'        => [%post_add]);
         
