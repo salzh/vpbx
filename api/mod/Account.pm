@@ -53,7 +53,7 @@ submit:Create Account
         &print_api_error_end_exit(110, "password/confirmpassword is not same");        
     }
     $post_add{password_confirm} = $post_add{confirmpassword};
-    $post_add{domain_uuuid} = $post_add{$domain{uuid}};
+    $post_add{domain_uuid} = $post_add{$domain{uuid}};
     
     if ($response{stat} ne 'fail') {
         %hash = &database_select_as_hash("select
