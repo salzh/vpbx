@@ -52,6 +52,7 @@ submit:Create Account
     if ($post_add{password} ne $post_add{confirmpassword}) {
         &print_api_error_end_exit(110, "password/confirmpassword is not same");        
     }
+    $post_add{password_confirm} = $post_add{confirmpassword};
     
     if ($response{stat} ne 'fail') {
         %hash = &database_select_as_hash("select
