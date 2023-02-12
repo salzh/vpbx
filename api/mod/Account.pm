@@ -55,9 +55,9 @@ submit:Create Account
     
     if ($response{stat} ne 'fail') {
         %hash = &database_select_as_hash("select
-                                    1,group_name
+                                    1,group_uuid
                                 from
-                                    v_users
+                                    v_groups
                                 where
                                     group_name='$post_add{group_name}' ",
                                 'uuid');
