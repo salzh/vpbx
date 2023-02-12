@@ -55,11 +55,11 @@ submit:Create Account
     
     if ($response{stat} ne 'fail') {
         %hash = &database_select_as_hash("select
-                                    1,user_uuid
+                                    1,group_name
                                 from
                                     v_users
                                 where
-                                    username='$post_add{group_name}' ",
+                                    group_name='$post_add{group_name}' ",
                                 'uuid');
         if ($hash{1}{uuid}) {
             $post_add{group_uuid_name} = $hash{1}{uuid} . "|" . $post_add{group_name};
@@ -75,7 +75,7 @@ submit:Create Account
                                 from
                                     v_groups
                                 where
-                                    group_name='$post_add{group_name}' and
+                                    group_name='$post_add{username}' and
                                     domain_uuid='$domain{uuid}'",
                                 'uuid');
         if ($hash{1}{uuid}) {
