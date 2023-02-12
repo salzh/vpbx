@@ -75,7 +75,7 @@ submit:Create Account
                                 from
                                     v_groups
                                 where
-                                    group_name='$post_add{username}' and
+                                    group_name='$post_add{group_name}' and
                                     domain_uuid='$domain{uuid}'",
                                 'uuid');
         if ($hash{1}{uuid}) {
