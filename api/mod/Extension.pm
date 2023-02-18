@@ -252,6 +252,7 @@ delete_uuid:';
           $post_add{description}                 = &database_clean_string(substr($form{description}, 0, 50));
          
           $post_add{extension_uuid} = $uuid;
+          $post_add{id} = $uuid;
           
           &post_data (
                      'domain_uuid' => $domain{uuid},
