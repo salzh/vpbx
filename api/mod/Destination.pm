@@ -48,7 +48,7 @@ destination_description:
       destination_distinctive_ring => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>''},
       destination_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'true'},
-	  domain_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+	  #domain_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
       destination_order => {type => 'bool', maxlen => 10, notnull => 0, default => '10'},
       destination_description => {type => 'string', maxlen => 255, notnull => 0, default => ''}      
    );
