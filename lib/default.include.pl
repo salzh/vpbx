@@ -232,7 +232,7 @@ sub change_domain () {
 	
 	return 1 if !&check_domain_change($uuid); #no need change again
 	
-	&post_data ('urlpath' => "/core/domain_settings/domains.php?domain_uuid=$uuid&domain_change=true",
+	&post_data ('urlpath' => "/core/domains/domains.php?domain_uuid=$uuid&domain_change=true",
 		'data' => ['domain_uuid' => $uuid, domain_change => 'true']
 		);
 	return 1;
