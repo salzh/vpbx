@@ -141,7 +141,8 @@ outbound_caller_id_name:
 outbound_caller_id_number:
 emergency_caller_id_name:
 emergency_caller_id_number:
-directory_full_name:
+directory_first_name:
+directory_last_name
 directory_visible:true
 directory_exten_visible:true
 limit_max:5
@@ -277,7 +278,8 @@ outbound_caller_id_name:
 outbound_caller_id_number:
 emergency_caller_id_name:
 emergency_caller_id_number:
-directory_full_name:
+directory_first_name:
+directory_last_name:
 directory_visible:true
 directory_exten_visible:true
 limit_max:5
