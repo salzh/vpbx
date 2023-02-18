@@ -192,7 +192,7 @@ delete_uuid:';
      
      if (!$domain{name}) {
           $response{stat}	= "fail";
-          $response{message}= "$domain not exists!";
+          $response{message}= "domain not exists!";
      }
       
      if ($response{stat} ne 'fail') {
@@ -207,7 +207,7 @@ delete_uuid:';
                               'uuid');
           if (!$hash{1}{uuid}) {
                $response{stat}		= "fail";
-               $response{message}	= "$extension not exists!";
+               $response{message}	= "extension not exists";
           }
      }
      
@@ -319,7 +319,7 @@ domain_uuid:879b9f9b-e69d-4181-9d81-f6775341cc7d';
      
      if (!$domain{name}) {
           $response{stat}		= "fail";
-          $response{message}	= "$domain not exists!";
+          $response{message}	= "domain not exists!";
      }
      
      $uuid   = &clean_str(substr($form{extension_uuid},0,50),"MINIMAL","-_");
@@ -388,7 +388,7 @@ domain_uuid:879b9f9b-e69d-4181-9d81-f6775341cc7d';
      
      if (!$domain{name}) {
           $response{stat}		= "ok";
-          $response{message}	= "$domain not exists!";
+          $response{message}	= "domain not exists!";
      }
      
      %hash = &database_select_as_hash_with_key (
@@ -546,7 +546,7 @@ submit:Save
                          'uuid');
           if (!$hash{1}{uuid}) {
                $response{stat}		= "fail";
-               $response{message}	= "$extension not exists!";
+               $response{message}	= "extension not exists";
           }
      }
      
