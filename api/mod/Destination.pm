@@ -8,30 +8,48 @@
 
 sub adddestination () {
    local $poststring_add = '
-destination_type:inbound
-destination_number:3109990000
-destination_context:public
-dialplan_details[0][dialplan_detail_type]:
-dialplan_details[0][dialplan_detail_order]:10
-dialplan_details[0][dialplan_detail_data]:transfer:100 XML shy.velantro.net
-fax_uuid:06281b95-0896-4834-9039-cd7317134df3
-destination_cid_name_prefix:
-destination_accountcode:
-destination_enabled:true
-destination_description:to be deleted
+destination_type: inbound
+destination_prefix: 
+destination_number: 18187298888
+destination_caller_id_name: 
+destination_caller_id_number: 
+destination_context: public
+destination_conditions[0][condition_field]: 
+destination_conditions[0][condition_expression]: 
+destination_actions[0]: transfer:101 XML 222.velantro.net
+user_uuid: 
+group_uuid: 
+destination_cid_name_prefix: 
+destination_record: true
+destination_hold_music: 
+destination_distinctive_ring: 
+destination_accountcode: 
+domain_uuid: 7ac0f7ec-be4e-4f57-ab8b-f2aff6d83b3a
+destination_order: 100
+destination_enabled: true
+destination_description: 
 ';
 
    local %params = (
-      destination_type => {type => 'enum:inbound,outbound', maxlen => 50, notnull => 1, default => ''},
+      destination_type => {type => 'enum:inbound,outbound', maxlen => 50, notnull => 1, default => 'inbound'},
       destination_number => {type => 'string', maxlen => 20, notnull => 1, default => ''},
       destination_context => {type => 'string', maxlen => 50, notnull => 0, default => 'public'},
-      'dialplan_details[0][dialplan_detail_type]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-      'dialplan_details[0][dialplan_detail_order]' => {type => 'int', maxlen => 3, notnull => 0, default => '10'},
-      'dialplan_details[0][dialplan_detail_data]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
-      fax_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_caller_id_name => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_caller_id_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      'destination_conditions[0][condition_field]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
+      'destination_conditions[0][condition_expression]' => {type => 'int', maxlen => 3, notnull => 0, default => ''},
+      'destination_actions[0]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
+      user_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      group_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_cid_name_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'true'},
+      destination_hold_music => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_distinctive_ring => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>''},
       destination_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'true'},
+	  domain_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+      destination_order => {type => 'bool', maxlen => 10, notnull => 0, default => '10'},
       destination_description => {type => 'string', maxlen => 255, notnull => 0, default => ''}      
    );
    
