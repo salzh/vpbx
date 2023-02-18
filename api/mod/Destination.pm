@@ -81,6 +81,7 @@ destination_description:
          }
       }
    }
+   $post_add{domain_uuid} = $domain{uuid};
    
    if ($response{stat} ne 'fail') {
       %hash = &database_select_as_hash(
