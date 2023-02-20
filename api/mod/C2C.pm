@@ -281,7 +281,7 @@ sub sendcallback {
 	local $ext 	= $form{ext};
 	local $domain  = $form{domain} || $HOSTNAME;
 	$domain		= $cgi->server_name();
-	($jwt_token) = $q->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
+	($jwt_token) = $cgi->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
 	if (!$jwt_token) {
 		$response{error} = 1;
 		$response{message} = 'jwt key not found!';
