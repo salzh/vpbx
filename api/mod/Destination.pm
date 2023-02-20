@@ -439,7 +439,7 @@ sub getdestinationdropdownlist() {
     
       $response{stat}	= "ok";
       $response{message}= "OK";
-      $response{data}{html} = $result;
+      $response{data}{html} = $result->content;
    }
    
    &print_json_response(%response);   
