@@ -294,7 +294,7 @@ sub sendcallback {
 	eval{$json=decode_jwt(token=>$jwt_token, key=>'callback');$hash = &Json2Hash($json);};
 	unless ($hash{sub} && $hash{aud}) {
 		$response{error} = 1;
-		$response{message} = "jwt_token=$jwt_token decode error!";
+		$response{message} = "jwt_token=$jwt_token decode error: $@: $!";
 		&print_json_response(%response);
 		return;		
 	}
