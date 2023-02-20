@@ -281,7 +281,7 @@ sub sendcallback {
 	local $ext 	= $form{ext};
 	local $domain  = $form{domain} || $HOSTNAME;
 	$domain		= $cgi->server_name();
-	($jwt_token) = $ENV{Authorization} =~ /Bearer (.+)$/;
+	($jwt_token) = $q->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
 	if (!$jwt_token) {
 		$response{error} = 1;
 		$response{message} = 'jwt key not found!';
@@ -294,7 +294,7 @@ sub sendcallback {
 	eval{$json=decode_jwt(token=>$jwt_token, key=>'callback');$hash = &Json2Hash($json);};
 	unless ($hash{sub} && $hash{aud}) {
 		$response{error} = 1;
-		$response{message} = 'jwt decode error!';
+		$response{message} = 'jwt_token=$jwt_token decode error!';
 		&print_json_response(%response);
 		return;		
 	}
