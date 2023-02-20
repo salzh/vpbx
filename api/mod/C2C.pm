@@ -334,7 +334,7 @@ sub sendcallback {
 	$response{error} = 0;
 	$response{message} = 'ok';
 	$response{actionid} = $form{actionid};
-	$response{callbackid} = $uuid
+	$response{callbackid} = $uuid;
 	&print_json_response(%response);	
 	
 }

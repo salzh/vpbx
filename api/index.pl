@@ -31,7 +31,7 @@ $module ||= 'Misc';
 my $f = "main" . "::$action";
 warn $f;
 if (defined &$f) {
-	unless ($action eq 'login' || $action eq 'logout' || $action eq 'logincheck') {
+	unless ($action eq 'login' || $action eq 'logout' || $action eq 'logincheck' || $module eq 'C2C') {
 		&saldial_http_error_401_if_not_authenticated();
 	}
 	&$f($form);
