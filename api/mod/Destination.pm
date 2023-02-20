@@ -439,6 +439,8 @@ sub getdestinationdropdownlist() {
     
       $response{stat}	= "ok";
       $response{message}= "OK";
+	  $content = $result->content;
+	  $content =~ s{<script>.+</script>}{}gs;
       $response{data}{html} = $result->content;
    }
    
