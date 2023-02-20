@@ -418,6 +418,31 @@ sub getdestination () {
    &print_json_response(%response);
 }
 
+sub getdestinationdropdownlist() {
+ 
+  
+   if ($response{stat} ne 'fail') {
+      %domain   = &get_domain();
 
+      if (!$domain{name}) {
+         $response{stat}		= "1";
+         $response{message}	= "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
+      }   
+   }
+   
+   if ($response{stat} ne 'fail') {   
+      $result = &post_data (
+         'domain_uuid' => $domain{uuid},
+         'urlpath'     => '/app/destinations/destination_json.php',
+         'reload'      => 0,
+         'data'        => []);
+    
+      $response{stat}	= "ok";
+      $response{message}= "OK";
+      $response{data}{html} = $result;
+   }
+   
+   &print_json_response(%response);   
+}
 
 return 1;
