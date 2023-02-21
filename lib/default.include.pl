@@ -277,7 +277,7 @@ sub get_jwt() {
 	}
 	$response{error} = 0;
 	$response{jwt_hash} = $jwt_hash;
-	return $response;
+	return %response;
 }
 
 sub get_config () {
