@@ -337,7 +337,7 @@ sub sendcallback {
 	
 }
 
-sub getcallbackstate {
+sub get_callbackstate {
 	my $uuid = $form{uuid} || $form{callbackid};
 
 	my %jwt = &get_jwt();
@@ -379,70 +379,21 @@ sub getcallbackstate {
 		}
 	}
 	
-	if (!$uuid_found) {
-		warn "not found $uuid in current channels, let's find it in cdr";
-		my $sth = $database_connection->prepare("select bridge_uuid from v_xml_cdr where uuid=?");
-		$sth->execute($uuid);
-		my $row = $sth->fetchrow_hashref;
-		if ($row->{bridge_uuid}) {
-			$uuid = $row->{bridge_uuid};
-			if ($uuid{$uuid}) {
-				$state = 'DESTANSWERED';
-			} else {
-				$state = 'HANGUP'
-			}
-		} else {
-			$state = 'HANGUP';
-		}
-		warn "not found $uuid in current channels, let's find it in xml_cdr log";
-		my $dir = "/usr/local/freeswitch/log/xml_cdr";
-		my $xml_file = "$dir/a_$uuid.cdr.xml";
-		if (-e $xml_file) {
-			$xml =`cat $xml_file`;
-			my $uuid = getvalue('bridge_uuid', $xml);
-			
-			warn "bridge_uuid: $uuid";
-			if ($uuid{$uuid}) {
-				$state = 'DESTANSWERED';
-			} else {
-				$state = 'HANGUP';
-				warn join ',', keys %uuid;
-
-			}
-			
-		} else {
-			warn "not found $uuid in current channels, let's find it in v_xml_cdr table";
-			my $sth = $database_connection->prepare("select bridge_uuid from v_xml_cdr where uuid=?");
-			$sth->execute($uuid);
-			my $row = $sth->fetchrow_hashref;
-			if ($row->{bridge_uuid}) {
-				$tmp_uuid = $row->{bridge_uuid};
-				if ($uuid{$tmp_uuid}) {
-					$state = 'DESTANSWERED';
-				} else {
-					$state = 'HANGUP'
-				}
-			} else {
-				warn "not found $uuid in v_xml_table, we think the state is HANGUP";
-				$state = 'HANGUP';
-			}
-		}
-		
+	
+	warn "$uuid:$state!";
+	if ($state eq 'EARLY') {
+		$state = 'EXTRING';
+	} elsif ($state eq 'RING_WAIT') {
+		$state = 'DESTRING';
+	} elsif ($state eq 'ACTIVE') {
+		$state = 'DESTANSWERED';
+	} elsif ($state eq 'HELD') {
+		$state = 'HELD';
 	} else {
-		warn "$uuid:$state!";
-		if ($state eq 'EARLY') {
-			$state = 'EXTRING';
-		} elsif ($state eq 'RING_WAIT') {
-			$state = 'DESTRING';
-		} elsif ($state eq 'ACTIVE') {
-			$state = 'DESTANSWERED';
-		} elsif ($state eq 'HELD') {
-			$state = 'HELD';
-		} else {
-			$state = 'EXTWAIT';
-		}
-	#	$state = 'HANGUP';
+		$state = 'EXTWAIT';
 	}
+	#	$state = 'HANGUP';
+	
 	
 	warn "$uuid state: $state";
 	$response{error} = 0;
