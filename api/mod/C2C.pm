@@ -370,7 +370,7 @@ sub getcallbackstate {
 		
 		#warn $callstate_index;
 		#@f = split ',', $_;
-		$f = records($channel);
+		$f = _records($channel);
 		$uuid{$$f[0]} = $$f[$callstate_index];
 		if ($$f[0] eq $uuid) {
 			$uuid_found = 1;
@@ -711,5 +711,23 @@ sub _get_outbound_callerid {
 	my $sql = "select 1, outbound_caller_id_number from v_extensions where user_context='$domain' and extension='$ext'";
 	local %data = &database_select_as_hash($sql, "outbound_caller_id_number");
 	return $data{1}{outbound_caller_id_number};
+}
+
+sub _records {
+	my $line   = shift || return;
+	my $limit  = shift;
+	my $token  = "saaaazh_";
+	my $i      = 0;
+	my @temp   = ();
+	my @fields = ();
+	$line =~ s/\[(.*?)\]/$temp[$i]=$1;$token.$i++/gxe;
+	for my $f (split ',', $line) {
+			if ($f =~ /$token(\d+)/) {
+					$f = $temp[$1];
+			}
+			push @fields, $f;
+	}
+
+	return \@fields;
 }
 return 1;
