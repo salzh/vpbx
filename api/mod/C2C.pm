@@ -290,8 +290,8 @@ sub sendcallback {
 	}
 	
 	
-	my $hash = undef;
-	eval{$hash=decode_jwt(token=>$jwt_token, key => $app{jwt_key});};
+	my %hash = ();
+	eval{$tmp=decode_jwt(token=>$jwt_token, key => $app{jwt_key});%hash = %$tmp};
 	unless ($hash{sub} && $hash{aud}) {
 		$response{error} = 1;
 		$response{message} = "jwt_token=$jwt_token decode error: $@: $!";
