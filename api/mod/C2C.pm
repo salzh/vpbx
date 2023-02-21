@@ -282,7 +282,7 @@ sub sendcallback {
 	local $domain  = $form{domain} || $HOSTNAME;
 	$domain		= $cgi->server_name();
 	
-	my %jwt =  &get_jwt();
+	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
 		return;
