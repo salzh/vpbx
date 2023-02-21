@@ -4,7 +4,6 @@
 	Contributor(s):
 	George Gabrielyan <george@velantro.com>
 =cut
-use Crypt::JWT qw(encode_jwt decode_jwt);
 
 use POSIX qw(strftime);
 $record_format = 'wav';
@@ -281,27 +280,11 @@ sub sendcallback {
 	local $ext 	= $form{ext};
 	local $domain  = $form{domain} || $HOSTNAME;
 	$domain		= $cgi->server_name();
-	($jwt_token) = $cgi->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
-	if (!$jwt_token) {
-		$response{error} = 1;
-		$response{message} = 'jwt key not found!';
-		&print_json_response(%response);
-		return;		
-	}
 	
 	
-	my %hash = ();
-	eval{$tmp=decode_jwt(token=>$jwt_token, key => $app{jwt_key});%hash = %$tmp};
-	unless ($hash{sub} && $hash{aud}) {
+	unless ($jwt_hash{aud} eq $domain && $jwt_hash{sub} eq $ext.'@'.$domain) {
 		$response{error} = 1;
-		$response{message} = "jwt_token=$jwt_token decode error: $@: $!";
-		&print_json_response(%response);
-		return;		
-	}
-	
-	unless ($hash{aud} eq $domain && $hash{sub} eq $ext.'@'.$domain) {
-		$response{error} = 1;
-		$response{message} = "sub and aud mismatch : $hash{aud} vs $domain && $hash{sub} vs " . $ext.'@'.$domain;
+		$response{message} = "sub and aud mismatch : $jwt_hash{aud} vs $domain && $jwt_hash{sub} vs " . $ext.'@'.$domain;
 		&print_json_response(%response);
 		return;		
 	}
