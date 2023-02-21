@@ -259,7 +259,7 @@ sub get_domain () {
 sub get_jwt() {
 	my $jwt_hash;
 	my %response;
-	($jwt_token) = $cgi->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
+	my($jwt_token) = $cgi->http('HTTP_AUTHORIZATION') =~ /Bearer (.+)$/;
 	if (!$jwt_token) {
 		$response{error} = 1;
 		$response{message} = 'jwt key not found!';
@@ -268,8 +268,8 @@ sub get_jwt() {
 	}
 	
 	
-	eval{$tmp=decode_jwt(token=>$jwt_token, key => $app{jwt_key});%jwt_hash = %$tmp};
-	unless ($jwt_hash{sub} && $jwt_hash{aud}) {
+	eval{$jwt_hash=decode_jwt(token=>$jwt_token, key => $app{jwt_key});};
+	unless ($jwt_hash->{sub} && $jwt_hash->{aud}) {
 		$response{error} = 1;
 		$response{message} = "jwt_token=$jwt_token decode error: $@: $!";
 		
