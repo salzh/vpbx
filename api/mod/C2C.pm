@@ -337,6 +337,121 @@ sub sendcallback {
 	
 }
 
+sub getcallbackstate {
+	my $uuid = $form{uuid} || $form{callbackid};
+
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
+	my %jwt_hash = %{$jwt{jwt_hash}};
+	
+	my %uuid = ();
+	#my $channels = `fs_cli -x "show channels"`;
+	my $channels = &runswitchcommand('internal', "show channels");
+	my $uuid_found = 0;
+	$i = 0;
+	$callstate_index = 24;
+	for $channel (split /\n/, $channels) {
+		if ($i++ == 0) {
+			$j = 0;
+			for $field_name (split ',', $channel) {
+				if ($field_name eq 'callstate') {
+					$callstate_index = $j;
+					last;
+				}
+				$j++;
+				
+			}
+			next;
+		}
+		
+		#warn $callstate_index;
+		#@f = split ',', $_;
+		$f = records($channel);
+		$uuid{$$f[0]} = $$f[$callstate_index];
+		if ($$f[0] eq $uuid) {
+			$uuid_found = 1;
+			$state = $$f[$callstate_index];
+			last;
+		}
+	}
+	
+	if (!$uuid_found) {
+		warn "not found $uuid in current channels, let's find it in cdr";
+		my $sth = $database_connection->prepare("select bridge_uuid from v_xml_cdr where uuid=?");
+		$sth->execute($uuid);
+		my $row = $sth->fetchrow_hashref;
+		if ($row->{bridge_uuid}) {
+			$uuid = $row->{bridge_uuid};
+			if ($uuid{$uuid}) {
+				$state = 'DESTANSWERED';
+			} else {
+				$state = 'HANGUP'
+			}
+		} else {
+			$state = 'HANGUP';
+		}
+		warn "not found $uuid in current channels, let's find it in xml_cdr log";
+		my $dir = "/usr/local/freeswitch/log/xml_cdr";
+		my $xml_file = "$dir/a_$uuid.cdr.xml";
+		if (-e $xml_file) {
+			$xml =`cat $xml_file`;
+			my $uuid = getvalue('bridge_uuid', $xml);
+			
+			warn "bridge_uuid: $uuid";
+			if ($uuid{$uuid}) {
+				$state = 'DESTANSWERED';
+			} else {
+				$state = 'HANGUP';
+				warn join ',', keys %uuid;
+
+			}
+			
+		} else {
+			warn "not found $uuid in current channels, let's find it in v_xml_cdr table";
+			my $sth = $database_connection->prepare("select bridge_uuid from v_xml_cdr where uuid=?");
+			$sth->execute($uuid);
+			my $row = $sth->fetchrow_hashref;
+			if ($row->{bridge_uuid}) {
+				$tmp_uuid = $row->{bridge_uuid};
+				if ($uuid{$tmp_uuid}) {
+					$state = 'DESTANSWERED';
+				} else {
+					$state = 'HANGUP'
+				}
+			} else {
+				warn "not found $uuid in v_xml_table, we think the state is HANGUP";
+				$state = 'HANGUP';
+			}
+		}
+		
+	} else {
+		warn "$uuid:$state!";
+		if ($state eq 'EARLY') {
+			$state = 'EXTRING';
+		} elsif ($state eq 'RING_WAIT') {
+			$state = 'DESTRING';
+		} elsif ($state eq 'ACTIVE') {
+			$state = 'DESTANSWERED';
+		} elsif ($state eq 'HELD') {
+			$state = 'HELD';
+		} else {
+			$state = 'EXTWAIT';
+		}
+	#	$state = 'HANGUP';
+	}
+	
+	warn "$uuid state: $state";
+	$response{error} = 0;
+	$response{message} = 'ok';
+	$response{'actionid'} = $form{actionid};
+	$reponse{state} = $state;
+	
+	&print_json_response(%response);
+}
 
 sub makeautocall {
 	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
