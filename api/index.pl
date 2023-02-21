@@ -45,7 +45,6 @@ if (defined &$f) {
 		}
 		
 		
-		my %jwt_hash = ();
 		eval{$tmp=decode_jwt(token=>$jwt_token, key => $app{jwt_key});%jwt_hash = %$tmp};
 		unless ($jwt_hash{sub} && $jwt_hash{aud}) {
 			$response{error} = 1;

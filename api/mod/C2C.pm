@@ -7,6 +7,7 @@
 
 use POSIX qw(strftime);
 $record_format = 'wav';
+my %jwt_hash = ();
 sub addincomingbycallerid () {
 	local %params = (
         dialplan_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
