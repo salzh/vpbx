@@ -399,7 +399,7 @@ sub getcallbackstate {
 	$response{error} = 0;
 	$response{message} = 'ok';
 	$response{'actionid'} = $form{actionid};
-	$reponse{state} = $state;
+	$response{state} = $state;
 	
 	&print_json_response(%response);
 }
