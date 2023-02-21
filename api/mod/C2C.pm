@@ -291,10 +291,17 @@ sub sendcallback {
 	
 	
 	my $hash = ();
-	eval{$json=decode_jwt(token=>$jwt_token, key=>'callback');$hash = &Json2Hash($json);};
+	eval{$json=decode_jwt(token=>$jwt_token, key => $app{jwt_key});$hash = &Json2Hash($json);};
 	unless ($hash{sub} && $hash{aud}) {
 		$response{error} = 1;
 		$response{message} = "jwt_token=$jwt_token decode error: $@: $!";
+		&print_json_response(%response);
+		return;		
+	}
+	
+	unless ($hash{aud} eq $domain && $hash{sub} eq $ext.'@'.$domain) {
+		$response{error} = 1;
+		$response{message} = "sub and aud mismatch!";
 		&print_json_response(%response);
 		return;		
 	}
