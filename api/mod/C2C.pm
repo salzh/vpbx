@@ -7,7 +7,7 @@
 
 use POSIX qw(strftime);
 $record_format = 'wav';
-my %jwt_hash = ();
+
 sub addincomingbycallerid () {
 	local %params = (
         dialplan_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
@@ -282,6 +282,13 @@ sub sendcallback {
 	local $domain  = $form{domain} || $HOSTNAME;
 	$domain		= $cgi->server_name();
 	
+	my %jwt =  &get_jwt();
+	if ($jwt{error) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
+	my %jwt_hash = %{$jwt{jwt_hash}};
 	
 	unless ($jwt_hash{aud} eq $domain && $jwt_hash{sub} eq $ext.'@'.$domain) {
 		$response{error} = 1;
