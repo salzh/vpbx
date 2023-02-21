@@ -301,7 +301,7 @@ sub sendcallback {
 	
 	unless ($hash{aud} eq $domain && $hash{sub} eq $ext.'@'.$domain) {
 		$response{error} = 1;
-		$response{message} = "sub and aud mismatch : $hash{aud} eq $domain && $hash{sub} eq $ext.'@'.$domain";
+		$response{message} = "sub and aud mismatch : $hash{aud} vs $domain && $hash{sub} vs " . $ext.'@'.$domain;
 		&print_json_response(%response);
 		return;		
 	}
