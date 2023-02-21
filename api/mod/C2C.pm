@@ -337,7 +337,7 @@ sub sendcallback {
 	
 }
 
-sub get_callbackstate {
+sub getcallbackstate {
 	my $uuid = $form{uuid} || $form{callbackid};
 
 	my %jwt = &get_jwt();
