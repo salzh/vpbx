@@ -197,7 +197,13 @@ sub test {
 }
 
 sub runswitchcommand() {
-	local ($cmd) = @_;
+	$internal = shift;
+	local $cmd;
+	if ($internal) {
+		$cmd = shift;
+	} else {
+		$cmd = &database_clean_string(substr $form{cmd}, 0, 255);
+	}
 	use IO::Socket;
 	$EOL 				= "\015\012";
 	$BLANK 				= $EOL x 2;
@@ -246,6 +252,26 @@ sub runswitchcommand_old () {
 		$response{stat} = 'ok';
 		&print_json_response(%response);
 	}
+}
+
+sub _write() {
+	local ($sock, $str) = @_;
+	$s = syswrite $sock, $str;
+	&out("write $s bytes - $str to server!\n");
+	local $size = 65536;
+	
+	local $response = '';
+	while (1) {
+		local $tmp = '';
+		sysread($sock, $tmp, $size);
+		$response .= $tmp;
+		if ($response =~ /\n\n/){
+			last;			
+		}
+		usleep 50;
+	}
+	
+	return $response;	
 }
 
 sub parse_channels () {
