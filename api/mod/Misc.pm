@@ -196,7 +196,33 @@ sub test {
     &print_json_response(%response);    
 }
 
-sub runswitchcommand () {
+sub runswitchcommand() {
+	local ($cmd) = @_;
+	use IO::Socket;
+	$EOL 				= "\015\012";
+	$BLANK 				= $EOL x 2;
+	$host = '127.0.0.1';
+	$port = '8021';
+	$remote = IO::Socket::INET->new(
+		Proto => 'tcp',
+		PeerAddr=> $host,
+		PeerPort=> $port,
+		Reuse   => 1
+	);
+	
+	sysread($remote, $tmp, 65536);
+	&_write($remote,  "auth ClueCon$BLANK");
+    
+	
+	$buffer = &_write($remote, "$cmd$BLANK");
+	
+	warn "response: $buffer !\n";
+	close $remote;
+	
+	return $buffer;
+}
+
+sub runswitchcommand_old () {
 	$internal = shift;
 	local $cmd;
 	if ($internal) {
