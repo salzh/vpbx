@@ -74,7 +74,7 @@ sub addincomingbycallerid () {
 	&print_json_response(%response);   
 }
 
-sub hangup {
+sub crmhangup {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
     
     $output = &runswitchcommand('internal', "uuid_kill $uuid"
@@ -485,7 +485,7 @@ CHECK:
 	goto CHECK;
 }
 
-sub hold () {
+sub crmhold () {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
@@ -510,8 +510,8 @@ sub hold () {
     &print_json_response(%response);
 }
 
-sub unhold() {
-    &hold();
+sub crmunhold() {
+    &crmhold();
 }
 
 sub agentlogin () {
