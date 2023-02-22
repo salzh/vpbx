@@ -4,6 +4,7 @@
 	Contributor(s):
 	George Gabrielyan <george@velantro.com>
 =cut
+use Time::HiRes qw(usleep);
 
 sub getdestinations () {
 	#*99(\d+) voicemail
