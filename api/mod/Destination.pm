@@ -63,6 +63,8 @@ destination_description:
    %response = ();
   
    %domain   = &get_domain();
+   $post_add{'destination_actions[0]'} = "transfer: " .$post_add{'destination_actions[0]'} . " XML " . $domain{name};
+
    $response{stat} = 'ok';
    
    if (!$domain{name}) {
