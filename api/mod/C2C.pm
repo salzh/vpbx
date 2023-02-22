@@ -210,7 +210,7 @@ sub transfer {
 	&print_json_response(%response);
 }
 
-
+=pod
 sub uploadvoicemaildrop {
 	my $name = uri_unescape(clean_str($form{name}, 'SQLSAFE'));
 	my $format = clean_str($form{format}, 'SQLSAFE') || 'mp3';
@@ -395,6 +395,7 @@ sub hold () {
 sub unhold() {
     &hold();
 }
+=cut
 
 sub agentlogin () {
     $name   = &database_clean_string(substr $form{agentname}, 0, 50);
