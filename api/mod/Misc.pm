@@ -258,7 +258,7 @@ sub runswitchcommand_old () {
 sub _write() {
 	local ($sock, $str) = @_;
 	$s = syswrite $sock, $str;
-	&out("write $s bytes - $str to server!\n");
+	warn "write $s bytes - $str to server!\n";
 	local $size = 65536;
 	
 	local $response = '';
