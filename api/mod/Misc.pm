@@ -205,6 +205,10 @@ sub runswitchcommand() {
 	} else {
 		$cmd = &database_clean_string(substr $form{cmd}, 0, 255);
 	}
+	if ($cmd !~ /^(?:bg|)api /) {
+		$cmd = "api $cmd";
+	}
+	
 	use IO::Socket;
 	$EOL 				= "\015\012";
 	$BLANK 				= $EOL x 2;
