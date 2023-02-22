@@ -496,7 +496,7 @@ sub getuuid() {
     #try best to get call uuid by different condition
 }
 
-sub get_bchannel&genuuid() {
+sub get_bchannel() {
 	local $uuid = shift || return;
 	%raw_calls = &parse_calls();
 	for (keys %raw_calls) {
