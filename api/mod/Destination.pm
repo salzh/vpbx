@@ -143,8 +143,6 @@ destination_conditions[0][condition_field]:
 destination_conditions[0][condition_expression]: 
 destination_actions[0]: transfer:*99100 XML 222.velantro.net
 destination_actions[1]: 
-user_uuid: 
-group_uuid: 
 destination_cid_name_prefix: 
 destination_record: 
 destination_hold_music: 
