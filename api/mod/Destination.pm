@@ -190,9 +190,7 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
    %response = ();
   
    %domain   = &get_domain();
-   $post_add{domain_uuid} = $domain{uuid};
-   $post_add{db_destination_number} = $post_add{destination_number};
-   
+
    $response{stat} = 'ok';
    
    if (!$domain{name}) {
@@ -211,6 +209,9 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
          }
       }
    }
+   
+   $post_add{domain_uuid} = $domain{uuid};
+   $post_add{db_destination_number} = $post_add{destination_number};
    
 
    %hash = &database_select_as_hash(
