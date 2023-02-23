@@ -162,11 +162,11 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
    local %params = (
       destination_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
       dialplan_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
-      destination_type => {type => 'enum:inbound,outbound', maxlen => 50, notnull => 1, default => ''},
+      destination_type => {type => 'enum:inbound,outbound', maxlen => 50, notnull => 1, default => 'inbound'},
       destination_number => {type => 'string', maxlen => 20, notnull => 1, default => ''},
       db_destination_number => {type => 'string', maxlen => 20, notnull => 0, default => ''},
       destination_context => {type => 'string', maxlen => 50, notnull => 0, default => 'public'},
-      'dialplan_details[0]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
+      'destination_actions[0]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
       'destination_conditions[0][condition_field]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
       'destination_conditions[0][condition_expression]' => {type => 'int', maxlen => 3, notnull => 0, default => ''},
       destination_cid_name_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
