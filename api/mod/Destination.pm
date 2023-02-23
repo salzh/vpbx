@@ -133,35 +133,51 @@ destination_description:
 
 sub editdestination () {
       local $poststring_add = '
-destination_type:inbound
-destination_number:3109990000
-destination_context:public
-dialplan_details[0][dialplan_detail_uuid]:69ba135a-0896-4834-9039-cd7317134df3
-dialplan_details[0][dialplan_detail_type]:transfer
-dialplan_details[0][dialplan_detail_order]:70
-dialplan_details[0][dialplan_detail_data]:transfer:100 XML shy.velantro.net
-fax_uuid:06281b95-0896-4834-9039-cd7317134df3
-destination_cid_name_prefix:
-destination_accountcode:
-destination_enabled:true
-destination_description:to be deleted
+destination_type: inbound
+destination_prefix: 
+destination_number: 7472191171
+destination_caller_id_name: 
+destination_caller_id_number: 
+destination_context: public
+destination_conditions[0][condition_field]: 
+destination_conditions[0][condition_expression]: 
+destination_actions[0]: transfer:*99100 XML 222.velantro.net
+destination_actions[1]: 
+user_uuid: 
+group_uuid: 
+destination_cid_name_prefix: 
+destination_record: 
+destination_hold_music: 
+destination_distinctive_ring: 
+destination_accountcode: 
+domain_uuid: 7ac0f7ec-be4e-4f57-ab8b-f2aff6d83b3a
+destination_order: 100
+destination_enabled: true
+destination_description: 
+db_destination_number: 7472191171
+dialplan_uuid: 1c4a4cc4-dd51-45f3-9316-9306f1f9d2a8
+destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
 ';
 
    local %params = (
       destination_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
-      dialplan_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+      dialplan_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_type => {type => 'enum:inbound,outbound', maxlen => 50, notnull => 1, default => ''},
       destination_number => {type => 'string', maxlen => 20, notnull => 1, default => ''},
-      db_destination_number => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+      db_destination_number => {type => 'string', maxlen => 20, notnull => 0, default => ''},
       destination_context => {type => 'string', maxlen => 50, notnull => 0, default => 'public'},
-      'dialplan_details[0][dialplan_detail_type]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-      'dialplan_details[0][dialplan_detail_order]' => {type => 'int', maxlen => 3, notnull => 0, default => '10'},
-      'dialplan_details[0][dialplan_detail_data]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
-      fax_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      'dialplan_details[0]' => {type => 'string', maxlen => 255, notnull => 1, default => ''},
+      'destination_conditions[0][condition_field]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
+      'destination_conditions[0][condition_expression]' => {type => 'int', maxlen => 3, notnull => 0, default => ''},
       destination_cid_name_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
-      destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>'false'},
+      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'true'},
+      destination_hold_music => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_distinctive_ring => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+      destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>''},
       destination_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'true'},
-      destination_description => {type => 'string', maxlen => 255, notnull => 0, default => ''}      
+	  #domain_uuid => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+      destination_order => {type => 'bool', maxlen => 10, notnull => 0, default => '10'},
+      destination_description => {type => 'string', maxlen => 255, notnull => 0, default => ''}  
    );
    
    local %post_add = ();
@@ -171,23 +187,15 @@ destination_description:to be deleted
         $post_add{$key} = $val;
    }
    
-   for (0..9) {
-      last unless $form{"dialplan_details[" . $_ . "][dialplan_detail_data]"};
-      $post_add{"dialplan_details[" . $_ . "][dialplan_detail_type]"} =
-            &database_clean_string($form{"dialplan_details[" . $_ . "][dialplan_detail_type]"});
-      
-      $post_add{"dialplan_details[" . $_ . "][dialplan_detail_data]"} =
-            &database_clean_string($form{"dialplan_details[" . $_ . "][dialplan_detail_data]"});
-	  $post_add{"dialplan_details[" . $_ . "][dialplan_detail_order]"} =
-            &database_clean_string($form{"dialplan_details[" . $_ . "][dialplan_detail_order]"});
-	  $post_add{"dialplan_details[" . $_ . "][dialplan_detail_uuid]"} =
-            &database_clean_string($form{"dialplan_details[" . $_ . "][dialplan_detail_uuid]"});
-      
+
    }
    
    %response = ();
   
    %domain   = &get_domain();
+   $post_add{domain_uuid} = $domain{uuid};
+   $post_add{db_destination_number} = $post_add{destination_number};
+   
    $response{stat} = 'ok';
    
    if (!$domain{name}) {
@@ -207,50 +215,31 @@ destination_description:to be deleted
       }
    }
    
-   if ($response{stat} ne 'fail') {
-      %hash = &database_select_as_hash(
-                    "select
-                       1,destination_uuid
-                    from
-                       v_destinations
-                    where
-                       destination_number='$post_add{destination_number}' and
-					   destination_uuid != '$post_add{destination_uuid}'",
-                    'uuid');
-        
-         if ($hash{1}{uuid}) {
-            $response{stat}		= "fail";
-            $response{message}	= &_("this destination already existed!");
-         }
-   }
+
+   %hash = &database_select_as_hash(
+			   "select
+				 1,destination_uuid,dialplan_uuid
+			  from
+				 v_destinations
+			  where
+				destination_uuid='$post_add{destination_uuid}'",
+			  'uuid,dialplan_uuid');
    
-   if ($response{stat} ne 'fail') {
-         &post_data (
-            'domain_uuid' => $domain{uuid},
-            'urlpath'     => "/app/destinations/destination_edit.php?id=$post_add{destination_uuid}",
-            'reload'      => 1,
-            'data'        => [%post_add]);
-        
-		warn "edit destination: " . Dumper(\%post_add);
-         %hash = &database_select_as_hash(
-                     "select
-                       1,destination_uuid
-                    from
-                       v_destinations
-                    where
-                       destination_type='$post_add{destination_type}' and
-                       destination_number='$post_add{destination_number}'",
-                    'uuid');
-         
-         if ($hash{1}{uuid}) {
-            $response{stat}		= "ok";
-            $response{message}	= "OK";
-            $response{data}{destination_uuid} = $hash{1}{uuid};
-         } else {
-            $response{stat}		= "fail";
-            $response{message}	= &_("destination not saved!");
-         }        
-      }
+   if (!$hash{1}{uuid}) {
+	  $response{stat}		= "fail";
+	  $response{message}	=  &_("destination not found!");
+	
+   } else {
+	
+	  $post_add{dialplan_uuid} = $hash{1}{dialplan_uuid};
+      warn "edit destination: " . Dumper(\%post_add);
+
+	  &post_data (
+		 'domain_uuid' => $domain{uuid},
+		 'urlpath'     => "/app/destinations/destination_edit.php?id=$post_add{destination_uuid}",
+		 'reload'      => 1,
+		 'data'        => [%post_add]);
+	  }
      
    &print_json_response(%response);
 }
