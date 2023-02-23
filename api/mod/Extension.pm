@@ -173,7 +173,7 @@ enabled:true
 description:
 extension_uuid:bd24e793-2e1e-4352-9a29-8ddbb1880a89
 id:bd24e793-2e1e-4352-9a29-8ddbb1880a89
-domain_uuid:879b9f9b-e69d-4181-9d81-f6775341cc7d
+domain_uuid:
 delete_type:
 delete_uuid:';
      
@@ -224,6 +224,7 @@ delete_uuid:';
           $post_add{vm_enabled}= $vm_enabled;
           $post_add{voicemail_password} = $voicemail_password;
           $post_add{vm_mailto}   = $vm_mailto;
+          $post_add{domain_uuid}= $domain{uuid};
           $post_add{user_context}= $user_context;
          
           if ($user_record eq 'all' || $user_record eq 'local' || $user_record eq 'inbound' || $user_record eq 'outbound') {
