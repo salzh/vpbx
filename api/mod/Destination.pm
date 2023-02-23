@@ -186,10 +186,7 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
         next if !$key;
         $post_add{$key} = $val;
    }
-   
-
-   }
-   
+      
    %response = ();
   
    %domain   = &get_domain();
@@ -238,8 +235,9 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
 		 'domain_uuid' => $domain{uuid},
 		 'urlpath'     => "/app/destinations/destination_edit.php?id=$post_add{destination_uuid}",
 		 'reload'      => 1,
-		 'data'        => [%post_add]);
-	  }
+		 'data'        => [%post_add]
+	  );
+   }
      
    &print_json_response(%response);
 }
