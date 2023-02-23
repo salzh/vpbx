@@ -405,6 +405,7 @@ sub getdestination () {
                         "type,data,order");
                   $i = 0;
                   for (sort {$d{$a}{order} <=> $d{$b}{order}} keys %d) {
+					 $response{data}{'destination_actions[$i]'} = $d{$_}{data};
                      $response{data}{"dialplan_details[" . $i . "][dialplan_detail_type]"} = $d{$_}{type};
                      $response{data}{"dialplan_details[" . $i . "][dialplan_detail_data]"} = $d{$_}{data};
                      $response{data}{"dialplan_details[" . $i . "][dialplan_detail_order]"} = $d{$_}{order};
@@ -443,7 +444,7 @@ sub getdestinationdropdownlist() {
       $response{message}= "OK";
 	  $content = $result->content;
 	  $content =~ s{<script>.+?</script>}{}gs;
-      $response{html} = $content;
+      $response{data}{html} = $content;
    }
    
    &print_json_response(%response);   
