@@ -377,7 +377,7 @@ expireat:
        }
     }	
 	
-	if (!$response{stat} ne 'fail') {
+	if ($response{stat} ne 'fail') {
 		$post_add{dialplan_context} ||= $domain{name};
 		#https://222.velantro.net/app/dialplans/forward.php?action=updatedest&forwardstr=18187298888;8882115404;true;2023-01-01%2009:50;2023-03-16%2009:50
 		$result = &post_data (
