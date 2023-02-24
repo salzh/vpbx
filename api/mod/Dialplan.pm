@@ -352,7 +352,7 @@ expireat:
 
     if (!$domain{name}) {
         $response{stat}		= "fail";
-        $response{message}	= "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
+        $response{message}	= "domain_name $form{domain_name}/$form{domain_uuid} " . &_("not exists");
     }
     
 	local %params = (
