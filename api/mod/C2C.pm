@@ -19,11 +19,15 @@ sub hangup {
 	}
 	
 	
-    $output = &runswitchcommand('internal', "uuid_kill $uuid"
-								);
-    
-    $response{error}          =  0;
+    $output = &runswitchcommand('internal', "uuid_kill $uuid");
+	$response{error}          =  0;
     $response{message} = $output;
+    
+	if ($output =~ /ERR/) {
+		$response{error}       =  1;
+	}
+	
+
 	&print_json_response(%response);   	
 }
 
