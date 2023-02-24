@@ -407,7 +407,7 @@ sub getglobalforward() {
 			"select
 			1,$fields
 			from
-				v_dialplans
+				v_global_forward
 			where
 				did='$did'",		
 		"$fields");
