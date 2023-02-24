@@ -330,4 +330,91 @@ dialplan_description:
 	&print_json_response(%response);
 }
 
+sub setglobalforward () {
+    #https://222.velantro.net/app/dialplans/forward.php?action=updatedest&forwardstr=18187298888;8882115404;true;2023-01-01%2009:50;2023-03-16%2009:50
+	local $poststring_add = '
+did:
+dest:
+status:
+expirestart:
+expireat:
+';
+
+	local %post_add = ();
+	for (split /\n/, $poststring_add) {
+		 ($key, $val) = split ':', $_, 2;
+		 next if !$key;
+		 $post_add{$key} = $val;
+	}
+	
+	%response       = ();   
+    %domain         = &get_domain();
+
+    if (!$domain{name}) {
+        $response{stat}		= "fail";
+        $response{message}	= "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
+    }
+    
+	local %params = (
+        did => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+        dest => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+        expirestart => {type => 'string', maxlen => 50, notnull => 1, default => ''},		
+        expireat => {type => 'string', maxlen => 50, notnull => 1, default => ''},		
+        status => {type => 'string', maxlen => 50, notnull => 1, default => ''},		
+    );
+	 
+
+    
+    if ($response{stat} ne 'fail') {
+       for $k (keys %params) {
+            $tmpval   = '';
+            if (&getvalue(\$tmpval, $k, $params{$k})) {
+                $post_add{$k} = $tmpval;
+            } else {
+                $response{stat}		= "fail";
+                $response{message}	= $k. &_(" not valid");
+            }
+       }
+    }	
+	
+	if (!$response{stat} ne 'fail') {
+		$post_add{dialplan_context} ||= $domain{name};
+		#https://222.velantro.net/app/dialplans/forward.php?action=updatedest&forwardstr=18187298888;8882115404;true;2023-01-01%2009:50;2023-03-16%2009:50
+		$result = &post_data (
+			'domain_uuid' => $domain{uuid},
+			'urlpath'     => "/app/dialplans/forward.php?action=updatedest&forwardstr=$post_add{did};$post_add{dest};$post_add{status};$post_add{expirestart};$post_add{expireat}",
+			'reload'      => 1,
+			'data'        => []);
+		#warn $result->header("Location");
+		
+		$response{stat}		= "ok";		      
+	}
+	
+	&print_json_response(%response);
+}
+
+sub getglobalforward() {
+    local $did  = &clean_str(substr($form{did},0,50),"MINIMAL","-_");
+    if (!$did) {
+      $response{stat}		= "fail";
+      $response{message}	= &_("did is null!");   
+	}
+  
+	if ($response{stat} ne 'fail') {
+		local %domain  = &get_domain();
+		local $fields  = 'did,dest,expireat,enabled,expirestart,expireat';
+		local %dialplan = &database_select_as_hash(
+			"select
+			1,$fields
+			from
+				v_dialplans
+			where
+				did='$did'",		
+		"$fields");
+    }
+    $response{stat} = 'ok';
+	$response{data} = $dialplan{1};
+    &print_json_response(%response);
+}
+
 return 1;
