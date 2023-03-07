@@ -294,6 +294,8 @@ call_timeout:30
 call_group:
 user_record:
 hold_music:
+missed_call_app: 
+missed_call_data: 
 user_context:pbx.fusionpbx.cn
 auth_acl:
 cidr:
