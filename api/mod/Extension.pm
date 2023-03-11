@@ -459,17 +459,19 @@ sub getgswaveqr () {
      
      $response = ();
 
-     $html = &post_data (
+     $res = &post_data (
                     'domain_uuid' => $domain{uuid},
                     'reload'      => 0,
                     'urlpath' => '/app/gswave/index.php?id=' . $uuid,
                     'data' => []
                 );
+	 $html = $res->content;
  
 	 open(W, "> /tmp/qr.html") or die "fail to open qr.html";
 	 print W $html;
 	 close W;
-	 ($qrimg_src) = $html =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
+	 print 
+	 ($qrimg_src) = $html-> =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
      $response{stat} = 'ok';
    
      $response{data} = $qrimg_src;
