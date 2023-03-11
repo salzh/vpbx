@@ -451,7 +451,27 @@ sub deleteextension () {
      &print_json_response(%response); 
 }
 
+sub getgswaveqr () {
+     local $uuid  = &clean_str(substr($form{extension_uuid},0,50),"MINIMAL","-_");
+     
+     warn $uuid;
+     %domain   = &get_domain();
+     
+     $response = ();
 
+     $html = &post_data (
+                    'domain_uuid' => $domain{uuid},
+                    'reload'      => 1,
+                    'urlpath' => '/app/gswave/index.php?id=' . $uuid,
+                    'data' => []
+                );
+ 
+     $response{stat} = 'ok';
+   
+     $response{data} = $html
+     
+     &print_json_response(%response); 
+}
 
 sub setextensionforward () {
      local $poststring_add = '
