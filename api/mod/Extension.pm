@@ -471,7 +471,7 @@ sub getgswaveqr () {
 	 print W $html;
 	 close W;
 	 print 
-	 ($qrimg_src) = $html-> =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
+	 ($qrimg_src) = $html =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
      $response{stat} = 'ok';
    
      $response{data} = $qrimg_src;
