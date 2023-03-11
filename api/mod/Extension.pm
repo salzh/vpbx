@@ -468,7 +468,7 @@ sub getgswaveqr () {
  
      $response{stat} = 'ok';
    
-     $response{data} = $html
+     $response{data} = $html;
      
      &print_json_response(%response); 
 }
