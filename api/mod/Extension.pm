@@ -470,7 +470,6 @@ sub getgswaveqr () {
 	 open(W, "> /tmp/qr.html") or die "fail to open qr.html";
 	 print W $html;
 	 close W;
-	 print 
 	 ($qrimg_src) = $html =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
      $response{stat} = 'ok';
    
