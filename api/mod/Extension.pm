@@ -461,7 +461,7 @@ sub getgswaveqr () {
 
      $html = &post_data (
                     'domain_uuid' => $domain{uuid},
-                    'reload'      => 1,
+                    'reload'      => 0,
                     'urlpath' => '/app/gswave/index.php?id=' . $uuid,
                     'data' => []
                 );
