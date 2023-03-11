@@ -466,9 +466,10 @@ sub getgswaveqr () {
                     'data' => []
                 );
  
+	 ($qrimg_src) = $html =~ m{<img src="(data:image/jpeg;base64,.+?)"}i;
      $response{stat} = 'ok';
    
-     $response{data} = $html;
+     $response{data} = $qrimg_src;
      
      &print_json_response(%response); 
 }
