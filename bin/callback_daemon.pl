@@ -306,6 +306,13 @@ sub Dial() {
 		return;
 	}
 
+	if (length($from) < 6) {
+		$ext = "$from\@$domain_name";
+		$type = "outbound";
+	} elsif (length($to) < 6) {
+		$type = "incoming";
+		$ext = "$to\@$domain_name";
+	}
 	
 	if ($dialed_calls{$uuid}) {
 		$iscallback = $dialed_calls{$uuid};
@@ -328,13 +335,7 @@ sub Dial() {
 		}
 	}
 	delete $hangup_calls{$to};
-	if (length($from) < 6) {
-		$ext = "$from\@$domain_name";
-		$type = "outbound";
-	} elsif (length($to) < 6) {
-		$type = "incoming";
-		$ext = "$to\@$domain_name";
-	}
+	
 	
 	$data = "type=$type&state=ringing&uuid=$uuid&caller=" . &to164($from) . "&to=" . &to164($to) . "&ext=$ext&domain_name=$domain_name";
 	$cache_uuid = &_uuid();
