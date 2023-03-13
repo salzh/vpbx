@@ -14,6 +14,14 @@ use POSIX qw(strftime);
 use MIME::Base64;
 use POSIX qw/ceil/;
 require "/var/www/vpbx/lib/default.include.pl";
+require "/var/www/vpbx/lib/tools.database.pl";	# database access
+require "/var/www/vpbx/lib/tools.memcache.pl";	# pbx-v2 specific
+
+
+&default_include_init();
+
+&tools_database_init();
+&tools_memcache_init();
 
 #======================================================
 
