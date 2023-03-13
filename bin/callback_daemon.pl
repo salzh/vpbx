@@ -738,8 +738,8 @@ sub send_zoho_request() {
 	warn "$type, $ext, $data";
 	
 	%hash = ();
-	for (split '&', $data) {
-		($k, $v)= split '=', $v, 2;
+	for $kv (split '&', $data) {
+		($k, $v) = split '=', $kv, 2;
 		$hash{$k} = $v;
 	}
 	
