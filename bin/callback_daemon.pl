@@ -341,9 +341,9 @@ sub Dial() {
 	$data = "type=$type&state=ringing&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to);
 	$cache_uuid = &_uuid();
 	$now = &now();
-	$sql = "insert into v_zoho_api_cache (zoho_api_cache_uuid,ext,data,insert_date) values('$cache_uuid', '$ext', 'type=$type&id=$uuid&from='" . &to164($from) . '&to=' . &to164($to) . ", '$now')";
-	warn $sql;
-	&database_do($sql);
+	#$sql = "insert into v_zoho_api_cache (zoho_api_cache_uuid,ext,data,insert_date) values('$cache_uuid', '$ext', 'type=$type&id=$uuid&from='" . &to164($from) . '&to=' . &to164($to) . ", '$now')";
+	#warn $sql;
+	#&database_do($sql);
 	&send_zoho_request('callnotify', $ext, $data);	
 }
 
@@ -490,7 +490,7 @@ sub End() {
 	$data = "type=$type&state=$state&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to) . "&start_time=$starttime" . ($fixed_billsec > 0 ? "&duration=$fixed_billsec&voiceuri=https://$domain_name/app/xml_cdr/download.php?id=$uuid" : ""); #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 	
 	
-	&database_do("delete from v_zoho_api_cache where ext='$ext'");
+	#&database_do("delete from v_zoho_api_cache where ext='$ext'");
 	&send_zoho_request('callnotify', $ext, $data);
 }
 
@@ -507,7 +507,7 @@ sub check_callback() {
 	$data = "code=$code&from=" . &to164($from) . "&to=" . &to164($to) . "&message=fail to call agent: $code"; #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 	
 	
-	&database_do("delete from v_zoho_api_cache where ext='$ext'");
+	#&database_do("delete from v_zoho_api_cache where ext='$ext'");
 	&send_zoho_request('clicktodialerror', $from . '@' . $domain_name, $data);
 }
 
@@ -524,7 +524,7 @@ sub check_missed() {
 	$data = "type=received&state=missed&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to) . "&start_time=$starttime"; #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 	
 	
-	&database_do("delete from v_zoho_api_cache where ext='$ext'");
+	#&database_do("delete from v_zoho_api_cache where ext='$ext'");
 	&send_zoho_request('callnotify', $ext, $data);
 }
 
