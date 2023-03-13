@@ -756,7 +756,8 @@ sub send_zoho_request() {
 	$json = &Hash2Json(%hash);
 	$domain_name = $hash{domain_name} || $app{base_domain};
 	$url = 'https://newdev.velantro.net/push_api/$domain_name/webhook';
-	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/json
+	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/json'";
+	$res = `$cmd`;
 	log_debug(4, "cmd:$cmd\nresponse: $res\n");
 	return $res;
 }
