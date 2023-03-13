@@ -305,15 +305,7 @@ sub Dial() {
 	if ($event{'Caller-Channel-Name'} =~ m{loopback/(\w+)\-b}) {
 		return;
 	}
-	if ($zoho_tokens{$to.'@' . $domain_name}) {
-		$type = 'received';
-		$ext = $to.'@' . $domain_name;
-	} elsif ($zoho_tokens{$from.'@' . $domain_name}) {
-		$type = 'dialed';
-		$ext = $from.'@' . $domain_name;
-	} else {
-		return;
-	}
+
 	
 	if ($dialed_calls{$uuid}) {
 		$iscallback = $dialed_calls{$uuid};
@@ -752,7 +744,6 @@ sub send_zoho_request() {
 	}
 	
 	$json = &Hash2Json(%hash);
-	$code = $zoho_tokens{$ext}{access_token};
 	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/x-www-form-urlencoded'";
 	$res = `$cmd`;
 	log_debug("cmd:$cmd\nresponse: $res\n");
