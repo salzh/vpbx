@@ -330,7 +330,9 @@ sub Dial() {
 	delete $hangup_calls{$to};
 	if (length($from) < 6) {
 		$ext = "$from\@$domain_name";
+		$type = "outbound";
 	} elsif (length($to) < 6) {
+		$type = "incoming";
 		$ext = "$to\@$domain_name";
 	}
 	
