@@ -340,12 +340,12 @@ sub Dial() {
 sub Newchannel() {
 	local(%event) = @_;
 	$Channel_Spool{$event{Channel}}{CallerIDName} = $event{CallerIDName};
-	&log_debug("Get CallerIDName " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{CallerIDName} . "!\n");
+	&log_debug(4, "Get CallerIDName " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{CallerIDName} . "!\n");
 	$Channel_Spool{$event{Channel}}{Exten} = $event{Exten};
-	&log_debug("Get Exten " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{Exten} . "!\n");
+	&log_debug(4, 4, "Get Exten " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{Exten} . "!\n");
 	
 	$Channel_Spool{$event{Channel}}{UniqueID} = $event{Uniqueid};
-	&log_debug("Get UniqueID " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{UniqueID} . "!\n");
+	&log_debug(4, 4, "Get UniqueID " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{UniqueID} . "!\n");
 }
 
 sub Hangup() {
@@ -746,14 +746,8 @@ sub send_zoho_request() {
 	$json = &Hash2Json(%hash);
 	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/x-www-form-urlencoded'";
 	$res = `$cmd`;
-	log_debug("cmd:$cmd\nresponse: $res\n");
+	log_debug(4, 4, "cmd:$cmd\nresponse: $res\n");
 	return $res;
-}
-
-sub log_debug() {
-	$msg = shift;
-	$t = getTime();
-	print STDERR "$t $msg\n";
 }
 
 
