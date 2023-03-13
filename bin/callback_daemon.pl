@@ -13,7 +13,7 @@ use URI::Escape;
 use POSIX qw(strftime);
 use MIME::Base64;
 use POSIX qw/ceil/;
-require "/var/www/vpx/lib/default.include.pl";
+require "/var/www/vpbx/lib/default.include.pl";
 
 #======================================================
 
