@@ -13,9 +13,7 @@ use URI::Escape;
 use POSIX qw(strftime);
 use MIME::Base64;
 use POSIX qw/ceil/;
-require "/var/www/vpbx/lib/default.include.pl";
-require "/var/www/vpbx/lib/tools.database.pl";	# database access
-require "/var/www/vpbx/lib/tools.memcache.pl";	# pbx-v2 specific
+require "/var/www/vpbx/api/include.pl";
 
 
 &default_include_init();
@@ -744,14 +742,18 @@ S
 
 sub send_zoho_request() {
 	local ($type, $ext, $data) = @_;
-	if ($type eq 'callnotify') {
-		$url = 'https://www.zohoapis.com/phonebridge/v3/callnotify';
-	} elsif ($type eq 'clicktodialerror') {
-		$url = 'https://www.zohoapis.com/phonebridge/v3/clicktodialerror';
-	}
+	$url = 'https://newdev.velantro.net/push_api/vip.velantro.net/webhook';
 	warn "$type, $ext, $data";
+	
+	%hash = ();
+	for (split '&', $data) {
+		($k, $v)= split '=', $v, 2;
+		$hash{$k} = $v;
+	}
+	
+	$json = &Hash2Json(%hash);
 	$code = $zoho_tokens{$ext}{access_token};
-	$cmd = "curl  $url -X POST -d '$data' -H 'Authorization: Zoho-oauthtoken $code' -H 'Content-Type: application/x-www-form-urlencoded'";
+	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/x-www-form-urlencoded'";
 	$res = `$cmd`;
 	log_debug("cmd:$cmd\nresponse: $res\n");
 	return $res;
