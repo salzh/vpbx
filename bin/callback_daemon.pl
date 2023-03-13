@@ -342,10 +342,10 @@ sub Newchannel() {
 	$Channel_Spool{$event{Channel}}{CallerIDName} = $event{CallerIDName};
 	&log_debug(4, "Get CallerIDName " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{CallerIDName} . "!\n");
 	$Channel_Spool{$event{Channel}}{Exten} = $event{Exten};
-	&log_debug(4, 4, "Get Exten " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{Exten} . "!\n");
+	&log_debug(4, "Get Exten " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{Exten} . "!\n");
 	
 	$Channel_Spool{$event{Channel}}{UniqueID} = $event{Uniqueid};
-	&log_debug(4, 4, "Get UniqueID " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{UniqueID} . "!\n");
+	&log_debug(4, "Get UniqueID " . $event{Channel} . '=' . $Channel_Spool{$event{Channel}}{UniqueID} . "!\n");
 }
 
 sub Hangup() {
