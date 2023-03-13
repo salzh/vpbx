@@ -158,10 +158,7 @@ while (<$remote>) {
 			($tmp1,$tmp2,$tmp3,$tmp4) = split(/\|/,$event{Type});
 			# call action
 			warn $event{'Event-Name'} . ' ==> ' . $event{'CC-Action'}  . "\n";
-			&refresh_zoho_tokens();
-			for $key (keys %zoho_tokens) {
-				log_debug("zoho_keys: $key=" . $zoho_tokens{$key}{access_token});
-			}
+			
 			if ($event{'Event-Name'} eq "CHANNEL_OUTGOING") {Dial(%event); }
 			elsif ($event{'Event-Name'} eq "CHANNEL_BRIDGE")			{ Bridge(%event); }
 			elsif ($event{'Event-Name'} eq "CHANNEL_HANGUP")		{ Hangup(%event); }
