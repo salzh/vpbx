@@ -746,7 +746,7 @@ sub send_zoho_request() {
 	$json = &Hash2Json(%hash);
 	$cmd = "curl  $url -X POST -d '$json' -H 'Authorization: Bearer $app{jwt_key_alert}' -H 'Content-Type: application/x-www-form-urlencoded'";
 	$res = `$cmd`;
-	log_debug(4, 4, "cmd:$cmd\nresponse: $res\n");
+	log_debug(4, "cmd:$cmd\nresponse: $res\n");
 	return $res;
 }
 
