@@ -264,7 +264,7 @@ sub Bridge() {
 	$ext = $dialed_calls{$uuid}{ext};
 	$domain_name = $dialed_calls{$uuid}{domain_name};
 	$type = $dialed_calls{$uuid}{type};
-	$data = "type=$type&state=answered&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to);
+	$data = "type=$type&state=answered&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to). "ext=$ext&&domain_name=$domain_name";
 	&send_zoho_request('callnotify', $ext, $data);	
 }
 
