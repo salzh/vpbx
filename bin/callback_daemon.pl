@@ -750,7 +750,7 @@ sub send_zoho_request() {
 	$domain_name = $app{base_domain};
 	for $kv (split '&', $data) {
 		($k, $v) = split '=', $kv, 2;
-		if ($k =~ /^\s*$/{
+		if ($k =~ /^\s*$/) {
 			next;
 		}
 		
