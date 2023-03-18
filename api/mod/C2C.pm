@@ -272,7 +272,7 @@ sub listvoicemaildrop {
 	for $k (keys %data) {
 		($type) = $data{$k}{voicemaildrop_path} =~ /\.(\w+)$/;
 		$filepath = "voicemaildrop/" . $data{$k}{voicemaildrop_uuid} . ".$type";
-		push @$list, {id =>$data{$k}{voicemaildrop_uuid}}, name => $data{$k}{voicemaildrop_name}, filepath => $filepath};
+		push @$list, {id =>$data{$k}{voicemaildrop_uuid}, name => $data{$k}{voicemaildrop_name}, filepath => $filepath};
 		$found = 1;
 	}
 	
