@@ -66,6 +66,11 @@ sub sendcallback {
 		$dest = "011$1";
 	}
 	
+	unless($dest =~ /^\d{10}$/ || $dest =~ /^011\d+$/) {
+		print j({error => '1', 'message' => "dest=$query{dest} is invalid", 'actionid' => $query{actionid}});
+		exit 0;
+	}
+	
 	local $realdest = $dest;
 	$fs_cli = 'fs_cli';
 	
@@ -214,13 +219,19 @@ sub transfer {
 	&print_json_response(%response);
 }
 
-=pod
+
 sub uploadvoicemaildrop {
 	my $name = uri_unescape(clean_str($form{name}, 'SQLSAFE'));
 	my $format = clean_str($form{format}, 'SQLSAFE') || 'mp3';
 	my $ext =  clean_str($form{ext}, 'SQLSAFE') || '';
 	my $uuid = &genuuid();
 	my $domain		= $cgi->server_name();
+	
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
 	
 	my $basedir = "/var/lib/freewitch/voicemaildrop";
 	if (!-d $basedir) {
@@ -236,7 +247,7 @@ sub uploadvoicemaildrop {
 		$error = 1;
     }
 	
-	$dbh->prepare("insert into v_voicemaildrop (voicemaildrop_uuid, voicemaildrop_name, voicemaildrop_path, domain_name, ext) values ('$uuid', '$name', '$path', '$domain', '$ext')")->execute();
+	&database_do("insert into v_voicemaildrop (voicemaildrop_uuid, voicemaildrop_name, voicemaildrop_path, domain_name, ext) values ('$uuid', '$name', '$path', '$domain', '$ext')");
 	$response{error} = $error;
 	$response{message} =  $msg;
 	$response{actionid} = $form{actionid};
@@ -247,15 +258,21 @@ sub listvoicemaildrop {
 	my $domain		= $cgi->server_name();
 	my $ext =  clean_str($form{ext}, 'SQLSAFE') || '';
 
-	my $sth = $dbh->prepare("select * from v_voicemaildrop where domain_name='$domain' and ext='$ext'");
-	$sth->execute();
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
 	
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext from v_voicemaildrop where domain_name='$domain' and ext='$ext'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
+
 	my $list = [];
 	my $found = 0;
-	while (my $row = $sth->fetchrow_hashref) {
-		($type) = $row->{voicemaildrop_path} =~ /\.(\w+)$/;
-		$filepath = "voicemaildrop/" . $row->{voicemaildrop_uuid} . ".$type";
-		push @$list, {id => $row->{voicemaildrop_uuid}, name => $row->{voicemaildrop_name}, filepath => $filepath};
+	for $k (keys %data) {
+		($type) = $data{$k}{voicemaildrop_path} =~ /\.(\w+)$/;
+		$filepath = "voicemaildrop/" . $data{$k}{voicemaildrop_uuid} . ".$type";
+		push @$list, {id =>$data{$k}{voicemaildrop_uuid}}, name => $data{$k}{voicemaildrop_name}, filepath => $filepath};
 		$found = 1;
 	}
 	
@@ -276,71 +293,94 @@ sub listvoicemaildrop {
 
 sub deletevoicemaildrop {
 	my $id = clean_str($form{id}, 'SQLSAFE');
-	my $sth = $dbh->prepare("select * from v_voicemaildrop where voicemaildrop_uuid='$id' ");
-	$sth->execute();
-
-	my $list = [];
-	my $found = 0;
-	my $path  = '';
-	while (my $row = $sth->fetchrow_hashref) {
-		$path = $row->{voicemaildrop_path};
-		$found = 1;
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
 	}
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext from v_voicemaildrop wherevoicemaildrop_uuid='$id'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
 	
-	if ($found) {
-		$dbh->prepare("delete from v_voicemaildrop where voicemaildrop_uuid='$id' ")->execute;
+
+	if ($data{$id}{voicemaildrop_uuid}) {
+		&database_do("delete from v_voicemaildrop where voicemaildrop_uuid='$id' ");
+		$path = $data{$id}{voicemaildrop_path};
 		unlink $path;
-		print j({error => '0', 'message' => 'ok', 'actionid' => $form{actionid}});
+		$response{error} = 0;
+		$response{message} =  $msg;
+		$response{actionid} = $form{actionid};
 
 	} else {
-		print j({error => '1', 'message' => 'not found', 'actionid' => $form{actionid}});
+		$response{error} = 1;
+		$response{message} =  'not found';
+		$response{actionid} = $form{actionid};
 	}
+	&print_json_response(%response);
+
 }
 
 sub getvoicemaildrop {
 	my $id = clean_str($form{id}, 'SQLSAFE');
 	warn $id;
-	my $sth = $dbh->prepare("select * from v_voicemaildrop where voicemaildrop_uuid='$id' ");
-	$sth->execute();
-	my $list = [];
-	my $found = 0;
-	my $path  = '';
-	while (my $row = $sth->fetchrow_hashref) {
-		$path = $row->{voicemaildrop_path};
-		$found = 1;
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
 	}
-	my $filepath = '';
-	if ($found) {
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext from v_voicemaildrop wherevoicemaildrop_uuid='$id'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
+	
+
+	if ($data{$id}{voicemaildrop_uuid}) {
+		$path = $data{$id}{voicemaildrop_path};
 		($type) = $path =~ /\.(\w+)$/;
 		$filepath = "voicemaildrop/$id.$type";
-		print j({error => '0', 'message' => 'ok', 'actionid' => $form{actionid}, filepath => $filepath, name => $row->{voicemaildrop_name}});
+		$response{error} = 0;
+		$response{message} =  'ok';
+		$response{filepath} = $filepath;
+		$response{name} => $data{$id}{voicemaildrop_name};
+		$response{actionid} = $form{actionid};
 
 	} else {
-		print j({error => '1', 'message' => 'not found', 'actionid' => $form{actionid}});
+		$response{error} = 1;
+		$response{message} =  'not found';
+		$response{actionid} = $form{actionid};
 	}
-	
+	&print_json_response(%response);
 }
 
 sub updatevoicemaildrop {
 	my $id = clean_str($form{id}, 'SQLSAFE');
 	my $name = uri_unescape(clean_str($form{name}, 'SQLSAFE'));
-	my $sth = $dbh->prepare("update  v_voicemaildrop set voicemaildrop_name='$name' where voicemaildrop_uuid='$id' ");
-	$sth->execute();
-	print j({error => '0', 'message' => 'ok', 'actionid' => $form{actionid}});
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	&database_do("update  v_voicemaildrop set voicemaildrop_name='$name' where voicemaildrop_uuid='$id' ");
+	$response{error} = 0;
+	$response{message} =  'ok';
+	$response{actionid} = $form{actionid};
+	&print_json_response(%response);
 }
 
 sub sendvoicemaildrop {
 	my $id = clean_str($form{id}, 'SQLSAFE');
 	my $callback_uuid = clean_str($form{callback_uuid}, 'SQLSAFE');
 	
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext from v_voicemaildrop wherevoicemaildrop_uuid='$id'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
 	
-	my $sth = $dbh->prepare("select * from v_voicemaildrop where voicemaildrop_uuid='$id' ");
-	$sth->execute();
 
-	my $list = [];
-	my $found = 0;
-	my $path  = '';
-	while (my $row = $sth->fetchrow_hashref) {
+	if ($data{$id}{voicemaildrop_uuid}) {
+		$path = $data{$id}{voicemaildrop_path};
+		($type) = $path =~ /\.(\w+)$/;
+		
 		$path = $row->{voicemaildrop_path};
 		$found = 1;
 	}
@@ -359,15 +399,27 @@ sub sendvoicemaildrop {
 		}
 		
 		if (!$call_found || !$remote_uuid) {
-			print j({error => '1', 'message' => "$callback_uuid not found in any call", 'actionid' => $form{actionid}});
+			$response{error} = 1;
+			$response{message} =   "$callback_uuid not found in any call";
+			$response{actionid} = $form{actionid};
+			&print_json_response(%response);
+			return;
 		} else {
 		
 			my $result = `fs_cli -x "uuid_setvar $remote_uuid  voicemaildrop_file $path"`;
 			$result = `fs_cli -x "uuid_transfer $remote_uuid play_voicemaildrop XML default"`;
-			print j({error => '0', 'message' => $result, 'actionid' => $form{actionid}});
+			$response{error} = 0;
+			$response{message} =  'ok';
+			$response{actionid} = $form{actionid};
+			&print_json_response(%response);
+			return;
 		}
 	} else {
-		print j({error => '1', 'message' => 'not found', 'actionid' => $form{actionid}});
+		$response{error} = 1;
+		$response{message} =   "'not found";
+		$response{actionid} = $form{actionid};
+		&print_json_response(%response);
+		return;
 	}
 }
 
@@ -375,6 +427,12 @@ sub hold () {
     local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
     %calls = parse_calls();
     if ($direction eq 'inbound') {		
 		for  (keys %calls) {
@@ -399,27 +457,8 @@ sub hold () {
 sub unhold() {
     &hold();
 }
-=cut
 
-sub agentlogin () {
-    $name   = &database_clean_string(substr $form{agentname}, 0, 50);
-    $status = shift || 'Available';
-    %domain      = &get_domain();
-    $domain_name = $domain{name};
-    if (!$domain{name}) {
-        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
-    }
-    warn "callcenter_config agent set status $name\@$domain_name '$status'";
-    $output = &runswitchcommand(1, "callcenter_config agent set status $name\@$domain_name '$status'");
-    
-    $response{stat}          = 'ok';
-    $response{message} = $output;
-    &print_json_response(%response);
-}
 
-sub agentlogout () {
-    &agentlogin('Logged Out');
-}
 
 
 sub stoprecording() {
@@ -432,6 +471,12 @@ sub startrecording() {
 sub _dorecording() {
 	local $mode = shift;
 	local $ext = $form{ext} || $form{extension};
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
 	%domain    = &get_domain();
     $domain_name    = $domain{name};
     if (!$domain{name}) {
