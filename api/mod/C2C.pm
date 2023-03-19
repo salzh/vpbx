@@ -221,9 +221,9 @@ sub transfer {
 
 
 sub uploadvoicemaildrop {
-	my $name = uri_unescape(clean_str($form{name}, 'SQLSAFE'));
-	my $format = clean_str($form{format}, 'SQLSAFE') || 'mp3';
-	my $ext =  clean_str($form{ext}, 'SQLSAFE') || '';
+	my $name = uri_unescape(&clean_str($form{name}, 'SQLSAFE'));
+	my $format = &clean_str($form{format}, 'SQLSAFE') || 'mp3';
+	my $ext =  &clean_str($form{ext}, 'SQLSAFE') || '';
 	my $uuid = &genuuid();
 	my $domain		= $cgi->server_name();
 	
@@ -256,7 +256,7 @@ sub uploadvoicemaildrop {
 
 sub listvoicemaildrop {
 	my $domain		= $cgi->server_name();
-	my $ext =  clean_str($form{ext}, 'SQLSAFE') || '';
+	my $ext =  &clean_str($form{ext}, 'SQLSAFE') || '';
 
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
@@ -292,7 +292,7 @@ sub listvoicemaildrop {
 }
 
 sub deletevoicemaildrop {
-	my $id = clean_str($form{id}, 'SQLSAFE');
+	my $id = &clean_str($form{id}, 'SQLSAFE');
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
@@ -320,7 +320,7 @@ sub deletevoicemaildrop {
 }
 
 sub getvoicemaildrop {
-	my $id = clean_str($form{id}, 'SQLSAFE');
+	my $id = &clean_str($form{id}, 'SQLSAFE');
 	warn $id;
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
@@ -350,8 +350,8 @@ sub getvoicemaildrop {
 }
 
 sub updatevoicemaildrop {
-	my $id = clean_str($form{id}, 'SQLSAFE');
-	my $name = uri_unescape(clean_str($form{name}, 'SQLSAFE'));
+	my $id = &clean_str($form{id}, 'SQLSAFE');
+	my $name = uri_unescape(&clean_str($form{name}, 'SQLSAFE'));
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
@@ -365,8 +365,8 @@ sub updatevoicemaildrop {
 }
 
 sub sendvoicemaildrop {
-	my $id = clean_str($form{id}, 'SQLSAFE');
-	my $callback_uuid = clean_str($form{callback_uuid}, 'SQLSAFE');
+	my $id = &clean_str($form{id}, 'SQLSAFE');
+	my $callback_uuid = &clean_str($form{callback_uuid}, 'SQLSAFE');
 	
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
