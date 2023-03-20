@@ -265,7 +265,7 @@ sub get_jwt() {
 		$response{error} = 1;
 		$response{message} = 'jwt key not found!';
 		
-		return $response;	
+		return %response;	
 	}
 	
 	
