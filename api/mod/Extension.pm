@@ -617,6 +617,8 @@ sub getregistration () {
      
      $output = &runswitchcommand('internal', "show registrations");
 
+	 $output =~ s/\r//g;
+	 
 	 @list = ();
 	 for $row (split /\n/, $output) {
 		  #warn $row;
