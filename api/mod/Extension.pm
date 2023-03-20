@@ -619,12 +619,9 @@ sub getregistration () {
 	 for $row (split /\n/, $output) {
 		  warn $row;
 		  @arr = split ',', $row;
-		  if ($arr[1] ne $domain{name}) {
-			   next;
-		  }
-		  
-		  push @list, \@arr;
-		  
+		  if ($arr[1] eq $domain{name}) {
+			    push @list, \@arr;
+		  }		  
 	 }
      $response{stat}	= "ok";
      $response{message}	= "OK";
