@@ -480,28 +480,42 @@ sub getgswaveqr () {
 
 sub setextensionforward () {
      local $poststring_add = '
-forward_all_enabled:false
-forward_all_destination:
-follow_me_enabled:false
-destination_data_1:8284665566
-destination_delay_1:0
-destination_timeout_1:15
-destination_data_2:8384665566
-destination_delay_2:5
-destination_timeout_2:15
-destination_data_3:
-destination_delay_3:0
-destination_timeout_3:30
-destination_data_4:
-destination_delay_4:0
-destination_timeout_4:30
-destination_data_5:
-destination_delay_5:0
-destination_timeout_5:30
-cid_name_prefix:
-call_prompt:true
-dnd_enabled:false
-submit:Save
+forward_all_enabled: false
+forward_all_destination: 
+forward_busy_enabled: false
+forward_busy_destination: 
+forward_no_answer_enabled: false
+forward_no_answer_destination: 
+forward_user_not_registered_enabled: false
+forward_user_not_registered_destination: 
+follow_me_enabled: true
+destinations[0][uuid]: a6b6e113-56ec-4809-969b-87a95405e240
+destinations[0][destination]: 18882115404
+destinations[0][delay]: 0
+destinations[0][timeout]: 30
+destinations[0][prompt]: 
+destinations[1][uuid]: 3ac2bbd7-a53a-4d4f-b4cf-2ca376f56299
+destinations[1][destination]: 2124441005
+destinations[1][delay]: 0
+destinations[1][timeout]: 30
+destinations[1][prompt]: 
+destinations[2][uuid]: 11adda93-8b35-4156-86cc-24cea6f70276
+destinations[2][destination]: 
+destinations[2][delay]: 0
+destinations[2][timeout]: 30
+destinations[2][prompt]: 
+destinations[3][uuid]: 4e31a051-809a-48f8-812d-5f219d91756d
+destinations[3][destination]: 
+destinations[3][delay]: 0
+destinations[3][timeout]: 30
+destinations[3][prompt]: 
+destinations[4][uuid]: ec65f3ab-50ae-4a91-937d-892acce35ba9
+destinations[4][destination]: 
+destinations[4][delay]: 0
+destinations[4][timeout]: 30
+destinations[4][prompt]: 
+follow_me_ignore_busy: true
+dnd_enabled: false
 ';
 
      local %post_add = ();
@@ -515,31 +529,51 @@ submit:Save
      local %params = (
           forward_all_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
           forward_all_destination => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          follow_me_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
-          
-          destination_data_1 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          destination_delay_1 => {type => 'int', maxlen => 3, notnull => 0, default => '0'},
-          destination_timeout_1 => {type => 'int', maxlen => 3, notnull => 1, default => '30'},
-          
-          destination_data_2 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          destination_delay_2 => {type => 'int', maxlen => 3, notnull => 0, default => '0'},
-          destination_timeout_2 => {type => 'int', maxlen => 3, notnull => 1, default => '30'},
-         
-          destination_data_3 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          destination_delay_3 => {type => 'int', maxlen => 3, notnull => 0, default => '0'},
-          destination_timeout_3 => {type => 'int', maxlen => 3, notnull => 1, default => '30'},
-                  
-          destination_data_4 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          destination_delay_4 => {type => 'int', maxlen => 3, notnull => 0, default => '0'},
-          destination_timeout_4 => {type => 'int', maxlen => 3, notnull => 1, default => '30'},
-          
-          destination_data_5 => {type => 'string', maxlen => 20, notnull => 0, default => ''},
-          destination_delay_5 => {type => 'int', maxlen => 3, notnull => 0, default => '0'},
-          destination_timeout_5 => {type => 'int', maxlen => 3, notnull => 1, default => '30'},
-          
-          cid_name_prefix => {type => 'string', maxlen => 255, notnull => 0, default => ''},
-          call_prompt => {type => 'bool', maxlen => 10, notnull => 0, default =>'false'},
-          dnd_enabled => {type => 'boll', maxlen => 10, notnull => 0, default => 'false'}        
+		  
+		  forward_busy_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
+          forward_busy_destination => {type => 'string', maxlen => 20, notnull => 0, default => ''},
+		  
+		  forward_no_answer_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
+          forward_no_answer_destination => {type => 'string', maxlen => 20, notnull => 0, default => ''},
+		  
+		  forward_user_not_registered_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},		  
+          forward_user_not_registered_destination => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
+		  
+		  follow_me_enabled => {type => 'bool', maxlen => 10, notnull => 0, default => 'false'},
+
+          'destinations[0][uuid]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[0][data]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[0][delay]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[0][timeout]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[0][prompt]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+		  
+		  'destinations[1][uuid]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[1][data]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[1][delay]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[1][timeout]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[1][prompt]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+		  
+		  'destinations[2][uuid]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[2][data]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[2][delay]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[2][timeout]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[2][prompt]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+		  
+		  'destinations[3][uuid]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[3][data]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[3][delay]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[3][timeout]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[3][prompt]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+		  
+		  'destinations[4][uuid]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[4][data]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[4][delay]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[4][timeout]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+          'destinations[4][prompt]' => {type => 'string', maxlen => 20, notnull => 1, default => ''},
+        
+	 
+          dnd_enabled => {type => 'boll', maxlen => 10, notnull => 0, default => 'false'},     
+          follow_me_ignore_busy => {type => 'boll', maxlen => 10, notnull => 0, default => 'false'}        
     );
 	 
 	%response       = ();   
@@ -562,6 +596,20 @@ submit:Save
              }
         }
      }
+	 
+	 for(0..4) {
+		  if ($form{'destinations[' . $_ . '][uuid]'}) {
+			   $post_add{'destinations[' . $_ . '][uuid]'} = &genuuid();
+		  }
+		  
+		  $post_add{'destinations[' . $_ . '][destination]'} = $form{'destination_data_' . $_};
+		  $post_add{'destinations[' . $_ . '][delay]'} = $form{'destination_delay_' . $_};
+		  $post_add{'destinations[' . $_ . '][timeout]'} = $form{'destination_timeout_' . $_};
+		  $post_add{'destinations[' . $_ . '][prompt]'} = $form{'destination_prompt_' . $_};
+		  
+		  delete $form{'destination_data_' . $_}, $form{'destination_delay_' . $_}, $form{'destination_timeout_' . $_},$form{'destination_prompt_' . $_};
+
+	 }
      
      $uuid  = &clean_str(substr($form{extension_uuid},0,50),"MINIMAL","-_");
 
@@ -600,6 +648,60 @@ submit:Save
 
 }
 
+sub getextensionforward () {
+	 local $uuid  = &clean_str(substr($form{extension_uuid},0,50),"MINIMAL","-_");
+     
+     warn $uuid;
+     %domain   = &get_domain();
+     if (!$domain{name}) {
+          $response{stat}		= "fail";
+          $response{message}	= "domain not exists!";
+		  &print_json_response(%response); return;
+		  
+     }
+     $response = ();
+	 
+	 $fields = 'extension,do_not_disturb,forward_all_destination,forward_all_enabled,forward_busy_destination,forward_busy_enabled,forward_no_answer_destination,forward_no_answer_enabled,forward_user_not_registered_destination,forward_user_not_registered_enabled,follow_me_uuid'
+	 %hash = &database_select_as_hash("select 1,$fields from v_extensions  where domain_uuid = '$domain{uuid}'  and extension_uuid = '$uuid'",
+									  $fields);
+	 
+	 
+	 
+	 if (!$hash{1}{extension}) {
+		  $response{stat} = 'fail';
+		  $response{error} = '1';
+		  $response{message} = "not found by extension_uuid=$uuid";
+		  &print_json_response(%response); return;
+
+	 }
+	 
+	 $response{data} = $hash{1};	 
+	 if ($hash{1}{follow_me_uuid}) {
+		  $follow_me_uuid = $hash{1}{follow_me_uuid};
+		  %data = &database_select_as_hash("select follow_me_destination_uuid,follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order from v_follow_me where  follow_me_uuid = '$follow_me_uuid'", "follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order");
+		  
+		  for $id (keys %data) {
+			   $order = $data{$uuid}{follow_me_order};
+			   $response{data}{'destinations[' . $order . '][destination]'} = $data{$id}{follow_me_destination};
+			   $response{data}{'destinations[' . $order . '][uuid]'} = $data{$id}{follow_me_destination_uuid};
+			   $response{data}{'destinations[' . $order . '][delay]'} = $data{$id}{follow_me_delay};
+			   $response{data}{'destinations[' . $order . '][prompt]'} = $data{$id}{follow_me_prompt};
+			   $response{data}{'destinations[' . $order . '][timeout]'} = $data{$id}{follow_me_timeout};
+		  }
+		  
+		  for $order (0..4) {
+			   if ($response{data}{'destinations[' . $order . '][uuid]'}) {
+					$response{data}{'destinations[' . $order . '][uuid]'} = &genuuid();
+					$response{data}{'destinations[' . $order . '][destination]'} = '';
+					$response{data}{'destinations[' . $order . '][delay]'} = 0;
+					$response{data}{'destinations[' . $order . '][prompt]'} = '';
+					$response{data}{'destinations[' . $order . '][timeout]'} = 30;
+			   }
+		  }
+	 }
+	 
+	 
+}
 
 sub getregistration () {
 	 $extension = &clean_str(substr($form{extension},0,50),"MINIMAL","-_");
