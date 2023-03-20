@@ -270,15 +270,16 @@ sub _write() {
 	local $tmp = '';
 	sysread($sock, $tmp, $size);
 	$response .= $tmp;
-	if ($response =~ /Content-Length: (\d+)/i) {
+	if ($response =~ /Content-Length: (\d+)(.*)$/i) {
 		$content_length = $1;
+		$body = $2;
 	}
 	
 	if (!$content_length) {
 		return $response;
 	}
 	
-	($body) = $response =~ /Content\-Length: $content_length(.+)/i;
+	
 	$tmp = '';
 	$to_read = $content_length - (length $body);
 	
