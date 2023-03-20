@@ -613,7 +613,7 @@ sub getregistration () {
           $response{message}	= "domain not exists!";
      }
      
-     $output = &runswitchcommand('internal', "fs_cli -rx 'show registrations'");
+     $output = &runswitchcommand('internal', "show registrations");
 
      $response{stat}	= "ok";
      $response{message}	= "OK";
