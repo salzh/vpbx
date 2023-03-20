@@ -66,7 +66,7 @@ sub sendcallback {
 		$dest = "011$1";
 	}
 	
-	unless($dest =~ /^\d{10}$/ || $dest =~ /^011\d+$/) {
+	unless($dest =~ /^1?\d{10}$/ || $dest =~ /^011\d+$/) {
 		$response{error} = 1;
 		$response{message} = "dest=$form{dest} is invalid";
 		$response{actionid} = $form{actionid};
