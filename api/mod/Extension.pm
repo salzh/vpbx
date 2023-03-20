@@ -615,6 +615,7 @@ sub getregistration () {
      
      $output = &runswitchcommand('internal', "show registrations");
 
+	 @list = ();
 	 for $row (split /\n/, $output) {
 		  @arr = split ',', $row;
 		  if ($arr[1] ne $domain{name}) {
