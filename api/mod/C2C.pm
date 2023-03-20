@@ -443,8 +443,11 @@ sub hold () {
 	}
 	
 	if (!$uuid_xtt) {
-		warn "$uuid not in any calls!";
-		&print_api_error_end_exit(160, "$uuid not in any $direction calls");
+		$response{error} = 1;
+		$response{message} =   "$uuid not in any $direction calls";
+		$response{actionid} = $form{actionid};
+		&print_json_response(%response);
+		return;
 	}
 	
     $output = &runswitchcommand("internal", "uuid_hold toggle $uuid_xtt");
@@ -480,7 +483,12 @@ sub _dorecording() {
 	%domain    = &get_domain();
     $domain_name    = $domain{name};
     if (!$domain{name}) {
-        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+ 		
+		$response{error} = 1;
+		$response{message} =   "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
+		$response{actionid} = $form{actionid};
+		&print_json_response(%response);
+		return;
     }
 	
 	
