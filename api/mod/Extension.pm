@@ -611,6 +611,8 @@ sub getregistration () {
      if (!$domain{name}) {
           $response{stat}		= "ok";
           $response{message}	= "domain not exists!";
+		  &print_json_response(%response);
+		  return;
      }
      
      $output = &runswitchcommand('internal', "show registrations");
