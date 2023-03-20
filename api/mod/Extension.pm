@@ -699,7 +699,7 @@ sub getextensionforward () {
 			   }
 		  }
 	 }
-	 
+	  &print_json_response(%response);
 	 
 }
 
