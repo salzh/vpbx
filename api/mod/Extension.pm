@@ -661,7 +661,7 @@ sub getextensionforward () {
      }
      $response = ();
 	 
-	 $fields = 'extension,do_not_disturb,forward_all_destination,forward_all_enabled,forward_busy_destination,forward_busy_enabled,forward_no_answer_destination,forward_no_answer_enabled,forward_user_not_registered_destination,forward_user_not_registered_enabled,follow_me_uuid'
+	 $fields = 'extension,do_not_disturb,forward_all_destination,forward_all_enabled,forward_busy_destination,forward_busy_enabled,forward_no_answer_destination,forward_no_answer_enabled,forward_user_not_registered_destination,forward_user_not_registered_enabled,follow_me_uuid';
 	 %hash = &database_select_as_hash("select 1,$fields from v_extensions  where domain_uuid = '$domain{uuid}'  and extension_uuid = '$uuid'",
 									  $fields);
 	 
