@@ -638,7 +638,7 @@ dnd_enabled: false
           &post_data (
                      'domain_uuid' => $domain{uuid},
                      'urlpath'     => "/app/call_forward/call_forward.php?id=$uuid",
-                     'reload'      => 1,
+                     'reload'      => 0,
                      'data'        => [%post_add]);          
          
           $response{stat}	    = "ok";
