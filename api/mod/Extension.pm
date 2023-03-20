@@ -678,7 +678,7 @@ sub getextensionforward () {
 	 $response{data} = $hash{1};	 
 	 if ($hash{1}{follow_me_uuid}) {
 		  $follow_me_uuid = $hash{1}{follow_me_uuid};
-		  %data = &database_select_as_hash("select follow_me_destination_uuid,follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order from v_follow_me where  follow_me_uuid = '$follow_me_uuid'", "follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order");
+		  %data = &database_select_as_hash("select follow_me_destination_uuid,follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order from v_follow_me_destinations where  follow_me_uuid = '$follow_me_uuid'", "follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order");
 		  
 		  for $id (keys %data) {
 			   $order = $data{$uuid}{follow_me_order};
