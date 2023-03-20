@@ -68,7 +68,7 @@ sub sendcallback {
 	
 	unless($dest =~ /^\d{10}$/ || $dest =~ /^011\d+$/) {
 		$response{error} = 1;
-		$response{message} = '"dest=$query{dest} is invalid"';
+		$response{message} = "dest=$form{dest} is invalid";
 		$response{actionid} = $form{actionid};
 		&print_json_response(%response);	
 		return;
