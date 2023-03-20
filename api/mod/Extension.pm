@@ -601,6 +601,27 @@ submit:Save
 }
 
 
+sub getregistration () {
+	 $extension = &clean_str(substr($form{extension},0,50),"MINIMAL","-_");
+
+     $response = ();
+    
+     %domain   = &get_domain();
+     
+     if (!$domain{name}) {
+          $response{stat}		= "ok";
+          $response{message}	= "domain not exists!";
+     }
+     
+     $output = &runswitchcommand('internal', "fs_cli -rx 'show registrations'");
+
+     $response{stat}	= "ok";
+     $response{message}	= "OK";
+     
+     $response{data}{output} = $output;
+     
+     &print_json_response(%response);
+}
 
 return 1;
 
