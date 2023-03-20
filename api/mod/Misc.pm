@@ -286,7 +286,7 @@ sub _write() {
 	$body =~ s/[\r\n]/;/g;
 	$response =~ s/[\r\n]/;/g;
 	warn "$response: $body: $content_length: $to_read";
-	while (1) {
+	while ($to_read > 0) {
 		$n = sysread($sock, $tmp, $to_read);
 		if ($n >= $to_read) {
 			$response .= $tmp;
