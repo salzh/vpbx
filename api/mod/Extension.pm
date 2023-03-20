@@ -625,7 +625,7 @@ sub getregistration () {
 		  @arr = split ',', $row;
 		  if ($arr[1] eq $domain{name}) {
 			   warn $arr[1];
-			    push @list, \@arr;
+			    push @list, $row;
 		  }		  
 	 }
      $response{stat}	= "ok";
