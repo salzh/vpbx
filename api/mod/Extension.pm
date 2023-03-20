@@ -637,7 +637,7 @@ dnd_enabled: false
 
           &post_data (
                      'domain_uuid' => $domain{uuid},
-                     'urlpath'     => "https://222.velantro.net/app/call_forward/call_forward_edit.php?id=$uuid",
+                     'urlpath'     => "/app/call_forward/call_forward_edit.php?id=$uuid",
                      'reload'      => 0,
                      'data'        => [%post_add]);          
          
