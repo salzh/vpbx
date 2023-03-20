@@ -278,7 +278,7 @@ sub _write() {
 		return $response;
 	}
 	
-	($body) = $response =~ /\r\n\r\n(.+)$/i;
+	($body) = $response =~ /(\n\n.+)$/i;
 	$tmp = '';
 	$to_read = $content_length - (length $body);
 	warn "$body: $to_read";
