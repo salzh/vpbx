@@ -67,8 +67,11 @@ sub sendcallback {
 	}
 	
 	unless($dest =~ /^\d{10}$/ || $dest =~ /^011\d+$/) {
-		print j({error => '1', 'message' => "dest=$query{dest} is invalid", 'actionid' => $query{actionid}});
-		exit 0;
+		$response{error} = 1;
+		$response{message} = '"dest=$query{dest} is invalid"';
+		$response{actionid} = $form{actionid};
+		&print_json_response(%response);	
+		return;
 	}
 	
 	local $realdest = $dest;
