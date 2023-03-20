@@ -681,7 +681,7 @@ sub getextensionforward () {
 		  %data = &database_select_as_hash("select follow_me_destination_uuid,follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order from v_follow_me_destinations where  follow_me_uuid = '$follow_me_uuid'", "follow_me_destination,follow_me_delay,follow_me_prompt,follow_me_timeout,follow_me_order");
 		  
 		  for $id (keys %data) {
-			   $order = $data{$uuid}{follow_me_order};
+			   $order = $data{$id}{follow_me_order};
 			   $response{data}{'destinations[' . $order . '][destination]'} = $data{$id}{follow_me_destination};
 			   $response{data}{'destinations[' . $order . '][uuid]'} = $data{$id}{follow_me_destination_uuid};
 			   $response{data}{'destinations[' . $order . '][delay]'} = $data{$id}{follow_me_delay};
@@ -699,7 +699,9 @@ sub getextensionforward () {
 			   }
 		  }
 	 }
-	  &print_json_response(%response);
+	 $response{stat}	    = "ok";
+     $response{message}	= "OK";
+	 &print_json_response(%response);
 	 
 }
 
