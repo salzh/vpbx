@@ -270,13 +270,17 @@ sub _write() {
 		local $tmp = '';
 		sysread($sock, $tmp, $size);
 		$response .= $tmp;
-		if ($response =~ /\n\n/){
+		if ($response =~ /Content-Length: (\d+)/i) {
+			$body_size = $1;
+		}
+		
+		if ($response =~ /\n\n/ && !$body_size){
 			last;			
 		}
 		usleep 50;
 	}
 	
-	return $response;	
+	return $response . $body_size;	
 }
 
 sub parse_channels () {
