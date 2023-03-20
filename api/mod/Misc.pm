@@ -274,7 +274,7 @@ sub _write() {
 			$body_size = $1;
 		}
 		
-		if ($response =~ /\n\n/ && !$body_size){
+		if ($response =~ /\n\n/){
 			last;			
 		}
 		usleep 50;
