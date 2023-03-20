@@ -615,10 +615,19 @@ sub getregistration () {
      
      $output = &runswitchcommand('internal', "show registrations");
 
+	 for $row (split /\n/, $output) {
+		  @arr = split ',', $row;
+		  if ($arr[1] ne $domain{name}) {
+			   next;
+		  }
+		  
+		  push @list, \@arr;
+		  
+	 }
      $response{stat}	= "ok";
      $response{message}	= "OK";
      
-     $response{data}{output} = $output;
+     $response{data}{list} = \@list;
      
      &print_json_response(%response);
 }
