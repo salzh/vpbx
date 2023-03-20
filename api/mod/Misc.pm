@@ -266,21 +266,35 @@ sub _write() {
 	local $size = 65536;
 	
 	local $response = '';
-	while (1) {
-		local $tmp = '';
-		sysread($sock, $tmp, $size);
-		$response .= $tmp;
-		if ($response =~ /Content-Length: (\d+)/i) {
-			$body_size = $1;
-		}
-		
-		if ($response =~ /\n\n/){
-			last;			
-		}
-		usleep 50;
+	
+	local $tmp = '';
+	sysread($sock, $tmp, $size);
+	$response .= $tmp;
+	if ($response =~ /Content-Length: (\d+)/i) {
+		$content_length = $1;
 	}
 	
-	return $response . $body_size;	
+	if (!$content_length) {
+		return $response;
+	}
+	
+	($body) =~ /\n\n(.+)$/i;
+	$tmp = '';
+	$to_read = $content_length - (length $body);
+
+	while (1) {
+		$n = sysread($sock, $tmp, $to_read);
+		if ($n >= $to_read) {
+			$response .= $tmp;
+			last;
+		} else {
+			$to_read -= $n;
+		}
+		
+		usleep 50;		
+	}
+	
+	return $response;	
 }
 
 sub parse_channels () {
