@@ -617,6 +617,7 @@ sub getregistration () {
 
 	 @list = ();
 	 for $row (split /\n/, $output) {
+		  warn $row;
 		  @arr = split ',', $row;
 		  if ($arr[1] ne $domain{name}) {
 			   next;
