@@ -690,7 +690,7 @@ sub getextensionforward () {
 		  }
 		  
 		  for $order (0..4) {
-			   if ($response{data}{'destinations[' . $order . '][uuid]'}) {
+			   if (!$response{data}{'destinations[' . $order . '][uuid]'}) {
 					$response{data}{'destinations[' . $order . '][uuid]'} = &genuuid();
 					$response{data}{'destinations[' . $order . '][destination]'} = '';
 					$response{data}{'destinations[' . $order . '][delay]'} = 0;
