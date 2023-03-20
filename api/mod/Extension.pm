@@ -625,7 +625,7 @@ sub getregistration () {
 		  @arr = split ',', $row;
 		  if ($arr[1] eq $domain{name}) {
 			   warn $arr[1];
-			    push @list, $row;
+			    push @list, {ext=>$arr[0],'network_ip' => $arr[5], 'network_port' => $arr[6]};
 		  }		  
 	 }
      $response{stat}	= "ok";
