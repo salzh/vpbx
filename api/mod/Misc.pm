@@ -278,10 +278,12 @@ sub _write() {
 		return $response;
 	}
 	
-	($body) = $response =~ /Content-Length: $content_length(.+)/i;
+	($body) = $response =~ /Content\-Length: $content_length(.+)/i;
 	$tmp = '';
 	$to_read = $content_length - (length $body);
-	#warn "$response: $body: $content_length: $to_read";
+	
+	$body =~ s/[\r\n]/;/g;
+	warn "$body: $content_length: $to_read";
 	while (1) {
 		$n = sysread($sock, $tmp, $to_read);
 		if ($n >= $to_read) {
