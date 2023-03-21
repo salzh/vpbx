@@ -151,6 +151,8 @@ sub getcallbackstate {
 		$state = 'EXTRING';
 	} elsif ($state eq 'RING_WAIT') {
 		$state = 'DESTRING';
+	} elsif ($state eq 'RINGING') {
+		$state = 'EXTRING';
 	} elsif ($state eq 'ACTIVE') {
 		$state = 'DESTANSWERED';
 	} elsif ($state eq 'HELD') {
