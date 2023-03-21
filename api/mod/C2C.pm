@@ -112,7 +112,7 @@ sub getcallbackstate {
 	
 	my %jwt_hash = %{$jwt{jwt_hash}};
 	
-	my %uuid = ();
+	my %uuids = ();
 	#my $channels = `fs_cli -x "show channels"`;
 	my $channels = &runswitchcommand('internal', "show channels");
 	my $uuid_found = 0;
@@ -135,15 +135,14 @@ sub getcallbackstate {
 		#warn $callstate_index;
 		#@f = split ',', $_;
 		$f = _records($channel);
-		$uuid{$$f[0]} = $$f[$callstate_index];
+		$uuids{$$f[0]} = $$f[$callstate_index];
 		if ($$f[0] eq $uuid) {
 			$uuid_found = 1;
 			$state = $$f[$callstate_index];
 			last;
 		}
 	}
-	
-	
+	warn Data::Dumper::Dump(\%uuids);
 	warn "$uuid:$state!";
 	if ($state eq 'EARLY') {
 		$state = 'EXTRING';
