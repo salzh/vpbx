@@ -486,7 +486,7 @@ sub End() {
 		$fixed_billsec = 0;
 	}
 	
-	$data = "type=$type&state=hangup&ext=$ext&id=$uuid&from=" . &to164($from) . "&to=" . &to164($to) . "&start_time=$starttime" . ($fixed_billsec > 0 ? "&duration=$fixed_billsec&voiceuri=https://$domain_name/app/xml_cdr/download.php?id=$uuid" : ""); #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
+	$data = "type=$type&state=hangup&ext=$ext&uuid=$uuid&from=" . &to164($from) . "&to=" . &to164($to) . "&start_time=$starttime" . ($fixed_billsec > 0 ? "&duration=$fixed_billsec&voiceuri=https://$domain_name/app/xml_cdr/download.php?id=$uuid" : ""); #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 	
 	
 	#&database_do("delete from v_zoho_api_cache where ext='$ext'");
