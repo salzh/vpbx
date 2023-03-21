@@ -118,12 +118,14 @@ sub getcallbackstate {
 	my $uuid_found = 0;
 	$i = 0;
 	$callstate_index = 24;
+	$header_found = 0;
 	for $channel (split /\n/, $channels) {
 		if ($i++ == 0) {
 			$j = 0;
 			for $field_name (split ',', $channel) {
 				if ($field_name eq 'callstate') {
 					$callstate_index = $j;
+					$header_found = 1;
 					last;
 				}
 				$j++;
@@ -132,9 +134,14 @@ sub getcallbackstate {
 			next;
 		}
 		
+		if (!$header_found) {
+			$i = 0;
+			next;
+		}
+		
 		#warn $callstate_index;
 		#@f = split ',', $_;
-		$f = _records($channel);
+		$f = &_records($channel);
 		$uuids{$$f[0]} = $$f[$callstate_index];
 		if ($$f[0] eq $uuid) {
 			$uuid_found = 1;
