@@ -9,7 +9,7 @@
 sub adddestination () {
    local $poststring_add = '
 destination_type: inbound
-destination_prefix: 
+destination_prefix: 1
 destination_number: 18187298888
 destination_caller_id_name: 
 destination_caller_id_number: 
@@ -104,7 +104,7 @@ destination_description:
    if ($response{stat} ne 'fail') {
          &post_data (
             'domain_uuid' => $domain{uuid},
-            'urlpath'     => '/app/destinations/destination_edit.php',
+            'urlpath'     => '/app/destinations/destination_edit.php?type=inbound',
             'reload'      => 1,
             'data'        => [%post_add]);
         
