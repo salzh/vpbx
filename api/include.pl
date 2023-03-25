@@ -49,7 +49,7 @@ if (lc($ENV{REQUEST_METHOD}) eq 'get') {
 	foreach $form_name ($cgi->param) {
 		@form_values = $cgi->param($form_name);
 		$form_values_count = @form_values;
-		$form{$form_name} = ($form_values_count>1) ? join(",",@form_values) : $form_values[0];
+		$form{$form_name} = ($form_values_count>1) ? join(",",@form_values) : uri_unescape($form_values[0]);
 	}
 }
 warn Dumper(\%form);
