@@ -146,20 +146,26 @@ sub getcallbackstate {
 		}
 	}
 	warn Data::Dumper::Dump(\%uuids);
-	warn "$uuid:$state!";
-	if ($state eq 'EARLY') {
-		$state = 'EXTRING';
-	} elsif ($state eq 'RING_WAIT') {
-		$state = 'DESTRING';
-	} elsif ($state eq 'RINGING') {
-		$state = 'EXTRING';
-	} elsif ($state eq 'ACTIVE') {
-		$state = 'DESTANSWERED';
-	} elsif ($state eq 'HELD') {
-		$state = 'HELD';
+	if (!$uuid_found) {
+		$state = 'HANGUP';
 	} else {
-		$state = 'EXTWAIT';
+		
+		if ($state eq 'EARLY') {
+			$state = 'EXTRING';
+		} elsif ($state eq 'RING_WAIT') {
+			$state = 'DESTRING';
+		} elsif ($state eq 'RINGING') {
+			$state = 'EXTRING';
+		} elsif ($state eq 'ACTIVE') {
+			$state = 'DESTANSWERED';
+		} elsif ($state eq 'HELD') {
+			$state = 'HELD';
+		} else {
+			$state = 'EXTWAIT';
+		}
 	}
+		warn "$uuid:$state!";
+
 	#	$state = 'HANGUP';
 	
 	
