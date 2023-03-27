@@ -147,6 +147,7 @@ sub getcallbackstate {
 	}
 	warn Data::Dumper::Dump(\%uuids);
 	if (!$uuid_found) {
+		warn "$uuid not found in show channels";
 		$state = 'HANGUP';
 	} else {
 		
