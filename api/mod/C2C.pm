@@ -256,7 +256,7 @@ sub uploadvoicemaildrop {
 	
 	my $msg = 'ok';
 	my $error = 0;
-	if ($io_handle = $q->upload('voicemaildropfile') ) {
+	if ($io_handle = $cgi->upload('voicemaildropfile') ) {
 		open ($out_file,'>', $path );
 		while ($bytesread = $io_handle->read($buffer,1024) ) {
 			print $out_file $buffer;
