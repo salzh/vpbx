@@ -230,6 +230,8 @@ sub runswitchcommand() {
 	warn "response: $buffer !\n";
 	close $remote;
 	
+	$remote->close;
+	undef $remote;
 	return $buffer;
 }
 
