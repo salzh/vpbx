@@ -253,16 +253,24 @@ sub uploadvoicemaildrop {
 	}
 	
 	my $path = "$basedir/$uuid.$format";
-	my $ok = $cgi->upload('voicemaildropfile',  $path);
+	
 	my $msg = 'ok';
 	my $error = 0;
-	if (!$ok) {
-        $msg =  $cgi->cgi_error();
+	if ($io_handle = $q->upload('voicemaildropfile') ) {
+		open ($out_file,'>', $path );
+		while ($bytesread = $io_handle->read($buffer,1024) ) {
+			print $out_file $buffer;
+		}
+		close $out_file;
+	} else {
 		$error = 1;
-    }
+		$msg = "cant open fh from voicemaildropfile";
+	}
 	
+	$filesize = -s $path;
+	warn "voicemaildropfile - $path: $filesize";
 	&database_do("insert into v_voicemaildrop (voicemaildrop_uuid, voicemaildrop_name, voicemaildrop_path, domain_name, ext) values ('$uuid', '$name', '$path', '$domain', '$ext')");
-	$response{error} = $error;
+	$response{error}   = $error;
 	$response{message} =  $msg;
 	$response{actionid} = $form{actionid};
 	&print_json_response(%response);
