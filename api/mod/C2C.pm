@@ -278,8 +278,8 @@ sub listvoicemaildrop {
 		return;
 	}
 	
-	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext from v_voicemaildrop where domain_name='$domain' and ext='$ext'",
-									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where domain_name='$domain' and ext='$ext'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 
 	my $list = [];
 	my $found = 0;
