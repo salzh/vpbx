@@ -247,7 +247,7 @@ sub uploadvoicemaildrop {
 		return;
 	}
 	
-	my $basedir = "/var/lib/freewitch/voicemaildrop";
+	my $basedir = "/var/lib/freeswitch/voicemaildrop";
 	if (!-d $basedir) {
 		system("mkdir -p $basedir");
 	}
@@ -542,9 +542,9 @@ sub _dorecording() {
 			$mon  = strftime('%b', localtime);
 			$day  = strftime('%d', localtime);
 			
-			$recording_file = "/var/lib/freewitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format";
+			$recording_file = "/var/lib/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format";
 			for $i (0..20) {
-				$tmp_recording_file = "/var/lib/freewitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid" . ($i ? "_$i":"") . ".$record_format";
+				$tmp_recording_file = "/var/lib/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid" . ($i ? "_$i":"") . ".$record_format";
 				if (!-e $tmp_recording_file) {
 					$recording_file = $tmp_recording_file;
 					last;
