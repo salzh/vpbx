@@ -153,7 +153,7 @@ sub getstat () {
 	}
 	
 	$out = &runswitchcommand('internal', "status");
-	($v) = $out =~ /peak (\d+) /;
+	($v) = $out =~ /peak (\d+),/s;
 	$data{max_concurrent} = $v;
 	$response{data} = \%data;
 	&print_json_response(%response);
