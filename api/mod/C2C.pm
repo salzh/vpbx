@@ -446,7 +446,8 @@ sub sendvoicemaildrop {
 }
 
 sub hold () {
-    local ($uuid) = &database_clean_string(substr $form{uuid}, 0, 50);
+	$uuid = $form{uuid} || $form{callbackid};
+    local ($uuid) = &database_clean_string($uuid, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
 		 
 	my %jwt = &get_jwt();
