@@ -100,7 +100,7 @@ sub getstat () {
 	$data{total_inbound_duration} = 0;
 	$data{total_outbound_duration} = 0;
 
-	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
+	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
 	
 	%hash = &database_select_as_hash(
