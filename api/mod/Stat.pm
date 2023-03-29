@@ -116,21 +116,20 @@ sub getstat () {
 		$len_destination_number = length($hash{$uuid}{destination_number});
 		if ($len_callerid_number < 7 && $len_destination_number > 7) {
 			$data{outbound_calls} += 1;
+			$data{total_outbound_duration} += $hash{$uuid}{billsec};
 		} elsif ($len_callerid_number > 7) {
 			$data{inbound_calls} += 1;
+			$data{total_inbound_duration} += $hash{$uuid}{billsec};
 		}
 		
 		($pre3) = $hash{$uuid}{caller_id_number} =~ /^1?(\d{3})\d{5,}$/;
 		if ($pre eq '800' || $pre3 eq '811' || $pre3 eq '822' || $pre3 eq '833' || $pre3 eq '844' || $pre3 eq '855' || $pre3 eq '866' || $pre3 eq '877' || $pre3 eq '888' || $pre3 eq '899') {
 			$data{tollfree_calls} += 1;
-		}
-		
-		
-		
-				
-		
+		}	
 	}
 	
+	$data{avg_outbound_duration} = $data{outbound_calls} > 0 ? $data{total_outbound_duration} / $data{outbound_calls} : 0;
+	$data{avg_inbound_duration} = $data{inbound_calls} > 0 ? $data{total_inbound_duration} / $data{outbound_calls} : 0;
 	$response{data} = \%data;
 	&print_json_response(%response);
 }
