@@ -130,6 +130,31 @@ sub getstat () {
 	
 	$data{avg_outbound_duration} = $data{outbound_calls} > 0 ? $data{total_outbound_duration} / $data{outbound_calls} : 0;
 	$data{avg_inbound_duration} = $data{inbound_calls} > 0 ? $data{total_inbound_duration} / $data{inbound_calls} : 0;
+	
+	$channels = &runswitchcommand('internal', "show channels");
+	
+	$header_found = 0;
+	for $channel (split /\n/, $channels) {
+		if (!$header_found) {
+			$j = 0;
+			for $field_name (split ',', $channel) {
+				if ($field_name eq 'callstate') {
+					$callstate_index = $j;
+					$header_found = 1;
+					last;
+				}
+				$j++;
+				
+			}
+			next;
+		} else {
+			$data{live_calls} += 1;	
+		}
+	}
+	
+	$out = &runswitchcommand('internal', "status");
+	($v) = $out =~ /peak (\d+) /;
+	$data{max_concurrent} = $v;
 	$response{data} = \%data;
 	&print_json_response(%response);
 }

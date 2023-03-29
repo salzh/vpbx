@@ -111,12 +111,12 @@ sub getcdr () {
                             "total");
     $response{data}{total} = $hash{1}{total} ? $hash{1}{total} : 0;
     
-    $fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
+    $fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
     if ($response{stat} ne 'fail') {
     	
         %hash = &database_select_as_hash(
                             "select
-                                uuid,$fields
+                                xml_cdr_uuid,$fields
                             from
                                 v_xml_cdr
                             where
@@ -204,11 +204,11 @@ sub getcdrstatistics () {
     $current_epoch = int $hash{1}{epoch};
     $epoch_before1day = $current_epoch - 24*3600;
     $epoch_before30day= $current_epoch - 24*3600*30;
-    $fields = 'uuid,start_stamp,start_epoch,billsec';
+    $fields = 'xml_cdr_uuid,start_stamp,start_epoch,billsec';
     if ($response{stat} ne 'fail') {
         %hash = &database_select_as_hash(
                             "select
-                                uuid,$fields
+                                xml_cdr_uuid,$fields
                             from
                                 v_xml_cdr
                             where
