@@ -271,6 +271,7 @@ sub _write() {
 	
 	local $tmp = '';
 	sysread($sock, $tmp, $size);
+	warn $tmp;
 	$response .= $tmp;
 	if ($response =~ /Content-Length: (\d+)(.*)/s) {
 		$content_length = $1;
