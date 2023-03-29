@@ -6,7 +6,7 @@ sub getstat () {
     }
     %domain         = &get_domain();
 
-	@v = localtime(time-7*3600);
+	@v = localtime(time-7*3600*24);
 	$last7days = sprintf("%04d-%02d-%02d 00:00:00", 1900+$v[5],$v[4]+1,$v[3]);
 	
 
