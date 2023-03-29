@@ -220,7 +220,7 @@ sub runswitchcommand() {
 		PeerPort=> $port,
 		Reuse   => 1
 	);
-	
+	$remote->autoflush(1);
 	sysread($remote, $tmp, 65536);
 	&_write($remote,  "auth ClueCon$BLANK");
     
