@@ -129,7 +129,7 @@ sub getstat () {
 	}
 	
 	$data{avg_outbound_duration} = $data{outbound_calls} > 0 ? $data{total_outbound_duration} / $data{outbound_calls} : 0;
-	$data{avg_inbound_duration} = $data{inbound_calls} > 0 ? $data{total_inbound_duration} / $data{outbound_calls} : 0;
+	$data{avg_inbound_duration} = $data{inbound_calls} > 0 ? $data{total_inbound_duration} / $data{inbound_calls} : 0;
 	$response{data} = \%data;
 	&print_json_response(%response);
 }
