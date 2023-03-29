@@ -263,6 +263,7 @@ sub runswitchcommand_old () {
 
 sub _write() {
 	local ($sock, $str) = @_;
+	$content_length = 0;
 	$s = syswrite $sock, $str;
 	warn "lport: " . $sock->sockport   . " - write $s bytes - $str to server!\n";
 	local $size = 65536;
