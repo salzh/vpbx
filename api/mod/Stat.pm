@@ -102,14 +102,14 @@ sub getstat () {
 
 	$fields = 'uuid,uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
+	
 	%hash = &database_select_as_hash(
                             "select
                                 uuid,$fields
                             from
                                 v_xml_cdr
                             where
-                                $condition
-                            limit $limit offset $start_index",
+                                $condition",
                             "$fields");
 	
 
