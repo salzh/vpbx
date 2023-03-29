@@ -102,16 +102,9 @@ sub getstat () {
 
 	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
-	
-	%hash = &database_select_as_hash(
-                            "select
-                                xml_cdr_uuid,$fields
-                            from
-                                v_xml_cdr
-                            where
-                                $condition",
-                            "$fields");
-	
+	$sql =  "select xml_cdr_uuid,$fields from v_xml_cdr where $condition";
+	%hash = &database_select_as_hash($sql, "$fields");
+	warn "sql: $sql";
 
 
 	$response  = ();
