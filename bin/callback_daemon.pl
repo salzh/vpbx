@@ -764,7 +764,7 @@ sub send_zoho_request() {
 	}
 	
 	if ($hash{type} eq 'outbound' && $hash{state} eq 'hangup') {
-		return;
+		#return;
 		
 	}
 	
