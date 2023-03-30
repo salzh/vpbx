@@ -610,6 +610,26 @@ $result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_
 	&print_json_response(%response);	
 }
 
+sub mute() {
+	$uuid = $form{uuid} || $form{callbackid};
+	$dest =  &database_clean_string($form{dest}, 0, 50);
+    local ($uuid) = &database_clean_string($uuid, 0, 50);
+    local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
+	local $domain		= $cgi->server_name();
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
+	$response{stat}    = 'ok';
+	$response{message} = 'ok';
+	&print_json_response(%response);	
+}
+
+sub unmute() {
+	return mute(1);
+}
 sub getuuid() {
     #try best to get call uuid by different condition
 }
