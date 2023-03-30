@@ -570,7 +570,23 @@ sub _dorecording() {
 
 }
 
-
+sub senddtmf() {
+	$uuid = $form{uuid} || $form{callbackid};
+	$keypress =  &database_clean_string($form{keypress}, 0, 50);
+    local ($uuid) = &database_clean_string($uuid, 0, 50);
+    local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
+		 
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
+	$output = &runswitchcommand('internal', "uuid_send_dtmf $uuid $keypress");
+	$response{stat}    = 'ok';
+	$response{message} = $output;
+	&print_json_response(%response);	
+}
 
 sub getuuid() {
     #try best to get call uuid by different condition
