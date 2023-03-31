@@ -208,9 +208,9 @@ sub getuserlist () {
     %hash = &database_select_as_hash("select
                                         v_users.user_uuid,v_users.user_uuid,username,user_enabled,group_name
                                     from
-                                        v_users left join v_group_users
+                                        v_users left join v_user_groups
                                     on
-                                        v_users.user_uuid=v_group_users.user_uuid
+                                        v_users.user_uuid=v_user_groups.user_uuid
                                     where
                                         v_users.domain_uuid='$domain{uuid}'",
                                     "user_uuid,username,user_enabled,group_name");
@@ -237,9 +237,9 @@ sub getuser () {
     %hash = &database_select_as_hash("select
                                         1,v_users.user_uuid,$fields
                                     from
-                                        v_users left join v_group_users
+                                        v_users left join v_user_groups
                                     on
-                                        v_users.user_uuid=v_group_users.user_uuid
+                                        v_users.user_uuid=v_user_groups.user_uuid
                                     where
                                         v_users.domain_uuid='$domain{uuid}' and
                                         v_users.user_uuid='$user_uuid'",
