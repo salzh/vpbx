@@ -22,6 +22,10 @@ sub hangup {
     $output = &runswitchcommand('internal', "uuid_kill $uuid");
 	$response{error}          =  0;
     $response{message} = $output;
+	$response{state} = 'HANGUP';
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
     
 	if ($output =~ /ERR/) {
 		$response{error}       =  1;
@@ -229,7 +233,10 @@ sub transfer {
 	$response{error} = 0;
 	$response{message} = 'transfer: ok';
 	$response{actionid} = $form{actionid};
-	
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	&print_json_response(%response);
 }
 
@@ -475,6 +482,10 @@ sub hold () {
 	
     $output = &runswitchcommand("internal", "uuid_hold toggle $uuid_xtt");
     
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
     $response{stat}          = 'ok';
     $response{message} = $output;
     &print_json_response(%response);
@@ -566,6 +577,10 @@ sub _dorecording() {
 		$response{message} = $output;
 	}
 	
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	&print_json_response(%response);
 
 }
@@ -583,6 +598,10 @@ sub senddtmf() {
 	}
 	
 	$output = &runswitchcommand('internal', "uuid_send_dtmf $uuid $keypress");
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	$response{stat}    = 'ok';
 	$response{message} = $output;
 	&print_json_response(%response);	
@@ -607,11 +626,21 @@ sub startconference() {
 $result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain_name/XML nway$dest XML $domain");
 	$response{stat}    = 'ok';
 	$response{message} = 'ok';
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
+	$response{conference} =  "nway$dest";
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	&print_json_response(%response);	
 }
 
 sub mute() {
 	$uuid = $form{uuid} || $form{callbackid};
+	$conference = $form{conference};
 	$dest =  &database_clean_string($form{dest}, 0, 50);
     local ($uuid) = &database_clean_string($uuid, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
@@ -621,14 +650,17 @@ sub mute() {
 		&print_json_response(%jwt);
 		return;
 	}
-	
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	$response{stat}    = 'ok';
 	$response{message} = 'ok';
 	&print_json_response(%response);	
 }
 
 sub unmute() {
-	return &mute();
+	&mute();
 }
 sub getuuid() {
     #try best to get call uuid by different condition
@@ -719,4 +751,22 @@ sub clean_str() {
   return $new;
 }
 
+sub getstate() {
+	local $uuid = shift;
+	return 'ANSWERED';
+}
+
+sub getmute() {
+	local $uuid = shift;
+	return 0;
+}
+sub gethold() {
+	local $uuid = shift;
+	return 0;
+}
+
+sub getrecording() {
+	local $uuid = shift;
+	return 0;
+}
 return 1;
