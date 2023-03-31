@@ -628,7 +628,7 @@ sub mute() {
 }
 
 sub unmute() {
-	return &mute(1);
+	return &mute();
 }
 sub getuuid() {
     #try best to get call uuid by different condition
