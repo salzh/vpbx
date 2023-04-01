@@ -482,7 +482,7 @@ sub hold () {
 		return;
 	}
 	
-    $output = &runswitchcommand("internal", "uuid_hold" . ($hold ? ' off ' : ' '. "$uuid_xtt");
+    $output = &runswitchcommand("internal", "uuid_hold" . ($hold ? ' off ' : ' ') . "$uuid_xtt");
     
 	$response{state} = &getstate($uuid);
 	$response{mute} = &getmute($uuid);
