@@ -805,7 +805,7 @@ sub gethold() {
 
 sub getrecording() {
 	local $uuid = shift;
-	$output = &runswitchcommand('internal', "uuid_buglist $uuid");
+	local $output = &runswitchcommand('internal', "uuid_buglist $uuid");
 	if ($output =~ /\.(?:wav|mp3)/s) {
 		return 1;
 	}
