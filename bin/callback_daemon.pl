@@ -218,6 +218,7 @@ sub Bridge() {
 	local $variable_bridge_uuid = $event{variable_bridge_uuid};
 	if ($event{variable_iscallback} && $event{'Channel-Name'} =~ m{loopback/}) {
 		warn "Ignore bridge coz loopback on callback";
+		return;
 	}
 	
 	if ($kill_bridged_uuids{$variable_bridge_uuid}) {
@@ -278,6 +279,7 @@ sub Dial() {
 	#print Dumper(\%event);
 	if ($event{variable_iscallback} && $event{'Channel-Name'} =~ m{loopback/}) {
 		warn "Ignore Dial coz loopback on callback";
+		return;
 	}
 	warn $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'};
 	local	$uuid = $event{'Other-Leg-Unique-ID'} ;
