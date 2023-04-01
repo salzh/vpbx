@@ -21,7 +21,7 @@ sub hangup {
 	
     $output = &runswitchcommand('internal', "uuid_kill $uuid");
 	$response{error}          =  0;
-    $response{message} = $output;
+    $response{message} = 'OK';
 	$response{state} = 'HANGUP';
 	$response{mute} = &getmute($uuid);
 	$response{recording} = &getrecording($uuid);
@@ -29,6 +29,7 @@ sub hangup {
     
 	if ($output =~ /ERR/) {
 		$response{error}       =  1;
+		$response{message} = $output;
 	}
 	
 
@@ -792,8 +793,12 @@ sub gethold() {
 			$state = $$f[$callstate_index];
 		}
 	}
+	if ($state eq 'HELD') {
+		return 1;
+	}
+	
+	return 0;
 	#warn Data::Dumper::Dump(\%uuids);
-	return $state;
 }
 
 sub getrecording() {
