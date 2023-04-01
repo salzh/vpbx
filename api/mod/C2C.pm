@@ -454,6 +454,7 @@ sub sendvoicemaildrop {
 }
 
 sub hold () {
+	$mode = shift;
 	$uuid = $form{uuid} || $form{callbackid};
     local ($uuid) = &database_clean_string($uuid, 0, 50);
     local  $direction = $form{direction} eq 'inbound' ? 'inbound': 'outbound';
@@ -481,7 +482,7 @@ sub hold () {
 		return;
 	}
 	
-    $output = &runswitchcommand("internal", "uuid_hold toggle $uuid_xtt");
+    $output = &runswitchcommand("internal", "uuid_hold" . ($hold ? ' off ' : ' '. "$uuid_xtt");
     
 	$response{state} = &getstate($uuid);
 	$response{mute} = &getmute($uuid);
@@ -493,7 +494,7 @@ sub hold () {
 }
 
 sub unhold() {
-    &hold();
+    &hold(1);
 }
 
 
