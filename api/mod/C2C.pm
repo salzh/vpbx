@@ -762,6 +762,38 @@ sub getmute() {
 }
 sub gethold() {
 	local $uuid = shift;
+	my $channels = &runswitchcommand('internal', "show channels");
+	my $uuid_found = 0;
+	$i = 0;
+	$callstate_index = 24;
+	$header_found = 0;
+	for $channel (split /\n/, $channels) {
+		if (!$header_found) {
+			$j = 0;
+			for $field_name (split ',', $channel) {
+				if ($field_name eq 'callstate') {
+					$callstate_index = $j;
+					$header_found = 1;
+					last;
+				}
+				$j++;
+				
+			}
+			next;
+		}
+		
+		
+		warn "callstate_index: $callstate_index";
+		#@f = split ',', $_;
+		$f = &_records($channel);
+		$uuids{$$f[0]} = $$f[$callstate_index];
+		if ($$f[0] eq $uuid) {
+			$uuid_found = 1;
+			$state = $$f[$callstate_index];
+			last;
+		}
+	}
+	#warn Data::Dumper::Dump(\%uuids);
 	return 0;
 }
 
