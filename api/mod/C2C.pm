@@ -490,6 +490,7 @@ sub hold () {
 	$response{hold} = &gethold($uuid);
     $response{stat}          = 'ok';
     $response{message} = $output;
+	$response{uuid_xtt} = $uuid_xtt;
     &print_json_response(%response);
 }
 
@@ -773,7 +774,7 @@ sub gethold() {
 		if (!$header_found) {
 			$j = 0;
 			for $field_name (split ',', $channel) {
-				if ($field_name eq 'callstate') {
+				if ($field_name eq 'b_callstate') {
 					$callstate_index = $j;
 					$header_found = 1;
 					last;
