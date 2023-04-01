@@ -790,11 +790,10 @@ sub gethold() {
 		if ($$f[0] eq $uuid) {
 			$uuid_found = 1;
 			$state = $$f[$callstate_index];
-			last;
 		}
 	}
 	#warn Data::Dumper::Dump(\%uuids);
-	return 0;
+	return $state;
 }
 
 sub getrecording() {
