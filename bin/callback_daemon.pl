@@ -216,6 +216,9 @@ sub Bridge() {
 	local $did  = $event{'variable_sip_req_user'};
 	local $domain_name = '';
 	local $variable_bridge_uuid = $event{variable_bridge_uuid};
+	if ($event{variable_callback} && $event{'Channel-Name'} =~ m{loopback/}) {
+		warn "Ignore bridge coz loopback on callback";
+	}
 	
 	if ($kill_bridged_uuids{$variable_bridge_uuid}) {
 		$cmd = "fs_cli -rx \"uuid_kill $variable_bridge_uuid\"";
@@ -273,7 +276,9 @@ sub Dial() {
 	#print Dumper(\%event);
 	return unless $event{'Channel-Call-State'} eq 'DOWN';
 	#print Dumper(\%event);
-
+	if ($event{variable_callback} && $event{'Channel-Name'} =~ m{loopback/}) {
+		warn "Ignore Dial coz loopback on callback";
+	}
 	warn $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'};
 	local	$uuid = $event{'Other-Leg-Unique-ID'} ;
 
