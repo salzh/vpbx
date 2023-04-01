@@ -135,6 +135,7 @@ open $FH, ">> /tmp/incoming_call.log" or die $!;
 %dialed_calls = ();
 %hangup_calls = ();
 $need_event_body = 0;
+%answered_msg = ();
 while (<$remote>) {
 	
 	$_ =~ s/\r\n//g;
@@ -258,6 +259,11 @@ sub Bridge() {
 		return;
 	}
 	warn "Get Bridged uuid=$uuid\n";
+	if ($answered_msg{$uuid}) {
+		warn "$uuid answered already sent, ignore!";
+		return;
+	}
+	
 	$dialed_calls{$uuid}{answered_epoch} = $event{'Event-Date-Timestamp'};
 
 	warn Data::Dumper::Dumper($dialed_calls{$uuid});
@@ -269,6 +275,7 @@ sub Bridge() {
 	$domain_name = $dialed_calls{$uuid}{domain_name};
 	$type = $dialed_calls{$uuid}{type};
 	$data = "type=$type&state=answered&uuid=$uuid&caller=" . &to164($from) . "&to=" . &to164($to). "&ext=$ext&&domain_name=$domain_name";
+	$answered_msg{$uuid} = 1;
 	&send_zoho_request('callnotify', $ext, $data);	
 }
 
@@ -495,7 +502,7 @@ sub End() {
 	
 	$data = "type=$type&state=hangup&ext=$ext&uuid=$uuid&caller=" . &to164($from) . "&to=" . &to164($to) . "&start_time=$starttime" . ($fixed_billsec > 0 ? "&duration=$fixed_billsec&mute=0&recording=1&voiceuri=https://$domain_name/app/xml_cdr/download.php?id=$uuid" : ""); #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 	
-	
+	delete $answered_msg{$uuid};
 	#&database_do("delete from v_zoho_api_cache where ext='$ext'");
 	&send_zoho_request('callnotify', $ext, $data);
 }
