@@ -605,8 +605,12 @@ sub senddtmf() {
 	$response{mute} = &getmute($uuid);
 	$response{recording} = &getrecording($uuid);
 	$response{hold} = &gethold($uuid);
-	$response{stat}    = 'ok';
+	$response{error}    = 0;
 	$response{message} = $output;
+	if ($output =~ /not/) {
+		$response{error}       =  1;
+		$response{message} = $output;
+	}
 	&print_json_response(%response);	
 }
 
