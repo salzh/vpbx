@@ -765,7 +765,7 @@ sub getmute() {
 }
 sub gethold() {
 	local $uuid = shift;
-	my $channels = &runswitchcommand('internal', "show channels");
+	my $channels = &runswitchcommand('internal', "show calls");
 	my $uuid_found = 0;
 	$i = 0;
 	$callstate_index = 24;
