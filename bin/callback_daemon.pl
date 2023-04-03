@@ -519,7 +519,7 @@ sub check_callback() {
 	($to) = $cmd =~ /origination_caller_id_number=(\d+)/;
 	
 	if ($code) {
-		$data = "state=hangup&code=$code&from=" . &to164($from) . "&to=" . &to164($to) . "&ext=$ext"; #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
+		$data = "type=outbound&state=hangup&code=$code&from=" . &to164($from) . "&to=" . &to164($to) . "&ext=$ext"; #uri_escape('https://$domain_name/app/xml_cdr/download.php?id=$uuid&t=bin');
 		#&database_do("delete from v_zoho_api_cache where ext='$ext'");
 		&send_zoho_request('callnotify', $ext, $data);
 	}
