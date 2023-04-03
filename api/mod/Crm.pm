@@ -535,6 +535,8 @@ sub agentlogout () {
 }
 
 
+=pod
+
 sub stoprecording() {
 	&_dorecording(0);
 }
@@ -607,7 +609,7 @@ sub _dorecording() {
 
 }
 
-
+=cut
 
 sub getuuid() {
     #try best to get call uuid by different condition
