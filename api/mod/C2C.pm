@@ -627,14 +627,7 @@ sub startconference() {
 	}
 	$response{error} = 0;
 	$response{message} = 'ok';
-	$response{mute} = &getmute($uuid);
-	$response{recording} = &getrecording($uuid);
-	$response{hold} = &gethold($uuid);
-	$response{conference} =  "nway$dest";
-	$response{state} = &getstate($uuid);
-	$response{mute} = &getmute($uuid);
-	$response{recording} = &getrecording($uuid);
-	$response{hold} = &gethold($uuid);
+	
 	
 	$res = &runswitchcommand('internal', "uuid_getvar $uuid effective_caller_id_number");
 	if ($res =~ /\-ERR/) {
@@ -648,8 +641,15 @@ sub startconference() {
 	($cid) = $res =~ /(\d+)/;
 	
 	$output = &runswitchcommand('internal', "uuid_transfer $uuid -both nway$dest XML $domain");
-$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain/XML nway$dest XML $domain");
-	
+	$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain nway$dest XML $domain");
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
+	$response{conference} =  "nway$dest";
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	&print_json_response(%response);	
 }
 
