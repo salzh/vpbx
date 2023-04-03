@@ -625,15 +625,8 @@ sub startconference() {
 		&print_json_response(%jwt);
 		return;
 	}
-	
-	$res = &runswitchcommand('internal', "uuid_getvar $uuid effective_caller_id_number");
-	($cid) = $res =~ /(\d+)/;
-	
-	$output = &runswitchcommand('internal', "uuid_transfer $uuid -both nway$dest XML $domain");
-$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain/XML nway$dest XML $domain");
-	$response{stat}    = 'ok';
+	$response{error} = 0;
 	$response{message} = 'ok';
-	$response{state} = &getstate($uuid);
 	$response{mute} = &getmute($uuid);
 	$response{recording} = &getrecording($uuid);
 	$response{hold} = &gethold($uuid);
@@ -642,6 +635,21 @@ $result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_
 	$response{mute} = &getmute($uuid);
 	$response{recording} = &getrecording($uuid);
 	$response{hold} = &gethold($uuid);
+	
+	$res = &runswitchcommand('internal', "uuid_getvar $uuid effective_caller_id_number");
+	if ($res =~ /\-ERR/) {
+		$response{message} = $res;
+		$response{error} = 1;
+		&print_json_response(%response);
+		return;
+		
+	}
+	
+	($cid) = $res =~ /(\d+)/;
+	
+	$output = &runswitchcommand('internal', "uuid_transfer $uuid -both nway$dest XML $domain");
+$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain/XML nway$dest XML $domain");
+	
 	&print_json_response(%response);	
 }
 
