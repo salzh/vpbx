@@ -638,7 +638,7 @@ sub startconference() {
 		
 	}
 	
-	($cid) = $res =~ /(\d+)/;
+	($cid) = $res =~ /(\d{5,})/;
 	
 	$output = &runswitchcommand('internal', "uuid_transfer $uuid -both nway$dest XML $domain");
 	$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain,outbound_caller_id_number=$cid}loopback/$dest/$domain nway$dest XML $domain");
