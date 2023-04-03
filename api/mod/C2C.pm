@@ -517,19 +517,10 @@ sub _dorecording() {
 		return;
 	}
 	
-	%domain    = &get_domain();
-    $domain_name    = $domain{name};
-    if (!$domain{name}) {
- 		
-		$response{error} = 1;
-		$response{message} =   "$form{domain_name}/$form{domain_uuid} " . &_("not exists");
-		$response{actionid} = $form{actionid};
-		&print_json_response(%response);
-		return;
-    }
+	my $domain		= $cgi->server_name();
 	
 	
-	$ext = "$ext\@$domain";
+
 	%raw_calls = &parse_calls();
 	if ($raw_calls{$uuid}) {
 		$found = 1;
