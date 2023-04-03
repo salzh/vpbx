@@ -510,7 +510,7 @@ sub startrecording() {
 }
 sub _dorecording() {
 	local $mode = shift;
-	local $ext = $form{ext} || $form{extension};
+	local $uuid = $form{uuid} || $form{callbackid};
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
@@ -531,34 +531,16 @@ sub _dorecording() {
 	
 	$ext = "$ext\@$domain";
 	%raw_calls = &parse_calls();
-	for (keys %raw_calls) {
-		if ($raw_calls{$_}{presence_id} eq $ext) {
-			$found = 1;
-			$direction = 'outbound';
-		
-		}
-		
-		if ($raw_calls{$_}{b_presence_id} eq $ext) {
-			$found = 1;
-			$direction = 'inbound';			
-		}
-		
-		
-		if ($found) {
-			$uuid = $_;
-			$time = $raw_calls{$_}{created_epoch};
-			
-			last;
-		}
-		
+	if ($raw_calls{$uuid}) {
+		$found = 1;
 	}
 	
 	if (!$found) {
-		 $response{stat}    = 'fail';
-    	 $response{message} = '$ext is not in any bridged call';
+		 $response{error}    = 1;
+    	 $response{message} = '$uuid is not in any bridged call';
 	} else {
 		if (!$mode) {
-			$output = &runswitchcommand('internal', "uuid_record $main_uuid stop all");
+			$output = &runswitchcommand('internal', "uuid_record $uuid stop all");
 		} else {
 			
 			$year = strftime('%Y', localtime);
@@ -576,7 +558,7 @@ sub _dorecording() {
 			
 			$output = &runswitchcommand('internal', "uuid_record $uuid start $recording_file");
 		}	
-		$response{stat}    = 'ok';
+		$response{error}    = 0;
 		$response{message} = $output;
 	}
 	
