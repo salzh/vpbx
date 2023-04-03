@@ -513,7 +513,7 @@ sub check_callback() {
 	$body = $event{'body'};
 	($code) = $body =~ /\-ERR (.+)/;
 	($from) = $cmd =~ /fromextension=(\d+)/;
-	($uuid) = $cmd =~ /origination_uuid=(.+),/;
+	($uuid) = $cmd =~ /origination_uuid=(.+?),/;
 	($domain_name) = $cmd =~ /domain_name=(.+?),/;
 	$ext = $from.'@' . $domain_name;
 	($to) = $cmd =~ /origination_caller_id_number=(\d+)/;
