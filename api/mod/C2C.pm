@@ -411,8 +411,6 @@ sub sendvoicemaildrop {
 	if ($data{$id}{voicemaildrop_uuid}) {
 		$path = $data{$id}{voicemaildrop_path};
 		($type) = $path =~ /\.(\w+)$/;
-		
-		$path = $row->{voicemaildrop_path};
 		$found = 1;
 	}
 	
