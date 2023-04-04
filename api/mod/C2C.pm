@@ -851,9 +851,10 @@ sub _call_field2index() {
 			}
 			next;
 		}
+	}
 		
 		
-		warn "$field index: $callstate_index";
-		return $callstate_index;
+	warn "$field index: $callstate_index";
+	return $callstate_index;
 }
 return 1;
