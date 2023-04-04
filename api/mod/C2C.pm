@@ -179,9 +179,10 @@ sub getcallbackstate {
 	$response{error} = 0;
 	$response{message} = 'ok';
 	$response{'actionid'} = $form{actionid};
-	$response{state} = $state;
-	$response{mute} = 0;
-	$response{recording} = 0;
+	$response{state} = &getstate($uuid);
+	$response{mute} = &getmute($uuid);
+	$response{recording} = &getrecording($uuid);
+	$response{hold} = &gethold($uuid);
 	
 	&print_json_response(%response);
 }
@@ -396,7 +397,7 @@ sub updatevoicemaildrop {
 
 sub sendvoicemaildrop {
 	my $id = &clean_str($form{id}, 'SQLSAFE');
-	my $callback_uuid = &clean_str($form{callback_uuid}, 'SQLSAFE');
+	my $callback_uuid = &clean_str($form{callbackid}, 'SQLSAFE');
 	
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
