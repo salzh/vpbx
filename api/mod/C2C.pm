@@ -483,7 +483,7 @@ sub hold () {
 	}
 	
     $output = &runswitchcommand("internal", "uuid_hold" . ($hold ? ' off ' : ' ') . "$uuid_xtt");
-    
+    sleep 1;
 	$response{state} = &getstate($uuid);
 	$response{mute} = &getmute($uuid);
 	$response{recording} = &getrecording($uuid);
