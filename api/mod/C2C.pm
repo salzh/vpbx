@@ -829,4 +829,31 @@ sub getrecording() {
 	
 	return 0;
 }
+
+sub _call_field2index() {
+	my $field = shift;
+	my $channels = &runswitchcommand('internal', "show calls");
+	my $uuid_found = 0;
+	$i = 0;
+	$callstate_index = -1;
+	$header_found = 0;
+	for $channel (split /\n/, $channels) {
+		if (!$header_found) {
+			$j = 0;
+			for $field_name (split ',', $channel) {
+				if ($field_name eq $field) {
+					$callstate_index = $j;
+					$header_found = 1;
+					last;
+				}
+				$j++;
+				
+			}
+			next;
+		}
+		
+		
+		warn "$field index: $callstate_index";
+		return $callstate_index;
+}
 return 1;
