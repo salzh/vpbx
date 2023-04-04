@@ -405,7 +405,7 @@ sub sendvoicemaildrop {
 		return;
 	}
 	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where voicemaildrop_uuid='$id'",
-									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path domain_name,ext");
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 	
 
 	if ($data{$id}{voicemaildrop_uuid}) {
