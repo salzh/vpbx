@@ -404,6 +404,16 @@ sub sendvoicemaildrop {
 		&print_json_response(%jwt);
 		return;
 	}
+	
+	if (!$callback_uuid) {
+		$response{error} = 1;
+		$response{message} =   "callbackid is null";
+		$response{actionid} = $form{actionid};
+		&print_json_response(%response);
+		return;
+	}
+	
+	
 	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where voicemaildrop_uuid='$id'",
 									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 	
@@ -482,7 +492,7 @@ sub hold () {
 		return;
 	}
 	
-    $output = &runswitchcommand("internal", "uuid_hold" . ($hold ? ' off ' : ' ') . "$uuid_xtt");
+    $output = &runswitchcommand("internal", "uuid_hold" . ($mode ? ' off ' : ' ') . "$uuid_xtt");
     sleep 1;
 	$response{state} = &getstate($uuid);
 	$response{mute} = &getmute($uuid);
