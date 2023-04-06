@@ -652,7 +652,7 @@ sub mute() {
 	
 	local $members = &runswitchcommand('internal', "conference list $conference");
 	local @info = ();
-	local $found = 1;
+	local $found = 0;
 	for my $line (split /\n/, $members) {
 		if (index($line, $uuid) > -1) {
 			$found = 1;
