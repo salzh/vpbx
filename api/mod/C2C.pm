@@ -637,6 +637,7 @@ sub startconference() {
 }
 
 sub mute() {
+	local $mode = shift;
 	$uuid = $form{uuid} || $form{callbackid};
 	$conference = $form{conference};
 	$dest =  &database_clean_string($form{dest}, 0, 50);
@@ -648,12 +649,35 @@ sub mute() {
 		&print_json_response(%jwt);
 		return;
 	}
-	$response{state} = &getstate($uuid);
-	$response{mute} = &getmute($uuid);
-	$response{recording} = &getrecording($uuid);
-	$response{hold} = &gethold($uuid);
+	
+	local $members = &runswitchcommand('internal', "conference list $conference");
+	local @info = ();
+	local $found = 1;
+	for my $line (split /\n/, $members) {
+		if (index($line, $uuid) > -1) {
+			$found = 1;
+		}
+		@info = split ';', $line;		
+	}
 	$response{stat}    = 'ok';
 	$response{message} = 'ok';
+	if (!$found) {
+		$response{stat} = 'fail';
+		$response{error} = 1;
+		$response{message} = "call=$uuid not in any conference";
+		$response{mute} = 0;
+		$cmd = "conference $conference " .  ($mode ? "unmute" : "mute"). " " .  $info[0];
+		$output = &runswitchcommand('internal', $cmd);
+		$output = &runswitchcommand('internal', "uuid_setvar $uuid mute " . ($mode ? "unmute" : "mute"));
+		$response{cmd} = $cmd;
+		$response{mute} = ($mode ? "0" : "1");
+	} else {		
+		$response{state} = &getstate($uuid);
+		$response{mute} = &getmute($uuid);
+		$response{recording} = &getrecording($uuid);
+		$response{hold} = &gethold($uuid);
+	}
+	
 	&print_json_response(%response);	
 }
 
@@ -787,6 +811,12 @@ sub getstate() {
 
 sub getmute() {
 	local $uuid = shift;
+	$output = &runswitchcommand('internal', "uuid_get $uuid mute");
+	if ($output =~ /unmute/s) {
+		return 0;
+	} elsif ($output =~ /mute/s) {
+		return 1;
+	}
 	return 0;
 }
 sub gethold() {
