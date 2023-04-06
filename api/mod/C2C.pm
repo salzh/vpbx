@@ -666,14 +666,15 @@ sub mute() {
 		$response{error} = 1;
 		$response{message} = "call=$uuid not in any conference";
 		$response{mute} = 0;
+		
+	} else {
 		$cmd = "conference $conference " .  ($mode ? "unmute" : "mute"). " " .  $info[0];
 		$output = &runswitchcommand('internal', $cmd);
 		$output = &runswitchcommand('internal', "uuid_setvar $uuid mute " . ($mode ? "unmute" : "mute"));
 		$response{cmd} = $cmd;
 		$response{mute} = ($mode ? "0" : "1");
-	} else {		
 		$response{state} = &getstate($uuid);
-		$response{mute} = &getmute($uuid);
+		
 		$response{recording} = &getrecording($uuid);
 		$response{hold} = &gethold($uuid);
 	}
