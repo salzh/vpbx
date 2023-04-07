@@ -672,7 +672,7 @@ sub mute() {
 		$output = &runswitchcommand('internal', $cmd);
 		$output = &runswitchcommand('internal', "uuid_setvar $uuid mute " . ($mode ? "unmute" : "mute"));
 		$response{cmd} = $cmd;
-		$response{mute} = ($mode ? "0" : "1");
+		$response{mute} = ($mode ? 0 : 1);
 		$response{state} = &getstate($uuid);
 		
 		$response{recording} = &getrecording($uuid);
