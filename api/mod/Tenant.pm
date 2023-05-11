@@ -75,7 +75,7 @@ sub edittenant () {
 	
     if ($response{stat} ne 'fail') {
         &post_data ( 'domain'    => '',
-			'urlpath'   => "/core/domain_settings/domain_edit.php?id=$uuid",
+			'urlpath'   => "/core/domains/domain_edit.php?id=$uuid",
 			'reload'	=> 1,
 			'data'   =>  [
 				'domain_name' => $domain_name,
