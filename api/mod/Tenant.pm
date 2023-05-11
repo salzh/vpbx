@@ -69,6 +69,7 @@ sub edittenant () {
     $descr = &database_clean_string(substr($form{domain_description},0,255));
     $domain_name = $name . ($app{base_domain} ? ".$app{base_domain}" : '');
     $uuid  = &clean_str(substr($form{domain_uuid},0,50),"MINIMAL","-_");
+    $domain_enabled = &database_clean_string(substr($form{domain_enabled},0,255)) || 'true';
 
     %response = ();
 	
@@ -79,6 +80,7 @@ sub edittenant () {
 			'data'   =>  [
 				'domain_name' => $domain_name,
 				'domain_description' => $descr,
+                'domain_enabled' => $domain_enabled,
 				'domain_uuid'	=> $uuid,
 				'submit' => 'Save'
 			]
