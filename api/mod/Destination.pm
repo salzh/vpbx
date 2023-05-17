@@ -251,6 +251,11 @@ sub deletedestination () {
       $response{message}	= &_("destination_uuid is null!");   
    }
   
+   local %post_add = ();
+   $post_add['destinations[0][uuid]'] = $uuid;
+   $post_add['destinations[0][checked]'] = 'true';
+   $post_add['type'] = 'inbound';
+   $post_add['action'] = 'delete';
    if ($response{stat} ne 'fail') {
       %domain   = &get_domain();
 
@@ -263,9 +268,9 @@ sub deletedestination () {
    if ($response{stat} ne 'fail') {   
       &post_data (
          'domain_uuid' => $domain{uuid},
-         'urlpath'     => '/app/destinations/destination_delete.php' . "?id=$uuid",
+         'urlpath'     => '/app/destinations/destinations.php',
          'reload'      => 1,
-         'data'        => []);
+         'data'        => [%post_add]);
     
       $response{stat}	= "ok";
       $response{message}= "OK";
