@@ -242,7 +242,7 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
 }
 
 sub deletedestination () {
-   $uuid    = $form{destination_uuid};
+   local $uuid    = $form{destination_uuid};
    %response=();
    $response{stat}		= "ok";
 
@@ -274,7 +274,7 @@ sub deletedestination () {
     
       $response{stat}	= "ok";
       $response{message}= "OK";
-      $response{data}{destination_uuid} = $hash{1}{uuid};
+      $response{data}{destination_uuid} = $uuid;
    }
    
    &print_json_response(%response);   
