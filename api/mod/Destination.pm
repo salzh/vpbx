@@ -252,10 +252,10 @@ sub deletedestination () {
    }
   
    local %post_add = ();
-   $post_add['destinations[0][uuid]'] = $uuid;
-   $post_add['destinations[0][checked]'] = 'true';
-   $post_add['type'] = 'inbound';
-   $post_add['action'] = 'delete';
+   $post_add{'destinations[0][uuid]'} = $uuid;
+   $post_add{'destinations[0][checked]'} = 'true';
+   $post_add{'type'} = 'inbound';
+   $post_add{'action'} = 'delete';
    if ($response{stat} ne 'fail') {
       %domain   = &get_domain();
 
