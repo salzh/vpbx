@@ -43,7 +43,7 @@ sip_force_contact:
 sip_force_expires:
 nibble_account:
 mwi_account:
-sip_bypass_media:bypass-media-after-bridge
+sip_bypass_media:
 dial_string:
 enabled:true
 description:
