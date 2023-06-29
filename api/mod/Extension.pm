@@ -33,7 +33,7 @@ toll_allow:
 call_timeout:30
 call_group:
 user_record:
-hold_music:
+hold_music:local_stream://default
 missed_call_app: 
 missed_call_data: 
 user_context:pbx.fusionpbx.cn
@@ -161,7 +161,7 @@ toll_allow:
 call_timeout:30
 call_group:
 user_record:
-hold_music:
+hold_music:local_stream://default
 missed_call_app: 
 missed_call_data: 
 user_context:pbx.fusionpbx.cn
@@ -293,7 +293,7 @@ limit_destination:
 call_timeout:30
 call_group:
 user_record:
-hold_music:
+hold_music:local_stream://default
 missed_call_app: 
 missed_call_data: 
 user_context:pbx.fusionpbx.cn
