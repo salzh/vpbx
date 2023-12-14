@@ -16,6 +16,15 @@ use POSIX qw/ceil/;
 require "/var/www/vpbx/api/include.pl";
 
 
+$out = `ps aux | grep $0 | grep -v 'grep ' | wc -l`;
+chomp $out;
+
+if ($out > 1) {
+    warn "another $0 is already running, quit! ...";
+    exit 0;
+}
+
+
 &default_include_init();
 
 &tools_database_init();
