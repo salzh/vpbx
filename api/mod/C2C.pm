@@ -329,7 +329,7 @@ sub deletevoicemaildrop {
 		&print_json_response(%jwt);
 		return;
 	}
-	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop wherevoicemaildrop_uuid='$id'",
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where voicemaildrop_uuid='$id'",
 									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 	
 
@@ -358,7 +358,7 @@ sub getvoicemaildrop {
 		&print_json_response(%jwt);
 		return;
 	}
-	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop wherevoicemaildrop_uuid='$id'",
+	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where voicemaildrop_uuid='$id'",
 									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 	
 
