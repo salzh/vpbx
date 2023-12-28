@@ -23,6 +23,8 @@ emergency_caller_id_number:
 directory_full_name:
 directory_visible:true
 directory_exten_visible:true
+missed_call_app:email
+missed_call_data:
 limit_max:5
 limit_destination:
 voicemail_enabled:true
@@ -147,6 +149,8 @@ directory_first_name:
 directory_last_name
 directory_visible:true
 directory_exten_visible:true
+missed_call_app:email
+missed_call_data:
 limit_max:5
 limit_destination:
 device_line_uuid:
@@ -288,6 +292,8 @@ directory_first_name:
 directory_last_name:
 directory_visible:true
 directory_exten_visible:true
+missed_call_app:email
+missed_call_data:
 limit_max:5
 limit_destination:
 call_timeout:30
