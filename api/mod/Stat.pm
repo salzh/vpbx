@@ -100,6 +100,8 @@ sub getstat () {
 	$data{total_inbound_duration} = 0;
 	$data{total_outbound_duration} = 0;
 
+	%callerids = &datbase_select-as_hash("select outbound_caller_id_number,1 from v_extensions where domain_uuid='" . $domain{uuid} . "'", 'v');
+	
 	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
 	$sql =  "select xml_cdr_uuid,$fields from v_xml_cdr where $condition";
@@ -114,7 +116,7 @@ sub getstat () {
 		$data{all_calls} += 1;
 		$len_callerid_number = length($hash{$uuid}{caller_id_number});
 		$len_destination_number = length($hash{$uuid}{destination_number});
-		if ($len_callerid_number < 7 && $len_destination_number > 7) {
+		if (($callerids{$hash{$uuid}{caller_id_number}} || $len_callerid_number < 7) && $len_destination_number > 7) {
 			$data{outbound_calls} += 1;
 			$data{total_outbound_duration} += $hash{$uuid}{billsec};
 		} elsif ($len_callerid_number > 7) {
