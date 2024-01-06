@@ -100,7 +100,7 @@ sub getstat () {
 	$data{total_inbound_duration} = 0;
 	$data{total_outbound_duration} = 0;
 
-	%callerids = &datbase_select_as_hash("select outbound_caller_id_number,1 from v_extensions where domain_uuid='" . $domain{uuid} . "'", 'v');
+	%callerids = &database_select_as_hash("select outbound_caller_id_number,1 from v_extensions where domain_uuid='" . $domain{uuid} . "'", 'v');
 	
 	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
