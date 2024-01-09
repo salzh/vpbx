@@ -5,7 +5,7 @@
 	George Gabrielyan <george@velantro.com>
 =cut
 
-$music_dir = '/usr/local/freeswitch/sounds/music';
+$music_dir = '/usr/share/freeswitch/sounds/music';
 sub addmusiconhold () {
     %domain = &get_domain();
     if (!$domain{name}) {
