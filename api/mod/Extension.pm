@@ -107,6 +107,7 @@ description:
           $post_add{outbound_caller_id_name}      = &database_clean_string(substr($form{outbound_caller_id_name}, 0, 50));
           $post_add{directory_full_name}          = &database_clean_string(substr($form{directory_full_name}, 0, 50));
           $post_add{voicemail_password}           = &database_clean_string(substr($form{voicemail_password}, 0, 50));
+          $post_add{missed_call_data}            = &database_clean_string(substr($form{missed_call_data}, 0, 100));
           $post_add{description}                  = &database_clean_string(substr($form{description}, 0, 50));
           $post_add{domain_uuid}                  = $domain{uuid};
         
@@ -258,6 +259,7 @@ delete_uuid:';
           $post_add{outbound_caller_id_name}     = &database_clean_string(substr($form{outbound_caller_id_name}, 0, 50));
           $post_add{directory_full_name}         = &database_clean_string(substr($form{directory_full_name}, 0, 50));
           $post_add{voicemail_password}          = &database_clean_string(substr($form{voicemail_password}, 0, 50));
+          $post_add{missed_call_data}            = &database_clean_string(substr($form{missed_call_data}, 0, 100));
           $post_add{description}                 = &database_clean_string(substr($form{description}, 0, 50));
          
           $post_add{extension_uuid} = $uuid;
