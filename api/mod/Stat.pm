@@ -111,8 +111,8 @@ sub getstat () {
 
 
 	$response  = ();
-	$response{error}{code}	   = 0;
-	$response{error}{message} = 'OK';
+	$response{stat}	   = 'ok';
+	$response{message} = 'OK';
 	for $uuid (keys %hash) {
 		$data{all_calls} += 1;
 		$len_callerid_number = length($hash{$uuid}{caller_id_number});
