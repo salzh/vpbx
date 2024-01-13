@@ -14,6 +14,7 @@ sub getstat () {
     local %params = (
         uuid => {type => 'string', maxlen => 36, notnull => 0, default => ''},
         direction => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+        extension_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         caller_id_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         destination_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},        
         start_stamp => {type => 'string', maxlen => 50, notnull => 0, default => ''},
@@ -116,10 +117,11 @@ sub getstat () {
 		$data{all_calls} += 1;
 		$len_callerid_number = length($hash{$uuid}{caller_id_number});
 		$len_destination_number = length($hash{$uuid}{destination_number});
-		if (($callerids{$hash{$uuid}{caller_id_number}} || $len_callerid_number < 7) && $len_destination_number > 7) {
+		#if (($callerids{$hash{$uuid}{caller_id_number}} || $len_callerid_number < 7) && $len_destination_number > 7) {
+		if ($hash{$uuid}{direction} eq 'outbound' || (!$hash{$uuid}{direction} && $len_destination_number > 7)) {
 			$data{outbound_calls} += 1;
 			$data{total_outbound_duration} += $hash{$uuid}{billsec};
-		} elsif ($len_callerid_number > 7) {
+		} elsif ($hash{$uuid}{direction} eq 'inbound' || (!$hash{$uuid}{direction} && $len_destination_number < 7)) {
 			$data{inbound_calls} += 1;
 			$data{total_inbound_duration} += $hash{$uuid}{billsec};
 		}
