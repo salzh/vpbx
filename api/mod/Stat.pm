@@ -103,7 +103,7 @@ sub getstat () {
 
 	%callerids = &database_select_as_hash("select outbound_caller_id_number,1 from v_extensions where domain_uuid='" . $domain{uuid} . "'", 'v');
 	
-	$fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
+	$fields = 'xml_cdr_uuid,extension_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
 	
 	$sql =  "select xml_cdr_uuid,$fields from v_xml_cdr where $condition";
 	%hash = &database_select_as_hash($sql, "$fields");
