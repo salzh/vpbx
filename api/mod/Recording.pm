@@ -6,7 +6,7 @@
 =cut
 
 
-$recording_dir = '/usr/local/freeswitch/recordings';
+$recording_dir = '/var/lib/freeswitch/recordings';
 sub addrecording () {
     %domain = &get_domain();
     if (!$domain{name}) {
@@ -48,6 +48,7 @@ sub addrecording () {
 			warn "recording_uuid: $uuid";
             $response{stat}		= "ok";
             $response{message}	= "OK";
+            $response{filesize}	= $upload{filezise};
             $response{data}{recording_uuid} = $uuid;
         }
     }

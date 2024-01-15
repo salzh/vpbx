@@ -467,7 +467,7 @@ sub upload_file () {
 		} else {
 			move("/tmp/$temp_file", "$destdir/$filename.$format");
 		}
-		return (error => 0, file => "$destdir/$temp_file", name => $filename, format => $format);
+		return (error => 0, file => "$destdir/$temp_file", name => $filename, format => $format,filesize=> $size);
     }
 }
 
