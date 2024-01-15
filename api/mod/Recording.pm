@@ -48,7 +48,7 @@ sub addrecording () {
 			warn "recording_uuid: $uuid";
             $response{stat}		= "ok";
             $response{message}	= "OK";
-            $response{filesize}	= $upload{filezise};
+            $response{filesize}	= $upload{filesize};
             $response{data}{recording_uuid} = $uuid;
         }
     }
