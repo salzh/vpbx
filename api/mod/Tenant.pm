@@ -96,8 +96,11 @@ sub edittenant () {
 
 sub deletetenant () {
 	$uuid  = &clean_str(substr($form{domain_uuid},0,50),"MINIMAL","-_");
+    $post_add{'domains[0][uuid]'} = $uuid;
+    $post_add{'domains[0][checked]'} = 'true';
+    $post_add{'action'} = 'delete';
 	&post_data ( 'domain'   => '',
-				'urlpath'   => "/core/domain_settings/domain_delete.php?id=$uuid",
+				'urlpath'   => "/core/domains/domains.php",
 				'reload'	=> 1,
 				'data'   =>  []
 				);
