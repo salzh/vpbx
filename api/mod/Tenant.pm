@@ -102,7 +102,7 @@ sub deletetenant () {
 	&post_data ( 'domain'   => '',
 				'urlpath'   => "/core/domains/domains.php",
 				'reload'	=> 1,
-				'data'   =>  []
+				'data'   =>  [%post_add]
 				);
 	
 	$response{stat}	= "ok";
