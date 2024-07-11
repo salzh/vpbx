@@ -100,6 +100,10 @@ description:
           $post_add{voicemail_attach_file}   = &get_enabled($form{voicemail_attach_file}) || 'true';
           $post_add{voicemail_local_after_email} = &get_enabled($form{voicemail_local_after_email}) || 'true';
           $post_add{call_timeout}                = &clean_int($form{call_timeout}) || 30;
+		  if ($form{user_uuid}) {
+			   $post_add{'extension_users[0][user_uuid]'} = &database_clean_string($form{user_uuid});
+		  }
+		  
           
           $post_add{effective_caller_id_name}     = &database_clean_string(substr($form{effective_caller_id_name}, 0, 50));
           $post_add{effective_caller_id_number}   = &database_clean_string(substr($form{effective_caller_id_number}, 0, 50));
@@ -244,6 +248,10 @@ delete_uuid:';
           
           $post_add{extension} = &database_clean_string(substr $form{extension}, 0, 20);
 
+		  if ($form{user_uuid}) {
+			   $post_add{'extension_users[0][user_uuid]'} = &database_clean_string($form{user_uuid});
+		  }
+		  
           $post_add{password}                = &database_clean_string(substr $form{password}, 0, 15);
           $post_add{accountcode}             = $form{accountcode} || $user_context;
           $post_add{autogen_users}           = &get_enabled($form{autogen_users}) || 'false';
