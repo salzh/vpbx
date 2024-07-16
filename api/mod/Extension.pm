@@ -445,7 +445,7 @@ sub deleteextension () {
      &post_data (
                     'domain_uuid' => $domain{uuid},
                     'reload'      => 1,
-                    'urlpath' => '/app/extensions/extension_delete.php?id=' . $uuid,
+                    'urlpath' => '/app/extensions/extensions.php?action=delete_extension&extensions[0][checked]=true&extensions[0][uuid]=' . $uuid,
                     'data' => []
                 );
      %hash     = &database_select_as_hash(
