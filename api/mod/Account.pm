@@ -11,6 +11,7 @@ username:zhong
 password:123
 confirmpassword:123
 user_email:zhongxiang721@gmail.com
+user_enabled:true
 contact_name_given:zhong
 contact_name_family:weixiang
 contact_organization:zhong
@@ -26,6 +27,7 @@ submit:Create Account
         username => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         password => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         confirmpassword => {type => 'string', maxlen => 50, notnull => 1, default => ''},
+        user_enabled => {type => 'bool', maxlen => 50, notnull => 0, default => 'true'},
         user_email => {type => 'string', maxlen => 255, notnull => 1, default => ''},
         group_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         contact_name_given => {type => 'string', maxlen => 50, notnull => 0, default => ''},
@@ -125,6 +127,7 @@ sub edituser () {
         username => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         password => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         confirmpassword => {type => 'string', maxlen => 50, notnull => 0, default => ''},
+        user_enabled => {type => 'bool', maxlen => 50, notnull => 0, default => 'true'},
         group_name => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         contact_uuid  => {type => 'string', maxlen => 50, notnull => 1, default => ''},
         user_status => {type => 'string', maxlen => 50, notnull => 0, default => ''},
