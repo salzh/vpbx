@@ -20,7 +20,7 @@ destination_actions[0]: transfer:101 XML 222.velantro.net
 user_uuid: 
 group_uuid: 
 destination_cid_name_prefix: 
-destination_record: true
+destination_record: false
 destination_hold_music: 
 destination_distinctive_ring: 
 destination_accountcode: 
@@ -43,7 +43,7 @@ destination_description:
       user_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       group_uuid => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_cid_name_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
-      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'true'},
+      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'false'},
       destination_hold_music => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_distinctive_ring => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>''},
@@ -168,7 +168,7 @@ destination_uuid: 3cb689d8-f3ac-4c69-875f-e46dabca376f
       'destination_conditions[0][condition_field]' => {type => 'string', maxlen => 20, notnull => 0, default => ''},
       'destination_conditions[0][condition_expression]' => {type => 'int', maxlen => 3, notnull => 0, default => ''},
       destination_cid_name_prefix => {type => 'string', maxlen => 50, notnull => 0, default => ''},
-      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'true'},
+      destination_record => {type => 'string', maxlen => 50, notnull => 0, default => 'false'},
       destination_hold_music => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_distinctive_ring => {type => 'string', maxlen => 50, notnull => 0, default => ''},
       destination_accountcode => {type => 'string', maxlen => 50, notnull => 0, default =>''},
