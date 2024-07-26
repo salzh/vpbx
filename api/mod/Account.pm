@@ -277,6 +277,17 @@ sub deleteuser () {
         &print_api_error_end_exit(100, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
     }
     
+=pod
+action: delete
+search: 
+users[0][checked]: true
+users[0][uuid]: b594066e-dcc5-4e1e-aa89-b60e0250423b
+=cut
+    local %post_add;
+    $post_add{action} = 'delete';
+    $post_add{'users[0][checked]'} = 'true';
+    $post_add{'users[0][uuid]'} = $user_uuid;
+    
     %hash = &database_select_as_hash(
                 "select
                     1,user_uuid
@@ -293,9 +304,9 @@ sub deleteuser () {
     } else {
         &post_data (
             'domain_uuid' => $domain{uuid},
-            'urlpath'     => '/core/users/userdelete.php' . "?id=$user_uuid",
+            'urlpath'     => '/core/users/users.php',
             'reload'      => 1,
-            'data'        => []);
+            'data'        => [%post_add]);
         $response{stat}   = 'ok';
         
     }
