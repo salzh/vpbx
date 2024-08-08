@@ -91,7 +91,7 @@ sub getstat () {
 	$data{live_calls} = 0;
 	$data{max_concurrent} = 0;
 	$data{recording_storage} = 0;
-	$data{answered_precent} = 0;
+	$data{answered_calls} = 0;
 	$data{all_calls} = 0;
 	$data{outbound_calls} = 0;
 	$data{inbound_calls} = 0;
@@ -113,10 +113,15 @@ sub getstat () {
 	$response  = ();
 	$response{stat}	   = 'ok';
 	$response{message} = 'OK';
+	$answered_calls = 0;
 	for $uuid (keys %hash) {
 		$data{all_calls} += 1;
 		$len_callerid_number = length($hash{$uuid}{caller_id_number});
 		$len_destination_number = length($hash{$uuid}{destination_number});
+		if ($hash{$uuid}{billsec} > 0) {
+			$answered_calls += 1;
+		}
+		
 		#if (($callerids{$hash{$uuid}{caller_id_number}} || $len_callerid_number < 7) && $len_destination_number > 7) {
 		if ($hash{$uuid}{direction} eq 'outbound' || (!$hash{$uuid}{direction} && $len_destination_number > 7)) {
 			$data{outbound_calls} += 1;
