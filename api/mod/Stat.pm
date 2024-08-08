@@ -119,7 +119,7 @@ sub getstat () {
 		$len_callerid_number = length($hash{$uuid}{caller_id_number});
 		$len_destination_number = length($hash{$uuid}{destination_number});
 		if ($hash{$uuid}{billsec} > 0) {
-			$answered_calls += 1;
+			$data{answered_calls} += 1;
 		}
 		
 		#if (($callerids{$hash{$uuid}{caller_id_number}} || $len_callerid_number < 7) && $len_destination_number > 7) {
