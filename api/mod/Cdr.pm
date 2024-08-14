@@ -111,7 +111,7 @@ sub getcdr () {
                             "total");
     $response{data}{total} = $hash{1}{total} ? $hash{1}{total} : 0;
     
-    $fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp';
+    $fields = 'xml_cdr_uuid,caller_id_name,caller_id_number,destination_number,start_stamp,end_stamp,billsec,pdd_ms,rtp_audio_in_mos,hangup_cause,start_epoch,cc_queue,queue_extension,direction,bridge_uuid,sip_hangup_disposition,answer_stamp,record_name';
     if ($response{stat} ne 'fail') {
     	
         %hash = &database_select_as_hash(
@@ -136,8 +136,8 @@ sub getcdr () {
                 
                 warn $recording_filename;
                 $recording_url = '';
-                if (-e $recording_filename) {
-                    $recording_url = "http://$domain{name}/app/recordings/recordings2.php?filename=" . encode_base64($recording_filename, '');
+                if ($hash{$_}{record_name}) {
+                    $recording_url = "https://$domain{name}/app/xml_cdr/download2.php?id=$uuid&t=bin";;#"http://$domain{name}/app/recordings/recordings2.php?filename=" . encode_base64($recording_filename, '');
                     $hash{$_}{recording_url} = $recording_url;
                 }
             local $queue_name = $hash{$_}{cc_queue};
