@@ -14,7 +14,7 @@ sub getcdr () {
 
     
     local %params = (
-        uuid => {type => 'string', maxlen => 36, notnull => 0, default => ''},
+        xml_cdr_uuid => {type => 'string', maxlen => 36, notnull => 0, default => ''},
         direction => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         caller_id_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         destination_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},        
