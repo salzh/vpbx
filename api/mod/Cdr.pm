@@ -121,6 +121,7 @@ sub getcdr () {
                                 v_xml_cdr
                             where
                                 $condition
+                                order by start_stamp desc
                             limit $limit offset $start_index",
                             "$fields");
         
