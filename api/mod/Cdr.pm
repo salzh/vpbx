@@ -62,7 +62,11 @@ sub getcdr () {
             $condition .= "start_stamp >= '$post_add{start_stamp}'";
         } elsif ($_ eq 'end_stamp') {
             $condition .= "end_stamp <= '$post_add{end_stamp}'";
-        } elsif ($_ eq 'missed' ) {
+        } elsif ($_ eq 'caller_id_number') {
+            $condition .= "caller_id_number like '\%" . $post_add{caller_id_number} . "\%'";
+        } elsif ($_ eq 'destination_number') {
+            $condition .= "destination_number like '\%" . $post_add{caller_id_number} . "\%'";
+        }elsif ($_ eq 'missed' ) {
             if ($post_add{missed} eq 'true') {
                 $condition .= "billsec=0"
             } else {
