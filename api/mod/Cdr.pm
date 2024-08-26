@@ -65,7 +65,7 @@ sub getcdr () {
         } elsif ($_ eq 'caller_id_number') {
             $condition .= "caller_id_number like '\%" . $post_add{caller_id_number} . "\%'";
         } elsif ($_ eq 'destination_number') {
-            $condition .= "destination_number like '\%" . $post_add{caller_id_number} . "\%'";
+            $condition .= "destination_number like '\%" . $post_add{destination_number} . "\%'";
         }elsif ($_ eq 'missed' ) {
             if ($post_add{missed} eq 'true') {
                 $condition .= "billsec=0"
