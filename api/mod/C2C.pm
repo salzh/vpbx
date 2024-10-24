@@ -108,6 +108,7 @@ sub sendcallback {
 
 sub senddripcallback {	
 	local $ext 	= &database_clean_string(substr $form{ext}, 0, 50);
+	local $amd 	= &database_clean_string(substr $form{amd}, 0, 50);
 	local $call_timeout 	= $form{call_timeout} || 30;
 	if (!$ext) {		
 		&print_api_error_end_exit(130, "src is null");
@@ -175,7 +176,9 @@ sub senddripcallback {
 	if ($hash{1}{record} eq 'all' or $hash{1}{record} eq 'outbound') {
 		$record = "api_on_answer='uuid_record $uuid start /var/lib/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format'";
 	}
-	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$dest_uri  $ext XML $domain_name");
+	$dial_ext = $amd eq 'true'? "amd$ext" : $ext;
+	
+	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$dest_uri  $dial_ext XML $domain_name");
 
 	$response{stat}          = 'ok';
 	$response{data}{uuid}    = $uuid;   
