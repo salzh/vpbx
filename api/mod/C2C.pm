@@ -109,6 +109,12 @@ sub sendcallback {
 sub senddripcallback {	
 	local $ext 	= &database_clean_string(substr $form{ext}, 0, 50);
 	local $amd 	= &database_clean_string(substr $form{amd}, 0, 50);
+	local $avmd 	= &database_clean_string(substr $form{avmd}, 0, 50);
+	if ($avmd eq 'true') {
+		$avmd_string = "avmd='true'";
+	}
+	
+	local $voicemaildrop_uuid 	= &database_clean_string(substr $form{voicemaildrop_uuid}, 0, 50);
 	local $call_timeout 	= $form{call_timeout} || 30;
 	if (!$ext) {		
 		&print_api_error_end_exit(130, "src is null");
@@ -178,7 +184,7 @@ sub senddripcallback {
 	}
 	$dial_ext = $amd eq 'true'? "amd$ext" : $ext;
 	
-	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$dest_uri  $dial_ext XML $domain_name");
+	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$avmd_string,$record}$dest_uri  $dial_ext XML $domain_name");
 
 	$response{stat}          = 'ok';
 	$response{data}{uuid}    = $uuid;   
