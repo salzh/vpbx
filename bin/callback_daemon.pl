@@ -133,7 +133,7 @@ $remote->autoflush(1);
 $logres = login_cmd("auth ClueCon$BLANK");
 sleep 1;
 
-$logres = login_cmd("event BACKGROUND_JOB CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE MEDIA_BUG_STOP CUSTOM MISSED event::beep$BLANK");
+$logres = login_cmd("event BACKGROUND_JOB CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE MEDIA_BUG_STOP CUSTOM MISSED avmd::beep$BLANK");
 $eventcount = 0;
 %Channel_Spool = ();
 local $| = 1;
