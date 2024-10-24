@@ -110,11 +110,12 @@ sub senddripcallback {
 	local $ext 	= &database_clean_string(substr $form{ext}, 0, 50);
 	local $amd 	= &database_clean_string(substr $form{amd}, 0, 50);
 	local $avmd 	= &database_clean_string(substr $form{avmd}, 0, 50);
-	if ($avmd eq 'true') {
-		$avmd_string = "avmd='true'";
-	}
+	
 	
 	local $voicemaildrop_uuid 	= &database_clean_string(substr $form{voicemaildrop_uuid}, 0, 50);
+	if ($avmd eq 'true') {
+		$avmd_string = "avmd=true,voicemaildrop_uuid=$voicemaildrop_uuid";
+	}
 	local $call_timeout 	= $form{call_timeout} || 30;
 	if (!$ext) {		
 		&print_api_error_end_exit(130, "src is null");

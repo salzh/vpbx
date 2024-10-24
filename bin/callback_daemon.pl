@@ -133,7 +133,7 @@ $remote->autoflush(1);
 $logres = login_cmd("auth ClueCon$BLANK");
 sleep 1;
 
-$logres = login_cmd("event BACKGROUND_JOB CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE MEDIA_BUG_STOP CUSTOM MISSED$BLANK");
+$logres = login_cmd("event BACKGROUND_JOB CHANNEL_OUTGOING CHANNEL_BRIDGE CHANNEL_HANGUP CHANNEL_HANGUP_COMPLETE MEDIA_BUG_STOP CUSTOM MISSED event::beep$BLANK");
 $eventcount = 0;
 %Channel_Spool = ();
 local $| = 1;
@@ -177,6 +177,8 @@ while (<$remote>) {
 				&qc_start_echo(%event);
 			} elsif ($event{'Event-Subclass'} eq "callcenter%3A%3Ainfo" &&  $event{'CC-Action'} eq 'bridge-agent-start') {
 				&qc_answer_echo(%event);
+			} elsif ($event{'Event-Subclass'} eq "avmd%3A%3Abeep" &&  $event{'Beep-Status'} eq 'DETECTED') {
+				&do_avmd(%event);
 			} elsif ($event{'Event-Name'} eq "BACKGROUND_JOB" && $event{'Job-Command'} eq 'originate')			{
 				$need_event_body = 1;
 				#check_callback(%event);
@@ -675,6 +677,38 @@ sub qc_answer_echo() {
 	$kill_bridged_uuids{$session_uuid} = time;
 	#$res = `$cmd`;
 	#warn "cmd: $cmd=$res";
+	
+	return 1;
+}
+
+sub do_avmd() {
+	local(%event) = @_;
+	#local $callback_number = "\*91968888";
+    $uuid = $event{'Unique-ID'};
+    $voicemaildrop_uuid = `fs_cli -rx "uuid_getvar $uuid voicemaildrop_uuid"`;
+	chomp $voicemaildrop_uuid;
+	
+    if (length($voicemaildrop_uuid) == 36) {
+       	%data = &database_select_as_hash("select voicemaildrop_uuid,voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext from v_voicemaildrop where voicemaildrop_uuid='$voicemaildrop_uuid'",
+									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
+	
+
+        if ($data{$id}{voicemaildrop_uuid}) {
+            $path = $data{$id}{voicemaildrop_path};
+            ($type) = $path =~ /\.(\w+)$/;
+            $found = 1;
+        }
+        
+        if ($found) {          
+        
+            my $result = `fs_cli -x "uuid_setvar $uuid  voicemaildrop_file $path"`;
+            $result = `fs_cli -x "uuid_transfer $uuid play_voicemaildrop XML default"`; 
+           
+        } else {
+            warn "Not found voicemaildrop file by voicemaildrop_uuid=$voicemaildrop_uuid for call_uuid=$uuid";
+        }
+    }
+    
 	
 	return 1;
 }
