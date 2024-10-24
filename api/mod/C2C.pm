@@ -107,7 +107,7 @@ sub sendcallback {
 }
 
 sub senddripcallback {	
-	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
+	local $ext 	= &database_clean_string(substr $form{ext}, 0, 50);
 	local $call_timeout 	= $form{call_timeout} || 30;
 	if (!$ext) {		
 		&print_api_error_end_exit(130, "src is null");
