@@ -693,8 +693,8 @@ sub do_avmd() {
 									 "voicemaildrop_uuid,voicemaildrop_name,voicemaildrop_path,domain_name,ext");
 	
 
-        if ($data{$id}{voicemaildrop_uuid}) {
-            $path = $data{$id}{voicemaildrop_path};
+        if ($data{$voicemaildrop_uuid}{voicemaildrop_uuid}) {
+            $path = $data{$voicemaildrop_uuid}{voicemaildrop_path};
             ($type) = $path =~ /\.(\w+)$/;
             $found = 1;
         }
