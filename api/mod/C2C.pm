@@ -143,9 +143,11 @@ sub senddripcallback {
 
 	$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
 
-	$cid = &database_clean_string(substr $form{callerid}, 0, 50);
-	$code = &_get_area_code($dest);
-	$dcid = &_get_dynamic_callerid($ext, $domain{uuid}, $code);
+	#$cid = &database_clean_string(substr $form{callerid}, 0, 50);
+	$cid = _get_outbound_callerid($domain, $ext) || $dest;
+	warn "cid=$cid";
+	#$code = &_get_area_code($dest);
+	#$dcid = &_get_dynamic_callerid($ext, $domain{uuid}, $code);
 
 	$cid = $dcid if $dcid;
 
