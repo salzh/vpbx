@@ -685,6 +685,8 @@ sub do_avmd() {
 	local(%event) = @_;
 	#local $callback_number = "\*91968888";
     $uuid = $event{'Unique-ID'};
+    warn "Found voicemail beep event on call_uuid=$uuid";
+
     $voicemaildrop_uuid = `fs_cli -rx "uuid_getvar $uuid voicemaildrop_uuid"`;
 	chomp $voicemaildrop_uuid;
 	
