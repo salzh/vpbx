@@ -106,6 +106,82 @@ sub sendcallback {
 	
 }
 
+sub senddripcallback {	
+	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
+	local $call_timeout 	= $form{call_timeout} || 30;
+	if (!$ext) {		
+		&print_api_error_end_exit(130, "src is null");
+	}
+	%domain      = &get_domain();
+	$domain_name = $domain{name};
+	if (!$domain{name}) {
+		&print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
+	}	
+
+	$auto_answer = $form{autoanswer}  ? "sip_h_Call-Info=<sip:$domain_name>;answer-after=0,sip_auto_answer=true" : "";
+	$alert_info  = $form{autoanswer}  ? "sip_h_Alert-Info='Ring Answer'" : '';
+	$dest	= $form{dest};
+	if (!$form{dest}) {		
+		&print_api_error_end_exit(130, "dest is null");
+	}
+
+	$accountcode = $form{accountcode};
+	if ($accountcode) {
+		$accountcode_str = "sip_h_X-accountcode=$accountcode";
+	}
+
+	$uuid   = &genuuid();
+	if (!$uuid) {
+		&print_api_error_end_exit(130, "uuid tool not defined");       
+	}
+	$dest =~ s/^\+1//g;
+	if ($dest =~ /^\+(\d+)$/) {
+		$dest = "011$1";
+	}
+
+	$realdest = $dest;
+
+	$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
+
+	$cid = &database_clean_string(substr $form{callerid}, 0, 50);
+	$code = &_get_area_code($dest);
+	$dcid = &_get_dynamic_callerid($ext, $domain{uuid}, $code);
+
+	$cid = $dcid if $dcid;
+
+	warn "dynamic_callerid: $ext $cid - $dcid!\n";
+	@uri = &outbound_route_to_bridge($ext, $domain{uuid});
+	if ($uri[0]) {
+		$src_uri = $uri[0];
+	} else {
+		$src_uri = "user/$ext\@$domain{name}";
+	}
+	
+	@uri = &outbound_route_to_bridge($realdest, $domain{uuid});
+	if ($uri[0]) {
+		$dest_uri = $uri[0];
+	} else {
+		$dest = "user/$ext\@$domain{name}";
+	}
+
+	warn $src_uri;
+	$year = strftime('%Y', localtime);
+	$mon  = strftime('%b', localtime);
+	$day  = strftime('%d', localtime);
+
+	%hash = &database_select_as_hash("select 1,user_record from v_extensions where user_context='$domain_name' and extension='$ext'", 'record');
+	if ($hash{1}{record} eq 'all' or $hash{1}{record} eq 'outbound') {
+		$record = "api_on_answer='uuid_record $uuid start /var/lib/freeswitch/recordings/$domain_name/archive/$year/$mon/$day/$uuid.$record_format'";
+	}
+	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$ext,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$record}$dest_uri  $ext XML $domain_name");
+
+	$response{stat}          = 'ok';
+	$response{data}{uuid}    = $uuid;   
+	$response{message} = $output;   
+
+	&print_json_response(%response);
+}
+
 sub getcallbackstate {
 	my $uuid = $form{uuid} || $form{callbackid};
 
