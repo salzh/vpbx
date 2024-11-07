@@ -299,16 +299,18 @@ sub Dial() {
 		warn "Ignore Dial coz loopback on callback";
 		return;
 	}
-	warn $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'};
 	local	$uuid = $event{'Other-Leg-Unique-ID'} ;
 
 	$uuid = $event{'Channel-Call-UUID'} if !$uuid;
-
+    $uuid = $event{'Unique-ID'} if !$uuid;
 	local $from = $event{'Other-Leg-Caller-ID-Number'};
 	local $caller_name = $event{'Caller-Caller-ID-Name'};
 	
 	local $to =  $event{'Caller-Callee-ID-Number'};
 	local $caller_destination = $event{'Caller-RDNIS'};
+    
+    warn "$uuid: " . $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'};
+
 	#$uuid =~ s/\-//g;
 	local $now = &now();
 	if ($event{'Caller-Context'} eq 'default') {return;}
