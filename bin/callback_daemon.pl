@@ -309,7 +309,6 @@ sub Dial() {
 	local $to =  $event{'Caller-Callee-ID-Number'};
 	local $caller_destination = $event{'Caller-RDNIS'};
     
-    warn "$uuid: " . $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'};
 
 	#$uuid =~ s/\-//g;
 	local $now = &now();
@@ -327,6 +326,8 @@ sub Dial() {
         chomp $from;
 	}
 	
+    warn "$uuid: " . $event{'Caller-Caller-ID-Number'} . ":" . $event{'Other-Leg-Caller-ID-Number'} . " is calling  " . $event{'Caller-Callee-ID-Number'} . "$iscallback:$from";
+
 	if ($event{'Caller-Channel-Name'} =~ m{loopback/(\w+)\-a}) {
 		$to = $event{'Caller-Destination-Number'};
 	}
