@@ -185,7 +185,7 @@ sub senddripcallback {
 	}
 	$dial_ext = $amd eq 'true'? "amd$ext" : $ext;
 	
-	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$avmd_string,$record}$dest_uri  $dial_ext XML $domain_name");
+	$output = &runswitchcommand('internal', "bgapi originate {call_timeout=$call_timeout,iscallback=true,ringback=local_stream://default,ignore_early_media=true,fromextension=$ext,origination_caller_id_name=$cid,origination_caller_id_number=$cid,effective_caller_id_number=$cid,effective_caller_id_name=$cid,domain_name=$domain_name,outbound_caller_id_number=$cid,$alert_info,origination_uuid=$uuid,$accountcode_str,$auto_answer,record_session=true,$avmd_string,$record}$dest_uri  $dial_ext XML $domain_name");
 
 	$response{stat}          = 'ok';
 	$response{data}{uuid}    = $uuid;   
