@@ -321,7 +321,8 @@ sub Dial() {
 	local $iscallback = `fs_cli -rx "uuid_getvar $uuid iscallback"`;
 	chomp $iscallback; $iscallback = '' if $iscallback eq '_undef_';
 	if ($iscallback) {
-		$from = $event{'Caller-Orig-Caller-ID-Name'};
+		$from = `fs_cli -rx "uuid_getvar $uuid fromextension"`;#$event{'Caller-Orig-Caller-ID-Name'};
+        chomp $from;
 	}
 	
 	if ($event{'Caller-Channel-Name'} =~ m{loopback/(\w+)\-a}) {
