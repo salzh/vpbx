@@ -18,6 +18,7 @@ sub getcdr () {
         direction => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         caller_id_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         destination_number => {type => 'string', maxlen => 50, notnull => 0, default => ''},        
+        caller_destination => {type => 'string', maxlen => 50, notnull => 0, default => ''},        
         start_stamp => {type => 'string', maxlen => 50, notnull => 0, default => ''},
         end_stamp => {type => 'string', maxlen => 50, notnull => 0, default =>''},
         caller_id_name => {type => 'string', maxlen => 50, notnull => 0, default => ''},
