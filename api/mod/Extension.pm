@@ -80,7 +80,7 @@ description:
      
      if ($response{stat} ne 'fail') {
           $enabled            = &get_enabled($form{enabled});
-          $vm_enabled         = &get_enabled($form{vm_enabled});
+          $voicemail_enabled         = &get_enabled($form{voicemail_enabled});
           $voicemail_password = &clean_int($form{voicemail_password});
           $vm_mailto          = &database_clean_string(substr($form{vm_mailto}, 0, 50));          
           $user_context       = $domain{name};
@@ -88,7 +88,7 @@ description:
           
           $post_add{extension} = $extension;
           $post_add{enabled}   = $enabled || 'true';
-          $post_add{vm_enabled}= $vm_enabled || 'true';
+          $post_add{voicemail_enabled}= $voicemail_enabled || 'true';
           $post_add{voicemail_password} = $voicemail_password;
           $post_add{vm_mailto}          = $vm_mailto;
           $post_add{user_context}       = $user_context;
@@ -226,7 +226,7 @@ delete_uuid:';
      
      if ($response{stat} ne 'fail') {
           $enabled     = &get_enabled($form{enabled}) || 'true';
-          $vm_enabled  = &get_enabled($form{vm_enabled}) || 'true';
+          $voicemail_enabled  = &get_enabled($form{voicemail_enabled}) || 'true';
           $voicemail_password = &clean_int($form{voicemail_password});
           $vm_mailto   = &database_clean_string(substr($form{vm_mailto}, 0, 50));          
           $user_record   = &database_clean_string(substr($form{user_record}, 0, 50));          
@@ -234,7 +234,7 @@ delete_uuid:';
           
           
           $post_add{enabled}   = $enabled;
-          $post_add{vm_enabled}= $vm_enabled;
+          $post_add{voicemail_enabled}= $voicemail_enabled;
           $post_add{voicemail_password} = $voicemail_password;
           $post_add{vm_mailto}   = $vm_mailto;
           $post_add{domain_uuid}= $domain{uuid};
