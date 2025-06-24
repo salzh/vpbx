@@ -267,7 +267,9 @@ sub makepowercall {
 	$result = &runswitchcommand('internal', "conference $ext kick non_moderator");
 	
 	if (!$is_widget_in_conference) {
-		$result =  &runswitchcommand('internal', "originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,ignore_early_media=true,origination_uuid=$uuid,flags=endconf|moderator}loopback/$ext/$domain_name/XML conference$ext XML default");
+		$cmd_str = "originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,ignore_early_media=true,origination_uuid=$uuid,flags=endconf|moderator}loopback/$ext/$domain_name/XML conference$ext XML default";
+		warn $cmd_str;
+		$result =  &runswitchcommand('internal', $cmd_str);
 		sleep 2;
 		
 		$call_list = &runswitchcommand('internal', "show calls");
