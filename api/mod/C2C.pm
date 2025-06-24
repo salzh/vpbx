@@ -199,9 +199,9 @@ sub makepowercall {
 	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
     
     %domain         = &get_domain();
-    local $domain  = $form{domain} || $HOSTNAME;
-	$domain		= $cgi->server_name();
-	
+    #local $domain  = $form{domain} || $HOSTNAME;
+	#$domain		= $cgi->server_name();
+	$domain_name = $domain{name};
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
