@@ -199,10 +199,24 @@ sub makepowercall {
 	local $ext 	= &database_clean_string(substr $form{src}, 0, 50);
     
     %domain         = &get_domain();
-    $domain_name    = $domain{name};
-    if (!$domain{name}) {
-        &print_api_error_end_exit(90, "$form{domain_name}/$form{domain_uuid} " . &_("not exists"));
-    }
+    local $domain  = $form{domain} || $HOSTNAME;
+	$domain		= $cgi->server_name();
+	
+	my %jwt = &get_jwt();
+	if ($jwt{error}) {
+		&print_json_response(%jwt);
+		return;
+	}
+	
+	my %jwt_hash = %{$jwt{jwt_hash}};
+	
+	unless ($jwt_hash{aud} eq $domain && $jwt_hash{sub} eq $ext.'@'.$domain) {
+		$response{error} = 1;
+		$response{message} = "sub and aud mismatch : $jwt_hash{aud} vs $domain && $jwt_hash{sub} vs " . $ext.'@'.$domain;
+		&print_json_response(%response);
+		return;		
+	}
+	
 	
 	
 	$auto_answer = $form{autoanswer}  ? "sip_h_Call-Info=<sip:$domain_name>;answer-after=0,sip_auto_answer=true" : "";
