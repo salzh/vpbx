@@ -210,9 +210,9 @@ sub makepowercall {
 	
 	my %jwt_hash = %{$jwt{jwt_hash}};
 	
-	unless ($jwt_hash{aud} eq $domain && $jwt_hash{sub} eq $ext.'@'.$domain) {
+	unless ($jwt_hash{aud} eq $domain_name && $jwt_hash{sub} eq $ext.'@'.$domain_name) {
 		$response{error} = 1;
-		$response{message} = "sub and aud mismatch : $jwt_hash{aud} vs $domain && $jwt_hash{sub} vs " . $ext.'@'.$domain;
+		$response{message} = "sub and aud mismatch : $jwt_hash{aud} vs $domain_name && $jwt_hash{sub} vs " . $ext.'@'.$domain_name;
 		&print_json_response(%response);
 		return;		
 	}
