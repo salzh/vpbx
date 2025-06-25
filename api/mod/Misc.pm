@@ -484,7 +484,7 @@ sub outbound_route_to_bridge () {
 				app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' and
 				dialplan_enabled = 'true'";
 				
-	warn $sql;
+	#warn $sql;
 	
 	%hash = &database_select_as_hash($sql, "dialplan_uuid,dialplan_continue,dialplan_order");
 	$exit_2 = 0;
@@ -501,7 +501,7 @@ sub outbound_route_to_bridge () {
 				where
 					(domain_uuid = '$domain_uuid' or domain_uuid is null) and
 					dialplan_uuid = '$dialplan_uuid'";
-		warn $sql;	
+		#warn $sql;	
 		%detail = &database_select_as_hash($sql, "dialplan_detail_uuid,dialplan_detail_tag,dialplan_detail_type,dialplan_detail_data,dialplan_detail_order");
 		$regex_match = 0;
 		for $D (sort {$detail{$a}{dialplan_detail_order} <=> $detail{$b}{dialplan_detail_order}} keys %detail) {
@@ -536,7 +536,7 @@ sub outbound_route_to_bridge () {
 					$dialplan_detail_data =~ s/\$4/$regex_match_4/g;
 					$dialplan_detail_data =~ s/\$5/$regex_match_5/g;
 				
-					warn "$detail{$d}{'dialplan_detail_type'},$dialplan_detail_data";
+		#			warn "$detail{$d}{'dialplan_detail_type'},$dialplan_detail_data";
 					push @bridge_array, $dialplan_detail_data;
 					if ($dialplan_continue eq "false") {
 						$exit_2 = 1;
