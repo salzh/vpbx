@@ -20,5 +20,5 @@ my $data1 = decode_jwt(token=>$auth, key=>$key);
 print Data::Dumper::Dumper($data1);
 
 #$auth = 'eyJhbGciOiJIUzI1NiJ9.ewogICJzdWIiOiAiMzAxQDIyMi52ZWxhbnRyby5uZXQiLAogICJhdWQiOiAiMjIyLnZlbGFudHJvLm5ldCIsCiAgImV4cCI6IDE2OTQwMjIxMDAKfQo.Nt9ccxmvwhmth2R_sXMyP0g1rbaW-59y8JjIzUNHdt0';
-$out = `curl -H "Authorization: Bearer $auth" "http://$domain:8080/pbx/index.pl?mod=C2C&action=makepowercall&src=100&callerid=7474779513&dests=8882115404"`;
+$out = `curl -H "Authorization: Bearer $auth" "http://$domain:8080/pbx/index.pl?mod=C2C&action=makepowercall&src=100&callerid=7474779513&dests=2124441005,8882115404"`;
 print $out, "\n";

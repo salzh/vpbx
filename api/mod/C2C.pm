@@ -244,7 +244,7 @@ sub makepowercall {
 		
 		$realdest = "$dest" unless $dest =~ /^(?:\+|011)/;
 		@uri = &outbound_route_to_bridge($realdest, $domain{uuid});
-		$dest_uri .= '|' if $dest_uri;
+		$dest_uri .= ',' if $dest_uri;
 		if ($uri[0]) {
 			$dest_uri .=  $uri[0];
 		} else {
