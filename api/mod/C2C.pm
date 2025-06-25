@@ -290,7 +290,7 @@ sub makepowercall {
 	$uuid = &genuuid();
 	
 	#$result = &runswitchcommand('internal', "bgapi originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,origination_uuid=$uuid,autocallback_fromextension=$ext,is_lead=1}loopback/$dest/$domain_name/XML conference$ext XML default");
-	$cmd_str = "bgapi originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,autocallback_fromextension=$ext,is_lead=1,group_confirm_key=exec,group_confirm_file=lua confirm_amd.lua}$dest_uri conference$ext XML default";
+	$cmd_str = "bgapi originate {origination_caller_id_name=callback-$ext,origination_caller_id_number=$cid,domain_name=$domain_name,ignore_early_media=true,autocallback_fromextension=$ext,is_lead=1,group_confirm_key=exec,group_confirm_file=lua confirm_amd.lua}$dest_uri conference$ext XML default";
 	warn $cmd_str;
 	$result = &runswitchcommand('internal', $cmd_str);
 	
