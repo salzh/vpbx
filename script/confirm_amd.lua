@@ -62,7 +62,7 @@
         --process the response
             if (amd_result == "HUMAN") then
                 freeswitch.consoleLog("NOTICE", "[confirm] answered by human\n");
-            elseif (digit == "MACHINE") then
+            elseif (amd_result == "MACHINE") then
                 freeswitch.consoleLog("NOTICE", "[confirm] answered by machine\n");
                 session:hangup("NO_ANSER"); --LOSE_RACE
             
