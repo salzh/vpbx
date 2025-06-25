@@ -234,7 +234,7 @@ sub makepowercall {
     if (!$uuid) {
         &print_api_error_end_exit(130, "uuid tool not defined");       
     }
-	for (split ',', $dests) {
+	for $dest (split ',', $dests) {
 		$dest =~ s/^\+1//g;
 		if ($dest =~ /^\+(\d+)$/) {
 			$dest = "011$1";
