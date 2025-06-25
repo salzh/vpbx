@@ -473,7 +473,8 @@ sub upload_file () {
 
 sub outbound_route_to_bridge () {
 	local ($destination_number, $domain_uuid) = @_;
-
+	
+	warn "Get dialstr for $destination_number, $domain_uuid";
 	$sql = "select
 				dialplan_uuid,dialplan_uuid,dialplan_continue,dialplan_order
 			from
