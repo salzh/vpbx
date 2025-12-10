@@ -386,7 +386,8 @@ sub transfer {
 	my $uuid = $form{uuid} || $form{callbackid};
 	my $dest = $form{dest};
 	my $domain		= $cgi->server_name();
-
+	my $record = $form{record};
+	
 	my %jwt = &get_jwt();
 	if ($jwt{error}) {
 		&print_json_response(%jwt);
@@ -422,6 +423,13 @@ sub transfer {
 		}
 	} else {
 		$leg = '-bleg';
+	}
+	
+	if ($record eq 'true') {
+		my ($y,$m,$d) = &get_today();
+	
+		$path = "/var/lib/freeswitch/recordings/$domain/archive/$y/$m/$d/$uuid.wav'";
+		$res =  &runswitchcommand('internal', "uuid_record $uuid start $path");
 	}
 	
 	$res =  &runswitchcommand('internal', "uuid_transfer $uuid  $leg $dest XML $domain");
@@ -1091,5 +1099,15 @@ sub _call_field2index() {
 		
 	warn "$field index: $callstate_index";
 	return $callstate_index;
+}
+
+sub get_today {
+	my @arr = localtime();
+	my $y   = $arr[5] + 1900;
+	my @months = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
+	my $m	= $months[$arr[4]];
+	my $d	= sprintf("%02d", $arr[3]);
+	
+	return ($y, $m, $d);
 }
 return 1;
