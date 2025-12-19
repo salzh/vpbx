@@ -36,7 +36,7 @@ sub setforward() {
     if ($response{stat} ne 'fail') {
         &post_data (
                     'domain_uuid' => $domain{uuid},
-                    'urlpath'     => "/app/dialplan/forward.php?action=updatedest&forwardstr=$post_add{forwardstr}",
+                    'urlpath'     => "/app/dialplans/forward.php?action=updatedest&forwardstr=$post_add{forwardstr}",
                     'data'        => []);
         $response{stat}	= "ok";
     }
